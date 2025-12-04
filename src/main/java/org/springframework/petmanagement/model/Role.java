@@ -10,16 +10,16 @@ import jakarta.persistence.UniqueConstraint;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "roles" ,uniqueConstraints = @UniqueConstraint(columnNames = {"username", "role"}))
+@Table(name = "roles" ,uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role"}))
 public class Role extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "username")
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 
     @Column( name = "role")
-    private String name;
+    private String role; 
 
     public User getUser() {
         return user;
@@ -29,11 +29,11 @@ public class Role extends BaseEntity {
         this.user = user;
     }
 
-    public String getName() {
-        return name;
+    public String getRole() {
+        return role;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRole(String role) {
+        this.role = role;
     }
 }

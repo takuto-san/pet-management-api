@@ -1,19 +1,3 @@
-/*
- * Copyright 2016-2017 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.springframework.petmanagement.rest.controller;
 
 import org.springframework.http.HttpHeaders;
@@ -31,8 +15,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.transaction.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.Collection;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
@@ -51,7 +36,7 @@ public class PetTypeRestController implements PettypesApi {
     @PreAuthorize("hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)")
     @Override
     public ResponseEntity<List<PetTypeDto>> listPetTypes() {
-        List<PetType> petTypes = new ArrayList<>(this.clinicService.findAllPetTypes());
+        Collection<PetType> petTypes = this.clinicService.findAllPetTypes();
         if (petTypes.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -59,13 +44,11 @@ public class PetTypeRestController implements PettypesApi {
     }
 
     @PreAuthorize("hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)")
-    @Override
-    public ResponseEntity<PetTypeDto> getPetType(Integer petTypeId) {
-        PetType petType = this.clinicService.findPetTypeById(petTypeId);
-        if (petType == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(petTypeMapper.toPetTypeDto(petType), HttpStatus.OK);
+    @GetMapping("/pettypes/{petTypeId}")
+    public ResponseEntity<PetTypeDto> getPetType(@PathVariable("petTypeId") UUID petTypeId) {
+        return this.clinicService.findPetTypeById(petTypeId)
+            .map(petType -> new ResponseEntity<>(petTypeMapper.toPetTypeDto(petType), HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
@@ -79,27 +62,28 @@ public class PetTypeRestController implements PettypesApi {
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Override
-    public ResponseEntity<PetTypeDto> updatePetType(Integer petTypeId, PetTypeDto petTypeDto) {
-        PetType currentPetType = this.clinicService.findPetTypeById(petTypeId);
+    @PutMapping("/pettypes/{petTypeId}")
+    public ResponseEntity<PetTypeDto> updatePetType(@PathVariable("petTypeId") UUID petTypeId, @RequestBody PetTypeFieldsDto petTypeFieldsDto) {
+        PetType currentPetType = this.clinicService.findPetTypeById(petTypeId).orElse(null);
         if (currentPetType == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        currentPetType.setName(petTypeDto.getName());
+        
+        currentPetType.setName(petTypeFieldsDto.getName());
         this.clinicService.savePetType(currentPetType);
-        return new ResponseEntity<>(petTypeMapper.toPetTypeDto(currentPetType), HttpStatus.NO_CONTENT);
+        
+        return new ResponseEntity<>(petTypeMapper.toPetTypeDto(currentPetType), HttpStatus.OK);
     }
-
+    
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Transactional
-    @Override
-    public ResponseEntity<PetTypeDto> deletePetType(Integer petTypeId) {
-        PetType petType = this.clinicService.findPetTypeById(petTypeId);
+    @DeleteMapping("/pettypes/{petTypeId}")
+    public ResponseEntity<Void> deletePetType(@PathVariable("petTypeId") UUID petTypeId) {
+        PetType petType = this.clinicService.findPetTypeById(petTypeId).orElse(null);
         if (petType == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         this.clinicService.deletePetType(petType);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

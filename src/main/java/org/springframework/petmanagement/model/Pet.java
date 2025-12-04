@@ -1,35 +1,11 @@
-/*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.springframework.petmanagement.model;
 
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PropertyComparator;
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
-import java.util.*;
+import java.time.OffsetDateTime;
 
-
-/**
- * Simple business object representing a pet.
- *
- * @author Ken Krebs
- * @author Juergen Hoeller
- * @author Sam Brannen
- */
 @Entity
 @Table(name = "pets")
 public class Pet extends NamedEntity {
@@ -37,16 +13,23 @@ public class Pet extends NamedEntity {
     @Column(name = "birth_date", columnDefinition = "DATE")
     private LocalDate birthDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @Column(name = "sex", length = 10)
+    @Size(max = 10)
+    private String sex;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id")
     private PetType type;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private Owner owner;
+    
+    @Column(name = "created_at")
+    private OffsetDateTime createdAt;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
-    private Set<Visit> visits;
+    @Column(name = "updated_at")
+    private OffsetDateTime updatedAt;
 
     public LocalDate getBirthDate() {
         return this.birthDate;
@@ -54,6 +37,14 @@ public class Pet extends NamedEntity {
 
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public PetType getType() {
@@ -72,30 +63,19 @@ public class Pet extends NamedEntity {
         this.owner = owner;
     }
 
-    protected Set<Visit> getVisitsInternal() {
-        if (this.visits == null) {
-            this.visits = new HashSet<>();
-        }
-        return this.visits;
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    protected void setVisitsInternal(Set<Visit> visits) {
-        this.visits = visits;
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public List<Visit> getVisits() {
-        List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
-        PropertyComparator.sort(sortedVisits, new MutableSortDefinition("date", false, false));
-        return Collections.unmodifiableList(sortedVisits);
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setVisits(List<Visit> visits) {
-        this.visits = new HashSet<>(visits);
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
-
-    public void addVisit(Visit visit) {
-        getVisitsInternal().add(visit);
-        visit.setPet(this);
-    }
-
 }

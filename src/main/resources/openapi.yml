@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
-  title: Spring PetClinic
-  description: Spring PetClinic Sample Application.
+  title: Pet Management API
+  description: Pet Management API.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
@@ -17,14 +17,8 @@ tags:
     description: Endpoints related to users.
   - name: pet
     description: Endpoints related to pets.
-  - name: vet
-    description: Endpoints related to vets.
-  - name: visit
-    description: Endpoints related to vet visits.
   - name: pettypes
     description: Endpoints related to pet types.
-  - name: specialty
-    description: Endpoints related to vet specialties.
 paths:
   /oops:
     get:
@@ -66,7 +60,7 @@ paths:
       summary: Adds a pet owner
       description: Records the details of a new pet owner.
       requestBody:
-        description: The pet owner
+        description: The pet owner fields for creation.
         content:
           application/json:
             schema:
@@ -96,15 +90,22 @@ paths:
         - owner
       operationId: listOwners
       summary: Lists pet owners
-      description: Returns an array of pet owners.
+      description: Returns an array of pet owners. クエリパラメータで last_name_kana, first_name_kanaによる検索をサポートします。
       parameters:
-        - name: lastName
+        - name: lastNameKana
           in: query
-          description: Last name.
+          description: Last name in Kana (e.g., ヤマダ).
           required: false
           schema:
             type: string
-            example: Davis
+            example: ヤマダ
+        - name: firstNameKana
+          in: query
+          description: First name in Kana (e.g., タロウ).
+          required: false
+          schema:
+            type: string
+            example: タロウ
       responses:
         200:
           description: Owner details found and returned.
@@ -145,10 +146,9 @@ paths:
           description: The ID of the pet owner.
           required: true
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
+            type: string        
+            format: uuid
+            example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
       responses:
         200:
           description: Owner details found and returned.
@@ -198,10 +198,9 @@ paths:
           description: The ID of the pet owner.
           required: true
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
+            type: string        
+            format: uuid        
+            example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
       requestBody:
         description: The pet owner details to use for the update.
         content:
@@ -234,42 +233,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-
     delete:
       tags:
         - owner
       operationId: deleteOwner
       summary: Delete an owner by ID
-      description: Returns the owner or a 404 error.
+      description: Deletes the owner and returns 204 No Content on success.
       parameters:
         - name: ownerId
           in: path
           description: The ID of the owner.
           required: true
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
+            type: string        
+            format: uuid        
+            example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
       responses:
-        200:
-          description: Owner details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Owner'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
+        204:
+          description: Owner successfully deleted. (No Content)
         400:
           description: Bad request.
           content:
@@ -277,7 +258,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         404:
-          description: Owner  not found.
+          description: Owner not found.
           content:
             application/json:
               schema:
@@ -301,10 +282,9 @@ paths:
           description: The ID of the pet owner.
           required: true
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
+            type: string        
+            format: uuid        
+            example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
       requestBody:
         description: The details of the new pet.
         content:
@@ -326,7 +306,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         404:
-          description: Pet or Owner not found.
+          description: Owner not found.
           content:
             application/json:
               schema:
@@ -342,7 +322,7 @@ paths:
       tags:
         - pet
       operationId: getOwnersPet
-      summary: Get a pet by ID
+      summary: Get a pet by ID associated with a specific owner
       description: Returns the pet or a 404 error.
       parameters:
         - name: ownerId
@@ -350,19 +330,17 @@ paths:
           description: The ID of the pet owner.
           required: true
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
+            type: string        
+            format: uuid        
+            example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
         - name: petId
           in: path
           description: The ID of the pet.
           required: true
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
+            type: string        
+            format: uuid        
+            example: 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
       responses:
         200:
           description: Pet details found and returned.
@@ -404,8 +382,7 @@ paths:
       tags:
         - pet
       operationId: updateOwnersPet
-
-      summary: Update a pet's details
+      summary: Update a pet's details for a specific owner
       description: Updates the pet record with the specified details.
       parameters:
         - name: ownerId
@@ -413,19 +390,17 @@ paths:
           description: The ID of the pet owner.
           required: true
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
+            type: string        
+            format: uuid        
+            example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
         - name: petId
           in: path
           description: The ID of the pet.
           required: true
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
+            type: string        
+            format: uuid        
+            example: 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
       requestBody:
         description: The pet details to use for the update.
         content:
@@ -434,66 +409,12 @@ paths:
               $ref: '#/components/schemas/PetFields'
         required: true
       responses:
-        204:
+        200:
           description: Update successful.
-        400:
-          description: Bad request.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Pet not found for this owner.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-  /owners/{ownerId}/pets/{petId}/visits:
-    post:
-      tags:
-        - visit
-      operationId: addVisitToOwner
-      summary: Adds a vet visit
-      description: Records the details of a new vet visit.
-      parameters:
-        - name: ownerId
-          in: path
-          description: The ID of the pet owner.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-        - name: petId
-          in: path
-          description: The ID of the pet.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      requestBody:
-        description: The details of the new vet visit.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/VisitFields'
-        required: true
-      responses:
-        201:
-          description: The vet visit was successfully added.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Visit'
+                $ref: '#/components/schemas/Pet'
         400:
           description: Bad request.
           content:
@@ -553,39 +474,21 @@ paths:
       summary: Create a pet type
       description: Creates a pet type .
       requestBody:
-        description: The pet type
+        description: The pet type fields for creation.
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PetTypeFields'
         required: true
       responses:
-        200:
+        201:
           description: Pet type created successfully.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PetType'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
         400:
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Pet Type not found.
           content:
             application/json:
               schema:
@@ -596,184 +499,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-  /pettypes/{petTypeId}:
-    get:
-      tags:
-        - pettypes
-      operationId: getPetType
-      summary: Get a pet type by ID
-      description: Returns the pet type or a 404 error.
-      parameters:
-        - name: petTypeId
-          in: path
-          description: The ID of the pet type.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      responses:
-        200:
-          description: Pet type details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PetType'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Pet Type not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-    put:
-      tags:
-        - pettypes
-      operationId: updatePetType
-      summary: Update a pet type by ID
-      description: Returns the pet type or a 404 error.
-      parameters:
-        - name: petTypeId
-          in: path
-          description: The ID of the pet type.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      requestBody:
-        description: The pet type
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PetType'
-        required: true
-      responses:
-        200:
-          description: Pet type details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PetType'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Pet Type not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-    delete:
-      tags:
-        - pettypes
-      operationId: deletePetType
-      summary: Delete a pet type by ID
-      description: Returns the pet type or a 404 error.
-      parameters:
-        - name: petTypeId
-          in: path
-          description: The ID of the pet type.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      responses:
-        200:
-          description: Pet type details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PetType'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Pet type not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-
   /pets:
     get:
       tags:
         - pet
       operationId: listPets
-      summary: Lists pet
-      description: Returns an array of pet .
+      summary: Lists all pets
+      description: Returns an array of all pets.
       responses:
         200:
-          description: Pet types found and returned.
+          description: Pets found and returned.
           headers:
             ETag:
               description: An ID for this version of the response.
@@ -804,17 +539,16 @@ paths:
         - pet
       operationId: getPet
       summary: Get a pet by ID
-      description: Returns the pet  or a 404 error.
+      description: Returns the pet or a 404 error.
       parameters:
         - name: petId
           in: path
           description: The ID of the pet.
           required: true
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
+            type: string
+            format: uuid
+            example: 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
       responses:
         200:
           description: Pet details found and returned.
@@ -857,23 +591,22 @@ paths:
         - pet
       operationId: updatePet
       summary: Update a pet by ID
-      description: Returns the pet or a 404 error.
+      description: Updates the pet record with the specified details.
       parameters:
         - name: petId
           in: path
           description: The ID of the pet.
           required: true
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
+            type: string 
+            format: uuid
+            example: 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
       requestBody:
-        description: The pet
+        description: The pet fields for update.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pet'
+              $ref: '#/components/schemas/PetFields'
         required: true
       responses:
         200:
@@ -917,36 +650,19 @@ paths:
         - pet
       operationId: deletePet
       summary: Delete a pet by ID
-      description: Returns the pet or a 404 error.
+      description: Deletes the pet and returns 204 No Content on success.
       parameters:
         - name: petId
           in: path
           description: The ID of the pet.
           required: true
           schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
+            type: string
+            format: uuid
+            example: 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
       responses:
-        200:
-          description: Pet details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Pet'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
+        204:
+          description: Pet successfully deleted. (No Content)
         400:
           description: Bad request.
           content:
@@ -965,760 +681,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-  /visits:
-    get:
-      tags:
-        - visit
-      operationId: listVisits
-      summary: Lists visits
-      description: Returns an array of visit .
-      responses:
-        200:
-          description: visits found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Visit'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-    post:
-      tags:
-        - visit
-      operationId: addVisit
-      summary: Create a visit
-      description: Creates a visit.
-      requestBody:
-        description: The visit
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Visit'
-        required: true
-      responses:
-        200:
-          description: visit created successfully.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Visit'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Visit not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-  /visits/{visitId}:
-    get:
-      tags:
-        - visit
-      operationId: getVisit
-      summary: Get a visit by ID
-      description: Returns the visit or a 404 error.
-      parameters:
-        - name: visitId
-          in: path
-          description: The ID of the visit.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      responses:
-        200:
-          description: Visit details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Visit'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Visit not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-    put:
-      tags:
-        - visit
-      operationId: updateVisit
-      summary: Update a visit by ID
-      description: Returns the visit or a 404 error.
-      parameters:
-        - name: visitId
-          in: path
-          description: The ID of the visit.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      requestBody:
-        description: The visit
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/VisitFields'
-        required: true
-      responses:
-        200:
-          description: Visit details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Visit'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Visit not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-    delete:
-      tags:
-        - visit
-      operationId: deleteVisit
-      summary: Delete a visit by ID
-      description: Returns the visit or a 404 error.
-      parameters:
-        - name: visitId
-          in: path
-          description: The ID of the visit.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      responses:
-        200:
-          description: Visit details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Visit'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Visit not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-  /specialties:
-    get:
-      tags:
-        - specialty
-      operationId: listSpecialties
-      summary: Lists specialties
-      description: Returns an array of specialty .
-      responses:
-        200:
-          description: Specialties found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Specialty'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-    post:
-      tags:
-        - specialty
-      operationId: addSpecialty
-      summary: Create a specialty
-      description: Creates a specialty .
-      requestBody:
-        description: The specialty
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Specialty'
-        required: true
-      responses:
-        200:
-          description: Specialty created successfully.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Specialty'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Specialty not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-  /specialties/{specialtyId}:
-    get:
-      tags:
-        - specialty
-      operationId: getSpecialty
-      summary: Get a specialty by ID
-      description: Returns the specialty or a 404 error.
-      parameters:
-        - name: specialtyId
-          in: path
-          description: The ID of the speciality.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      responses:
-        200:
-          description: Specialty details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Specialty'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Specialty not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-    put:
-      tags:
-        - specialty
-      operationId: updateSpecialty
-      summary: Update a specialty by ID
-      description: Returns the specialty or a 404 error.
-      parameters:
-        - name: specialtyId
-          in: path
-          description: The ID of the specialty.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      requestBody:
-        description: The pet
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Specialty'
-        required: true
-      responses:
-        200:
-          description: Specialty details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Specialty'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Specialty not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-    delete:
-      tags:
-        - specialty
-      operationId: deleteSpecialty
-      summary: Delete a specialty by ID
-      description: Returns the specialty or a 404 error.
-      parameters:
-        - name: specialtyId
-          in: path
-          description: The ID of the specialty.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      responses:
-        200:
-          description: Specialty details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Specialty'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Specialty not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-  /vets:
-    get:
-      tags:
-        - vet
-      operationId: listVets
-      summary: Lists vets
-      description: Returns an array of vets.
-      responses:
-        200:
-          description: Vets found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Vet'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-
-    post:
-      tags:
-        - vet
-      operationId: addVet
-      summary: Create a Vet
-      description: Creates a vet .
-      requestBody:
-        description: The vet
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Vet'
-        required: true
-      responses:
-        200:
-          description: Vet created successfully.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Vet'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Vet not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-  /vets/{vetId}:
-    get:
-      tags:
-        - vet
-      operationId: getVet
-      summary: Get a vet by ID
-      description: Returns the vet or a 404 error.
-      parameters:
-        - name: vetId
-          in: path
-          description: The ID of the vet.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      responses:
-        200:
-          description: Vet details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Vet'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Vet not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-    put:
-      tags:
-        - vet
-      operationId: updateVet
-      summary: Update a vet  by ID
-      description: Returns the vet or a 404 error.
-      parameters:
-        - name: vetId
-          in: path
-          description: The ID of the vet.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      requestBody:
-        description: The vet
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Vet'
-        required: true
-      responses:
-        200:
-          description: Pet type details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Vet'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Vet not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-    delete:
-      tags:
-        - vet
-      operationId: deleteVet
-      summary: Delete a vet by ID
-      description: Returns the vet or a 404 error.
-      parameters:
-        - name: vetId
-          in: path
-          description: The ID of the vet.
-          required: true
-          schema:
-            type: integer
-            format: int32
-            minimum: 0
-            example: 1
-      responses:
-        200:
-          description: Vet details found and returned.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Vet'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
-        400:
-          description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: Vet not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        500:
-          description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
   /users:
     post:
       tags:
@@ -1727,39 +689,21 @@ paths:
       summary: Create a user
       description: Creates a user.
       requestBody:
-        description: The user
+        description: The user fields for creation (includes password).
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserFields'
         required: true
       responses:
-        200:
+        201:
           description: User created successfully.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        304:
-          description: Not modified.
-          headers:
-            ETag:
-              description: An ID for this version of the response.
-              schema:
-                type: string
         400:
           description: Bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        404:
-          description: User not found.
           content:
             application/json:
               schema:
@@ -1840,29 +784,6 @@ components:
       required:
         - message
       additionalProperties: true
-    Specialty:
-      title: Specialty
-      description: Fields of specialty of vets.
-      type: object
-      properties:
-        id:
-          title: ID
-          description: The ID of the specialty.
-          type: integer
-          format: int32
-          minimum: 0
-          example: 1
-          readOnly: true
-        name:
-          title: Name
-          description: The name of the specialty.
-          type: string
-          maxLength: 80
-          minLength: 1
-          example: radiology
-      required:
-        - id
-        - name
     OwnerFields:
       title: Owner fields
       description: Editable fields of a pet owner.
@@ -1870,47 +791,60 @@ components:
       properties:
         firstName:
           title: First name
-          description: The first name of the pet owner.
           type: string
           minLength: 1
           maxLength: 30
-          pattern: "^[\\p{L}]+([ '-][\\p{L}]+){0,2}$"
-          example: George
+          example: 太郎
         lastName:
           title: Last name
-          description: The last name of the pet owner.
           type: string
           minLength: 1
           maxLength: 30
-          pattern: "^[\\p{L}]+([ '-][\\p{L}]+){0,2}\\.?$"
-          example: Franklin
-        address:
-          title: Address
-          description: The postal address of the pet owner.
+          example: 山田
+        firstNameKana:
+          title: First name (Kana)
           type: string
-          minLength: 1
-          maxLength: 255
-          example: '110 W. Liberty St.'
+          example: タロウ
+        lastNameKana:
+          title: Last name (Kana)
+          type: string
+          example: ヤマダ
+        email:
+          title: Email
+          type: string
+          format: email
+          example: taro.yamada@example.com
+        postalCode:
+          title: Postal Code
+          type: string
+          maxLength: 8
+          example: 100-0001
+        prefecture:
+          title: Prefecture
+          type: string
+          example: 東京都
         city:
           title: City
-          description: The city of the pet owner.
           type: string
-          minLength: 1
           maxLength: 80
-          example: Madison
+          example: 千代田区
+        address:
+          title: Address
+          type: string
+          maxLength: 255
+          example: 千代田1-1
         telephone:
           title: Telephone number
-          description: The telephone number of the pet owner.
           type: string
-          minLength: 1
           maxLength: 20
-          pattern: '^[0-9]*$'
-          example: '6085551023'
+          pattern: '^[0-9-]*$'
+          example: '090-1111-2222'
       required:
         - firstName
         - lastName
-        - address
-        - city
+        - firstNameKana
+        - lastNameKana
+        - email
         - telephone
     Owner:
       title: Owner
@@ -1921,20 +855,30 @@ components:
           properties:
             id:
               title: ID
-              description: The ID of the pet owner.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
+              type: string
+              format: uuid
+              example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
+              readOnly: true
+            createdAt:
+              title: Created At
+              type: string
+              format: date-time
+              readOnly: true
+            updatedAt:
+              title: Updated At
+              type: string
+              format: date-time
               readOnly: true
             pets:
               title: Pets
-              description: The pets owned by this individual including any booked vet visits.
               type: array
               items:
                 $ref: '#/components/schemas/Pet'
               readOnly: true
           required:
+            - id
+            - createdAt
+            - updatedAt
             - pets
     PetFields:
       title: Pet fields
@@ -1943,22 +887,29 @@ components:
       properties:
         name:
           title: Name
-          description: The name of the pet.
           type: string
           maxLength: 30
-          example: Leo
+          example: ポチ
         birthDate:
           title: Birth date
-          description: The date of birth of the pet.
           type: string
           format: date
-          example: '2010-09-07'
-        type:
-          $ref: '#/components/schemas/PetType'
+          example: '2020-01-01'
+        sex:
+          title: Sex
+          type: string
+          maxLength: 10
+          example: オス
+        typeId:
+          title: Pet Type ID
+          description: The ID of the pet's type.
+          type: string
+          format: uuid
+          example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
       required:
         - name
         - birthDate
-        - type
+        - typeId
     Pet:
       title: Pet
       description: A pet.
@@ -1969,126 +920,35 @@ components:
             id:
               title: ID
               description: The ID of the pet.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
+              type: string
+              format: uuid
+              example: 'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
               readOnly: true
             ownerId:
               title: Owner ID
               description: The ID of the pet's owner.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
+              type: string
+              format: uuid
+              example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
               readOnly: true
-            visits:
-              title: Visits
-              description: Vet visit bookings for this pet.
-              type: array
-              items:
-                $ref: '#/components/schemas/Visit'
+            createdAt:
+              title: Created At
+              type: string
+              format: date-time
               readOnly: true
+            updatedAt:
+              title: Updated At
+              type: string
+              format: date-time
+              readOnly: true
+            type:
+              $ref: '#/components/schemas/PetType'
           required:
             - id
+            - ownerId
+            - createdAt
+            - updatedAt
             - type
-            - visits
-    VetFields:
-      title: VetFields
-      description: Editable fields of a veterinarian.
-      type: object
-      properties:
-        firstName:
-          title: First name
-          description: The first name of the vet.
-          type: string
-          minLength: 1
-          maxLength: 30
-          pattern: "^[\\p{L}]+([ '-][\\p{L}]+){0,2}$"
-          example: 'James'
-        lastName:
-          title: Last name
-          description: The last name of the vet.
-          type: string
-          minLength: 1
-          maxLength: 30
-          pattern: "^[\\p{L}]+([ '-][\\p{L}]+){0,2}\\.?$"
-          example: 'Carter'
-        specialties:
-          title: Specialties
-          description: The specialties of the vet.
-          type: array
-          items:
-            $ref: '#/components/schemas/Specialty'
-      required:
-        - firstName
-        - lastName
-        - specialties
-    Vet:
-      title: Vet
-      description: A veterinarian.
-      allOf:
-        - $ref: '#/components/schemas/VetFields'
-        - type: object
-          properties:
-            id:
-              title: ID
-              description: The ID of the vet.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
-              readOnly: true
-      required:
-        - id
-        - firstName
-        - lastName
-        - specialties
-    VisitFields:
-      title: Visit fields
-      description: Editable fields of a vet visit.
-      type: object
-      properties:
-        date:
-          title: Date
-          description: The date of the visit.
-          type: string
-          format: date
-          example: '2013-01-01'
-        description:
-          title: Description
-          description: The description for the visit.
-          type: string
-          minLength: 1
-          maxLength: 255
-          example: 'rabies shot'
-      required:
-        - description
-    Visit:
-      title: Visit
-      description: A booking for a vet visit.
-      allOf:
-        - $ref: '#/components/schemas/VisitFields'
-        - type: object
-          properties:
-            id:
-              title: ID
-              description: The ID of the visit.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
-              readOnly: true
-            petId:
-              title: Pet ID
-              description: The ID of the pet.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
-          required:
-            - id
-            - petId
     PetTypeFields:
       title: PetType fields
       description: Editable fields of a pet type.
@@ -2113,55 +973,81 @@ components:
             id:
               title: ID
               description: The ID of the pet type.
-              type: integer
-              format: int32
-              minimum: 0
-              example: 1
+              type: string
+              format: uuid
+              example: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
           required:
             - id
-    User:
-      title: User
-      description: An user.
+    UserFields:
+      title: User fields
+      description: Fields for creating/updating a user.
       type: object
       properties:
         username:
           title: username
-          description: The username
+          description: The username (unique).
           type: string
-          maxLength: 80
+          maxLength: 20
           minLength: 1
           example: john.doe
         password:
           title: Password
-          description: The password
+          description: The password (write-only).
           type: string
-          maxLength: 80
+          maxLength: 255
           minLength: 1
           example: 1234abc
+          writeOnly: true
         enabled:
           title: enabled
-          description: Indicates if the user is enabled
+          description: Indicates if the user is enabled (default true).
           type: boolean
           example: true
         roles:
           title: Roles
-          description: The roles of an user
+          description: The roles assigned to the user.
           type: array
           items:
-            $ref: '#/components/schemas/Role'
+            type: string
+            example: admin
       required:
         - username
+        - password
+    User:
+      title: User
+      description: An user record.
+      allOf:
+        - $ref: '#/components/schemas/UserFields'
+        - type: object
+          properties:
+            id:
+              title: ID
+              description: The ID of the user.
+              type: string
+              format: uuid
+              example: 'f2c6e1c4-b7a9-4d8e-9c7f-8e5d3c1a9b2d'
+              readOnly: true
+            roles:
+              title: Roles
+              description: The roles of an user.
+              type: array
+              items:
+                $ref: '#/components/schemas/Role'
+              readOnly: true
+          required:
+            - id
+            - roles
     Role:
       title: Role
-      description: A role.
+      description: A role assigned to a user.
       type: object
       properties:
-        name:
-          title: name
-          description: The role's name
+        role:
+          title: Role Name
+          description: The role's name.
           type: string
-          maxLength: 80
+          maxLength: 20
           minLength: 1
           example: admin
       required:
-        - name
+        - role

@@ -1,27 +1,13 @@
-/*
- * Copyright 2016-2017 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.springframework.petmanagement.rest.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.petmanagement.mapper.PetMapper;
 import org.springframework.petmanagement.model.Pet;
+import org.springframework.petmanagement.model.PetType;
 import org.springframework.petmanagement.rest.api.PetsApi;
 import org.springframework.petmanagement.rest.dto.PetDto;
+import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 import org.springframework.petmanagement.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,10 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * @author Vitaliy Fedoriv
- */
+import java.util.UUID;
+import java.util.Collection;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
@@ -51,43 +35,53 @@ public class PetRestController implements PetsApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<PetDto> getPet(Integer petId) {
-        PetDto pet = petMapper.toPetDto(this.clinicService.findPetById(petId));
-        if (pet == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(pet, HttpStatus.OK);
+    public ResponseEntity<PetDto> getPet(UUID petId) {
+        return this.clinicService.findPetById(petId)
+            .map(pet -> new ResponseEntity<>(petMapper.toPetDto(pet), HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<List<PetDto>> listPets() {
-        List<PetDto> pets = new ArrayList<>(petMapper.toPetsDto(this.clinicService.findAllPets()));
+        Collection<Pet> pets = this.clinicService.findAllPets();
+        
         if (pets.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(pets, HttpStatus.OK);
+        List<PetDto> petDtos = new ArrayList<>(petMapper.toPetsDto(pets));
+        return new ResponseEntity<>(petDtos, HttpStatus.OK);
     }
 
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<PetDto> updatePet(Integer petId, PetDto petDto) {
-        Pet currentPet = this.clinicService.findPetById(petId);
+    public ResponseEntity<PetDto> updatePet(UUID petId, PetFieldsDto petFieldsDto) {
+        Pet currentPet = this.clinicService.findPetById(petId).orElse(null);
         if (currentPet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        currentPet.setBirthDate(petDto.getBirthDate());
-        currentPet.setName(petDto.getName());
-        currentPet.setType(petMapper.toPetType(petDto.getType()));
+        
+        currentPet.setBirthDate(petFieldsDto.getBirthDate());
+        currentPet.setName(petFieldsDto.getName());
+        
+        currentPet.setSex(petFieldsDto.getSex()); 
+        
+        UUID newTypeId = petFieldsDto.getTypeId();
+        PetType newPetType = this.clinicService.findPetTypeById(newTypeId).orElse(null); 
+        if (newPetType == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        currentPet.setType(newPetType);
+        
         this.clinicService.savePet(currentPet);
-        return new ResponseEntity<>(petMapper.toPetDto(currentPet), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(petMapper.toPetDto(currentPet), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<PetDto> deletePet(Integer petId) {
-        Pet pet = this.clinicService.findPetById(petId);
+    public ResponseEntity<Void> deletePet(UUID petId) {
+        Pet pet = this.clinicService.findPetById(petId).orElse(null);
         if (pet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -7,21 +7,25 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends BaseEntity {
 
-    @Id
-    @Column(name = "username")
+    @Column(name = "username", length = 20)
+    @NotEmpty
+    @Size(max = 20)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 255)
+    @NotEmpty
+    @Size(max = 255)
     private String password;
 
     @Column(name = "enabled")
@@ -68,7 +72,8 @@ public class User {
             this.roles = new HashSet<>();
         }
         Role role = new Role();
-        role.setName(roleName);
+        role.setRole(roleName); 
+        role.setUser(this);
         this.roles.add(role);
     }
 }

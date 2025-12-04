@@ -1,21 +1,8 @@
-/*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.springframework.petmanagement.repository.springdatajpa;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.Query;
@@ -23,16 +10,10 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.petmanagement.model.Owner;
 import org.springframework.petmanagement.repository.OwnerRepository;
-
-/**
- * Spring Data JPA specialization of the {@link OwnerRepository} interface
- *
- * @author Michael Isvy
- * @since 15.1.2013
- */
+import org.springframework.lang.Nullable;
 
 @Profile("spring-data-jpa")
-public interface SpringDataOwnerRepository extends OwnerRepository, Repository<Owner, Integer> {
+public interface SpringDataOwnerRepository extends OwnerRepository, Repository<Owner, UUID> {
 
     @Override
     @Query("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName%")
@@ -40,5 +21,15 @@ public interface SpringDataOwnerRepository extends OwnerRepository, Repository<O
 
     @Override
     @Query("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id")
-    Owner findById(@Param("id") int id);
+    Optional<Owner> findById(@Param("id") UUID id);
+    
+    @Override
+    @Query("SELECT DISTINCT owner FROM Owner owner " +
+           "WHERE (:lastNameKana IS NULL OR owner.lastNameKana LIKE %:lastNameKana%) " +
+           "AND (:firstNameKana IS NULL OR owner.firstNameKana LIKE %:firstNameKana%) " +
+           "ORDER BY owner.lastNameKana, owner.firstNameKana")
+    Collection<Owner> findOwnerByKana(
+        @Param("lastNameKana") @Nullable String lastNameKana,
+        @Param("firstNameKana") @Nullable String firstNameKana
+    );
 }

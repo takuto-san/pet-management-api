@@ -1,29 +1,14 @@
-/*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.springframework.petmanagement.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+
+import java.time.OffsetDateTime;
 
 /**
  * Simple JavaBean domain object representing an person.
- *
- * @author Ken Krebs
  */
 @MappedSuperclass
 public class Person extends BaseEntity {
@@ -35,6 +20,26 @@ public class Person extends BaseEntity {
     @Column(name = "last_name")
     @NotEmpty
     protected String lastName;
+
+    @Column(name = "first_name_kana")
+    @NotEmpty
+    protected String firstNameKana;
+
+    @Column(name = "last_name_kana")
+    @NotEmpty
+    protected String lastNameKana;
+
+    @Column(name = "email")
+    @NotEmpty
+    @Email
+    protected String email;
+
+    @Column(name = "created_at")
+    protected OffsetDateTime createdAt;
+
+    @Column(name = "updated_at")
+    protected OffsetDateTime updatedAt;
+
 
     public String getFirstName() {
         return this.firstName;
@@ -51,6 +56,45 @@ public class Person extends BaseEntity {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+    
+    public String getFirstNameKana() {
+        return firstNameKana;
+    }
 
+    public void setFirstNameKana(String firstNameKana) {
+        this.firstNameKana = firstNameKana;
+    }
+
+    public String getLastNameKana() {
+        return lastNameKana;
+    }
+
+    public void setLastNameKana(String lastNameKana) {
+        this.lastNameKana = lastNameKana;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
 }
