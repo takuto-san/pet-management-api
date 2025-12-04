@@ -1,74 +1,77 @@
 package org.springframework.petmanagement.rest.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.petmanagement.mapper.UserMapper;
 import org.springframework.petmanagement.model.User;
-import org.springframework.petmanagement.rest.advice.ExceptionControllerAdvice;
+import org.springframework.petmanagement.rest.dto.UserDto;
+import org.springframework.petmanagement.rest.dto.UserFieldsDto;
 import org.springframework.petmanagement.service.UserService;
-import org.springframework.petmanagement.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.List;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ContextConfiguration(classes = ApplicationTestConfig.class)
-@WebAppConfiguration
+@AutoConfigureMockMvc
 class UserRestControllerTests {
 
-    @Mock
-    private UserService userService;
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private UserRestController userRestController;
-
-    private MockMvc mockMvc;
-
-    @BeforeEach
-    void initVets() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(userRestController)
-            .setControllerAdvice(new ExceptionControllerAdvice()).build();
-    }
+    @MockitoBean
+    private UserService userService;
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void testCreateUserSuccess() throws Exception {
-        User user = new User();
-        user.setUsername("username");
-        user.setPassword("password");
-        user.setEnabled(true);
-        user.addRole("OWNER_ADMIN");
-        ObjectMapper mapper = new ObjectMapper();
-        String newVetAsJSON = mapper.writeValueAsString(userMapper.toUserDto(user));
+        UserFieldsDto userFields = new UserFieldsDto();
+        userFields.setUsername("newuser");
+        userFields.setPassword("password123");
+        userFields.setEnabled(true);
+        
+        userFields.setRoles(List.of("OWNER_ADMIN"));
+
+        String jsonBody = objectMapper.writeValueAsString(userFields);
+
         this.mockMvc.perform(post("/api/users")
-            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .with(csrf())
+            .content(jsonBody)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated());
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void testCreateUserError() throws Exception {
-        User user = new User();
-        user.setUsername(""); // set empty username to force 400 error
-        user.setPassword("password");
-        user.setEnabled(true);
-        ObjectMapper mapper = new ObjectMapper();
-        String newVetAsJSON = mapper.writeValueAsString(userMapper.toUserDto(user));
+        UserFieldsDto userFields = new UserFieldsDto();
+        userFields.setUsername(""); // Empty -> 400 Bad Request
+        userFields.setPassword("pass");
+        userFields.setEnabled(true);
+
+        String jsonBody = objectMapper.writeValueAsString(userFields);
+
         this.mockMvc.perform(post("/api/users")
-            .content(newVetAsJSON).accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .with(csrf())
+            .content(jsonBody)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
     }
 }

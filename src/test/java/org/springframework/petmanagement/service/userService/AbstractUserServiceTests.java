@@ -1,50 +1,45 @@
 package org.springframework.petmanagement.service.userService;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.service.UserService;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
+@Transactional
 public abstract class AbstractUserServiceTests {
 
     @Autowired
-    private UserService userService;
-
-    @BeforeEach
-    public void init() {
-
-    }
+    protected UserService userService;
 
     @Test
     public void shouldAddUser() throws Exception {
-        String testUsername = "testusername";
+        String testUsername = "u_" + System.currentTimeMillis(); 
         
-        Optional<User> existingUser = userService.findUserByUsername(testUsername);
-        existingUser.ifPresent(user -> userService.deleteUser(user));
-
         User user = new User();
-        user.setUsername(testUsername); 
+        user.setUsername(testUsername);
         user.setPassword("securepassword");
         user.setEnabled(true);
         user.addRole("OWNER_ADMIN");
 
         userService.saveUser(user);
         
-        Optional<User> fetchedUser = userService.findUserByUsername(testUsername);
+        Optional<User> fetchedUserOpt = userService.findUserByUsername(testUsername);
         
-        assertTrue(fetchedUser.isPresent());
-        assertThat(fetchedUser.get().getId(), is(notNullValue()));
-        assertThat(fetchedUser.get().getRoles().parallelStream().allMatch(role -> role.getRole().startsWith("ROLE_")), is(true));
-        assertThat(fetchedUser.get().getRoles().parallelStream().allMatch(role -> role.getUser() != null), is(true));
+        assertThat(fetchedUserOpt).isPresent();
+        
+        User fetchedUser = fetchedUserOpt.get();
+        
+        assertThat(fetchedUser.getId()).isNotNull();
+        assertThat(fetchedUser.getUsername()).isEqualTo(testUsername);
+        
+        assertThat(fetchedUser.getRoles()).isNotEmpty();
+        assertThat(fetchedUser.getRoles())
+            .allMatch(role -> role.getRole().startsWith("ROLE_"))
+            .allMatch(role -> role.getUser() != null);
     }
 }

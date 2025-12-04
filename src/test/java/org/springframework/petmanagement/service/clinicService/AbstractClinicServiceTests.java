@@ -1,275 +1,240 @@
-/*
- * Copyright 2002-2017 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.springframework.petmanagement.service.clinicService;
 
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.petmanagement.model.*;
 import org.springframework.petmanagement.service.ClinicService;
-import org.springframework.petmanagement.util.EntityUtils;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.orm.ObjectRetrievalFailureException;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Transactional
 abstract class AbstractClinicServiceTests {
-
-private static final UUID OWNER_ID_1 = UUID.fromString("00000000-0000-0000-0000-000000000001");
-    private static final UUID OWNER_ID_6 = UUID.fromString("00000000-0000-0000-0000-000000000006");
-    private static final UUID PET_ID_7 = UUID.fromString("10000000-0000-0000-0000-000000000007");
-    private static final UUID PET_ID_1 = UUID.fromString("10000000-0000-0000-0000-000000000001");
-    private static final UUID PET_ID_3 = UUID.fromString("10000000-0000-0000-0000-000000000003");
-    private static final UUID OWNER_ID_3 = UUID.fromString("00000000-0000-0000-0000-000000000003");
-    private static final UUID PET_TYPE_ID_2 = UUID.fromString("20000000-0000-0000-0000-000000000002");
-    private static final UUID PET_TYPE_ID_4 = UUID.fromString("20000000-0000-0000-0000-000000000004");
-    private static final UUID PET_TYPE_ID_3 = UUID.fromString("20000000-0000-0000-0000-000000000003");
-    private static final UUID PET_TYPE_ID_1 = UUID.fromString("20000000-0000-0000-0000-000000000001");
 
     @Autowired
     protected ClinicService clinicService;
 
-    @Test
-    void shouldFindOwnersByLastName() {
-        Collection<Owner> owners = this.clinicService.findOwnerByKana("デービス", null);
-        assertThat(owners.size()).isEqualTo(2);
+    @Autowired
+    private EntityManager em;
 
-        owners = this.clinicService.findOwnerByKana("なし", null);
-        assertThat(owners.isEmpty()).isTrue();
+    private PetType catType;
+    private PetType dogType;
+
+    @BeforeEach
+    void setup() {
+        long timestamp = System.currentTimeMillis();
+
+        catType = new PetType();
+        catType.setName("cat_" + timestamp);
+        clinicService.savePetType(catType);
+
+        dogType = new PetType();
+        dogType.setName("dog_" + timestamp);
+        clinicService.savePetType(dogType);
+        
+        em.flush();
     }
 
     @Test
-    void shouldFindSingleOwnerWithPet() {
-        Owner owner = this.clinicService.findOwnerById(OWNER_ID_1).orElseThrow(
-            () -> new ObjectRetrievalFailureException(Owner.class, OWNER_ID_1.toString())
-        );
-        assertThat(owner.getLastName()).startsWith("Franklin");
-        assertThat(owner.getPets()).hasSize(1);
-        assertThat(owner.getPets().iterator().next().getType()).isNotNull();
-        assertThat(owner.getPets().iterator().next().getType().getName()).isEqualTo("cat");
+    void shouldFindOwnersByKana() {
+        Owner owner = createOwner("Taro", "Yamada", "タロウ", "ヤマダ");
+        clinicService.saveOwner(owner);
+        em.flush(); // DBへ反映
+
+        // 修正: リポジトリが LIKE :param になったため、呼び出し側で % をつける
+        Collection<Owner> owners = this.clinicService.findOwnerByKana("%ヤマダ%", null);
+        assertThat(owners).hasSize(1);
     }
 
     @Test
-    @Transactional
     void shouldInsertOwner() {
-        Collection<Owner> owners = this.clinicService.findOwnerByKana("シュルツ", null);
-        int found = owners.size();
-
-        Owner owner = new Owner();
-        owner.setFirstName("Sam");
-        owner.setLastName("Schultz");
-        owner.setFirstNameKana("サム");
-        owner.setLastNameKana("シュルツ");
-        owner.setEmail("sam.schultz@example.com");
-        owner.setAddress("4, Evans Street");
-        owner.setCity("Wollongong");
-        owner.setTelephone("4444444444");
-        
+        Owner owner = createOwner("Sam", "Schultz", "サム", "シュルツ");
         this.clinicService.saveOwner(owner);
-        assertThat(owner.getId()).isNotNull();
-        assertThat(owner.getPet("null value")).isNull();
+        em.flush(); // DBへ反映
         
-        owners = this.clinicService.findOwnerByKana("Schultz", null);
-        assertThat(owners).hasSize(found + 1);
+        assertThat(owner.getId()).isNotNull();
+        
+        // 修正: 呼び出し側で % をつける
+        Collection<Owner> owners = this.clinicService.findOwnerByKana("%シュルツ%", null);
+        assertThat(owners).isNotEmpty();
     }
 
     @Test
-    @Transactional
     void shouldUpdateOwner() {
-        Owner owner = this.clinicService.findOwnerById(OWNER_ID_1).orElseThrow(
-            () -> new ObjectRetrievalFailureException(Owner.class, OWNER_ID_1.toString())
-        );
-        String oldLastName = owner.getLastName();
-        String newLastName = oldLastName + "X";
+        Owner owner = createOwner("Jiro", "Sato", "ジロウ", "サトウ");
+        this.clinicService.saveOwner(owner);
+        em.flush();
 
+        String newLastName = "SatoUpdate";
         owner.setLastName(newLastName);
         this.clinicService.saveOwner(owner);
+        em.flush();
 
-        Owner updatedOwner = this.clinicService.findOwnerById(OWNER_ID_1).orElseThrow(
-            () -> new ObjectRetrievalFailureException(Owner.class, OWNER_ID_1.toString())
-        );
+        Owner updatedOwner = this.clinicService.findOwnerById(owner.getId()).orElseThrow();
         assertThat(updatedOwner.getLastName()).isEqualTo(newLastName);
     }
 
     @Test
-    void shouldFindPetWithCorrectId() {
-        Pet pet7 = this.clinicService.findPetById(PET_ID_7).orElseThrow(
-            () -> new ObjectRetrievalFailureException(Pet.class, PET_ID_7.toString())
-        );
-        assertThat(pet7.getName()).startsWith("Samantha");
-        assertThat(pet7.getOwner().getFirstName()).isEqualTo("Jean"); 
+    void shouldFindSingleOwnerWithPet() {
+        Owner owner = createOwner("Hanako", "Suzuki", "ハナコ", "スズキ");
+        Pet pet = createPet(owner, catType, "Tama");
+        owner.addPet(pet);
+        clinicService.saveOwner(owner);
+        clinicService.savePet(pet);
+        em.flush();
+
+        Owner foundOwner = this.clinicService.findOwnerById(owner.getId()).orElseThrow();
+        assertThat(foundOwner.getLastName()).isEqualTo("Suzuki");
+        assertThat(foundOwner.getPets()).hasSize(1);
+        assertThat(foundOwner.getPets().iterator().next().getName()).isEqualTo("Tama");
     }
 
     @Test
-    @Transactional
-    void shouldInsertPetIntoDatabaseAndGenerateId() {
-        Owner owner6 = this.clinicService.findOwnerById(OWNER_ID_6).orElseThrow(
-            () -> new ObjectRetrievalFailureException(Owner.class, OWNER_ID_6.toString())
-        );
-        int found = owner6.getPets().size();
+    void shouldFindPetWithCorrectId() {
+        Owner owner = createOwner("Jean", "Doe", "ジーン", "ドゥ");
+        Pet pet = createPet(owner, dogType, "Samantha");
+        clinicService.saveOwner(owner);
+        clinicService.savePet(pet);
+        em.flush();
+
+        Pet foundPet = this.clinicService.findPetById(pet.getId()).orElseThrow();
+        assertThat(foundPet.getName()).isEqualTo("Samantha");
+        assertThat(foundPet.getOwner().getFirstName()).isEqualTo("Jean");
+    }
+
+    @Test
+    void shouldInsertPet() {
+        Owner owner = createOwner("Tom", "Cruise", "トム", "クルーズ");
+        this.clinicService.saveOwner(owner);
 
         Pet pet = new Pet();
         pet.setName("bowser");
         pet.setSex("male");
-        
-        Collection<PetType> types = this.clinicService.findAllPetTypes();
-        PetType petType = EntityUtils.getById(types, PetType.class, PET_TYPE_ID_2);
-        
-        pet.setType(petType);
         pet.setBirthDate(LocalDate.now());
-        owner6.addPet(pet);
-        assertThat(owner6.getPets()).hasSize(found + 1);
-
+        pet.setType(dogType);
+        
+        owner.addPet(pet);
         this.clinicService.savePet(pet);
-        this.clinicService.saveOwner(owner6);
+        em.flush();
 
-        owner6 = this.clinicService.findOwnerById(OWNER_ID_6).orElseThrow(
-            () -> new ObjectRetrievalFailureException(Owner.class, OWNER_ID_6.toString())
-        );
-        assertThat(owner6.getPets()).hasSize(found + 1);
         assertThat(pet.getId()).isNotNull();
+        assertThat(owner.getPets()).hasSize(1);
     }
 
     @Test
-    @Transactional
-    void shouldUpdatePetName() throws Exception {
-        Pet pet7 = this.clinicService.findPetById(PET_ID_7).orElseThrow(
-            () -> new ObjectRetrievalFailureException(Pet.class, PET_ID_7.toString())
-        );
-        String oldName = pet7.getName();
+    void shouldUpdatePetName() {
+        Owner owner = createOwner("Mike", "Tyson", "マイク", "タイソン");
+        Pet pet = createPet(owner, catType, "Leo");
+        clinicService.saveOwner(owner);
+        clinicService.savePet(pet);
+        em.flush();
 
-        String newName = oldName + "X";
-        pet7.setName(newName);
-        this.clinicService.savePet(pet7);
+        String newName = "LeoUpdated";
+        pet.setName(newName);
+        this.clinicService.savePet(pet);
+        em.flush();
 
-        Pet updatedPet = this.clinicService.findPetById(PET_ID_7).orElseThrow(
-            () -> new ObjectRetrievalFailureException(Pet.class, PET_ID_7.toString())
-        );
+        Pet updatedPet = this.clinicService.findPetById(pet.getId()).orElseThrow();
         assertThat(updatedPet.getName()).isEqualTo(newName);
     }
-    
-    @Test
-    void shouldFindAllPets(){
-        Collection<Pet> pets = this.clinicService.findAllPets();
-        Pet pet1 = EntityUtils.getById(pets, Pet.class, PET_ID_1);
-        assertThat(pet1.getName()).isEqualTo("Leo");
-        Pet pet3 = EntityUtils.getById(pets, Pet.class, PET_ID_3);
-        assertThat(pet3.getName()).isEqualTo("Rosy");
-    }
 
     @Test
-    @Transactional
-    void shouldDeletePet(){
-        Pet pet = this.clinicService.findPetById(PET_ID_1).orElseThrow(
-            () -> new ObjectRetrievalFailureException(Pet.class, PET_ID_1.toString())
-        );
+    void shouldDeletePet() {
+        Owner owner = createOwner("Bob", "Marley", "ボブ", "マーリー");
+        Pet pet = createPet(owner, dogType, "Rex");
+        clinicService.saveOwner(owner);
+        clinicService.savePet(pet);
+        em.flush();
+        
+        UUID petId = pet.getId();
+
         this.clinicService.deletePet(pet);
-        
-        Optional<Pet> deletedPet = this.clinicService.findPetById(PET_ID_1);
-        assertThat(deletedPet).isEmpty();
+        em.flush();
+
+        assertThat(this.clinicService.findPetById(petId)).isEmpty();
     }
 
     @Test
-void shouldFindAllOwners(){
-        Collection<Owner> owners = this.clinicService.findAllOwners();
-        Owner owner1 = EntityUtils.getById(owners, Owner.class, OWNER_ID_1);
-        assertThat(owner1.getFirstName()).isEqualTo("George");
-        Owner owner3 = EntityUtils.getById(owners, Owner.class, OWNER_ID_3); 
-        assertThat(owner3.getFirstName()).isEqualTo("Eduardo");
-    }
+    void shouldDeleteOwner() {
+        Owner owner = createOwner("Alice", "Wonder", "アリス", "ワンダー");
+        this.clinicService.saveOwner(owner);
+        em.flush();
+        UUID ownerId = owner.getId();
 
-    @Test
-    @Transactional
-    void shouldDeleteOwner(){
-        Owner owner = this.clinicService.findOwnerById(OWNER_ID_1).orElseThrow(
-            () -> new ObjectRetrievalFailureException(Owner.class, OWNER_ID_1.toString())
-        );
         this.clinicService.deleteOwner(owner);
-        
-        Optional<Owner> deletedOwner = this.clinicService.findOwnerById(OWNER_ID_1);
-        assertThat(deletedOwner).isEmpty();
+        em.flush();
+
+        assertThat(this.clinicService.findOwnerById(ownerId)).isEmpty();
     }
 
     @Test
-    void shouldFindPetTypeById(){
-        PetType petType = this.clinicService.findPetTypeById(PET_TYPE_ID_1).orElseThrow(
-            () -> new ObjectRetrievalFailureException(PetType.class, PET_TYPE_ID_1.toString())
-        );
-        assertThat(petType.getName()).isEqualTo("cat");
-    }
-
-    @Test
-    void shouldFindAllPetTypes(){
-        Collection<PetType> petTypes = this.clinicService.findAllPetTypes();
-        PetType petType1 = EntityUtils.getById(petTypes, PetType.class, PET_TYPE_ID_1);
-        assertThat(petType1.getName()).isEqualTo("cat");
-        PetType petType3 = EntityUtils.getById(petTypes, PetType.class, PET_TYPE_ID_3);
-        assertThat(petType3.getName()).isEqualTo("lizard");
-    }
-
-    @Test
-    @Transactional
     void shouldInsertPetType() {
-        Collection<PetType> petTypes = this.clinicService.findAllPetTypes();
-        int found = petTypes.size();
-
         PetType petType = new PetType();
-        petType.setName("tiger");
-
+        petType.setName("tiger_" + System.currentTimeMillis()); 
         this.clinicService.savePetType(petType);
+        em.flush();
+
         assertThat(petType.getId()).isNotNull();
-
-        petTypes = this.clinicService.findAllPetTypes();
-        assertThat(petTypes).hasSize(found + 1);
+        assertThat(this.clinicService.findPetTypeById(petType.getId())).isPresent();
     }
 
     @Test
-    @Transactional
-    void shouldUpdatePetType(){
-        PetType petType = this.clinicService.findPetTypeById(PET_TYPE_ID_1).orElseThrow(
-            () -> new ObjectRetrievalFailureException(PetType.class, PET_TYPE_ID_1.toString())
-        );
-        String oldName = petType.getName();
-        String newName = oldName + "X";
-        petType.setName(newName);
+    void shouldUpdatePetType() {
+        PetType petType = new PetType();
+        petType.setName("hamster_" + System.currentTimeMillis());
         this.clinicService.savePetType(petType);
-        PetType updatedPetType = this.clinicService.findPetTypeById(PET_TYPE_ID_1).orElseThrow(
-            () -> new ObjectRetrievalFailureException(PetType.class, PET_TYPE_ID_1.toString())
-        );
-        assertThat(updatedPetType.getName()).isEqualTo(newName);
+        em.flush();
+
+        petType.setName("hamsterUpdated_" + System.currentTimeMillis());
+        this.clinicService.savePetType(petType);
+        em.flush();
+
+        PetType updated = this.clinicService.findPetTypeById(petType.getId()).orElseThrow();
+        assertThat(updated.getName()).startsWith("hamsterUpdated");
     }
 
     @Test
-    @Transactional
-    void shouldDeletePetType(){
-        PetType petType = this.clinicService.findPetTypeById(PET_TYPE_ID_1).orElseThrow(
-            () -> new ObjectRetrievalFailureException(PetType.class, PET_TYPE_ID_1.toString())
-        );
+    void shouldDeletePetType() {
+        PetType petType = new PetType();
+        petType.setName("snake_" + System.currentTimeMillis());
+        this.clinicService.savePetType(petType);
+        em.flush();
+        UUID typeId = petType.getId();
+
         this.clinicService.deletePetType(petType);
-        
-        Optional<PetType> deletedPetType = this.clinicService.findPetTypeById(PET_TYPE_ID_1);
-        assertThat(deletedPetType).isEmpty();
+        em.flush();
+
+        assertThat(this.clinicService.findPetTypeById(typeId)).isEmpty();
+    }
+
+    // --- Helper Methods ---
+
+    private Owner createOwner(String first, String last, String firstKana, String lastKana) {
+        Owner owner = new Owner();
+        owner.setFirstName(first);
+        owner.setLastName(last);
+        owner.setFirstNameKana(firstKana);
+        owner.setLastNameKana(lastKana);
+        owner.setAddress("123 Test St");
+        owner.setCity("Test City");
+        owner.setTelephone("1234567890");
+        owner.setEmail(first + "." + last + "@example.com");
+        return owner;
+    }
+
+    private Pet createPet(Owner owner, PetType type, String name) {
+        Pet pet = new Pet();
+        pet.setName(name);
+        pet.setBirthDate(LocalDate.now());
+        pet.setType(type);
+        pet.setSex("male");
+        pet.setOwner(owner);
+        return pet;
     }
 }

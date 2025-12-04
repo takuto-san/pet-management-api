@@ -10,11 +10,11 @@ import org.springframework.petmanagement.repository.PetRepository;
 import org.springframework.petmanagement.repository.PetTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.lang.Nullable;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.lang.Nullable;
 
 @Service
 public class ClinicServiceImpl implements ClinicService {
@@ -53,13 +53,14 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional
     public void deleteOwner(Owner owner) throws DataAccessException {
-        ownerRepository.delete(owner);
+        if (owner != null) {
+            ownerRepository.delete(owner);
+        }
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<PetType> findPetTypeById(UUID id) {
-        // 修正点: リポジトリが PetType を返すことを前提とし、Optional.ofNullable でラップ
         return Optional.ofNullable(petTypeRepository.findById(id)); 
     }
 
@@ -98,7 +99,8 @@ public class ClinicServiceImpl implements ClinicService {
     public void savePet(Pet pet) throws DataAccessException {
         PetType petType = findPetTypeById(pet.getType().getId())
             .orElseThrow(() -> new ObjectRetrievalFailureException(
-                PetType.class, pet.getType().getId().toString()
+                PetType.class, 
+                pet.getType().getId()
             ));
             
         pet.setType(petType);
@@ -114,6 +116,6 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public Collection<Owner> findOwnerByKana(@Nullable String lastNameKana, @Nullable String firstNameKana) throws DataAccessException {
-        return ownerRepository.findOwnerByKana(lastNameKana, firstNameKana);
+        return ownerRepository.findByLastNameKanaAndFirstNameKana(lastNameKana, firstNameKana);
     }
 }

@@ -66,7 +66,6 @@ public class BindingErrorsResponse {
         try {
             errorsAsJSON = mapper.writeValueAsString(bindingErrors);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
         }
         return errorsAsJSON;
     }

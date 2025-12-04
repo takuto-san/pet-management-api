@@ -1,25 +1,19 @@
 package org.springframework.petmanagement.repository;
-import jakarta.annotation.Nullable;
 
-import java.util.Collection;
-import java.util.UUID;
-import java.util.Optional;
-
-import org.springframework.dao.DataAccessException;
+import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.petmanagement.model.Owner;
+import org.springframework.lang.Nullable;
 
-public interface OwnerRepository {
+import java.util.List;
+import java.util.UUID;
 
-    Collection<Owner> findByLastName(String lastName) throws DataAccessException;
+public interface OwnerRepository extends ListCrudRepository<Owner, UUID> {
 
-    Optional<Owner> findById(UUID id) throws DataAccessException;
-    
-    void save(Owner owner) throws DataAccessException;
-    
-    Collection<Owner> findAll() throws DataAccessException;
-    
-    void delete(Owner owner) throws DataAccessException;
+    List<Owner> findByLastName(String lastName);
 
-    Collection<Owner> findOwnerByKana(@Nullable String lastNameKana, @Nullable String firstNameKana) throws DataAccessException;
+    List<Owner> findByLastNameKanaAndFirstNameKana(@Nullable String lastNameKana, @Nullable String firstNameKana);
+
+    List<Owner> findByLastNameKana(String lastNameKana);
+    List<Owner> findByFirstNameKana(String firstNameKana);
 
 }

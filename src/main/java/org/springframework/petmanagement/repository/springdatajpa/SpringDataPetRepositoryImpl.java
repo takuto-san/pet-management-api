@@ -2,7 +2,6 @@ package org.springframework.petmanagement.repository.springdatajpa;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.petmanagement.model.Pet;
@@ -15,10 +14,6 @@ public class SpringDataPetRepositoryImpl implements PetRepositoryOverride {
 
     @Override
     public void delete(Pet pet) {
-        Query visitQuery = this.em.createQuery("DELETE FROM Visit visit WHERE visit.pet.id = :petId");
-        visitQuery.setParameter("petId", pet.getId());
-        visitQuery.executeUpdate();
-
         if (em.contains(pet)) {
             em.remove(pet);
         } else {

@@ -1,12 +1,10 @@
 package org.springframework.petmanagement.repository;
-import org.springframework.lang.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.petmanagement.model.Owner;
 import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.PetType;
 
@@ -22,5 +20,4 @@ public interface PetRepository {
 
     void delete(Pet pet) throws DataAccessException;
 
-    Collection<Owner> findOwnerByKana(@Nullable String lastNameKana, @Nullable String firstNameKana) throws DataAccessException;
 }

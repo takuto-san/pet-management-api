@@ -5,7 +5,6 @@ import org.springframework.beans.support.PropertyComparator;
 import org.springframework.core.style.ToStringCreator;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -29,7 +28,6 @@ public class Owner extends Person {
     private String address;
 
     @Column(name = "telephone")
-    @NotEmpty
     @Size(max = 20)
     @Pattern(regexp = "^[0-9-]*$", message = "Telephone number must contain only digits and hyphens")
     private String telephone;
