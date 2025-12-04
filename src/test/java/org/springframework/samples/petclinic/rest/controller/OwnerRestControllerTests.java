@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.rest.controller;
+package org.springframework.petmanagement.rest.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -24,17 +24,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.samples.petclinic.mapper.OwnerMapper;
-import org.springframework.samples.petclinic.mapper.PetMapper;
-import org.springframework.samples.petclinic.mapper.VisitMapper;
-import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.rest.advice.ExceptionControllerAdvice;
-import org.springframework.samples.petclinic.rest.dto.OwnerDto;
-import org.springframework.samples.petclinic.rest.dto.PetDto;
-import org.springframework.samples.petclinic.rest.dto.PetTypeDto;
-import org.springframework.samples.petclinic.rest.dto.VisitDto;
-import org.springframework.samples.petclinic.service.ClinicService;
-import org.springframework.samples.petclinic.service.clinicService.ApplicationTestConfig;
+import org.springframework.petmanagement.mapper.OwnerMapper;
+import org.springframework.petmanagement.mapper.PetMapper;
+import org.springframework.petmanagement.mapper.VisitMapper;
+import org.springframework.petmanagement.model.Owner;
+import org.springframework.petmanagement.rest.advice.ExceptionControllerAdvice;
+import org.springframework.petmanagement.rest.dto.OwnerDto;
+import org.springframework.petmanagement.rest.dto.PetDto;
+import org.springframework.petmanagement.rest.dto.PetTypeDto;
+import org.springframework.petmanagement.rest.dto.VisitDto;
+import org.springframework.petmanagement.service.ClinicService;
+import org.springframework.petmanagement.service.clinicService.ApplicationTestConfig;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;

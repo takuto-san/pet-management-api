@@ -209,8 +209,8 @@ Here is a list of the generated packages and the corresponding tooling:
 
 | Package name                                   | Tool             |
 |------------------------------------------------|------------------|
-| org.springframework.samples.petclinic.mapper   | [MapStruct](https://mapstruct.org/)        |
-| org.springframework.samples.petclinic.rest.dto | [OpenAPI Generator maven plugin](https://github.com/OpenAPITools/openapi-generator/) |
+| org.springframework.petmanagement.mapper   | [MapStruct](https://mapstruct.org/)        |
+| org.springframework.petmanagement.rest.dto | [OpenAPI Generator maven plugin](https://github.com/OpenAPITools/openapi-generator/) |
 
 
 To get both, you have to run the following command:

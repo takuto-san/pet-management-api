@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.service.clinicService;
+package org.springframework.petmanagement.service.clinicService;
 
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
