@@ -1,0 +1,4 @@
+
+docker-compose --profile postgres up -d
+./mvnw spring-boot:run
+http://localhost:9966/petclinic
