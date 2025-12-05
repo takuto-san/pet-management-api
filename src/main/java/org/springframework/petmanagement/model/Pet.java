@@ -1,6 +1,7 @@
 package org.springframework.petmanagement.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.time.OffsetDateTime;
 public class Pet extends NamedEntity {
 
     @Column(name = "birth_date", columnDefinition = "DATE")
+    @NotNull
     private LocalDate birthDate;
 
     @Column(name = "sex", length = 10)
@@ -18,13 +20,14 @@ public class Pet extends NamedEntity {
     private String sex;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "type_id")
+    @JoinColumn(name = "type_id", nullable = false)
+    @NotNull
     private PetType type;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
-    
+
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 

@@ -1,7 +1,10 @@
 package org.springframework.petmanagement.mapper;
 
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.petmanagement.model.PetType;
 import org.springframework.petmanagement.rest.dto.PetTypeDto;
 import org.springframework.petmanagement.rest.dto.PetTypeFieldsDto;
@@ -9,15 +12,20 @@ import org.springframework.petmanagement.rest.dto.PetTypeFieldsDto;
 import java.util.Collection;
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PetTypeMapper {
 
+    @Mapping(target = "id", ignore = true)
     PetType toPetType(PetTypeDto petTypeDto);
 
     @Mapping(target = "id", ignore = true)
     PetType toPetType(PetTypeFieldsDto petTypeFieldsDto);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updatePetTypeFromFields(PetTypeFieldsDto petTypeFieldsDto, @MappingTarget PetType currentPetType);
+
     PetTypeDto toPetTypeDto(PetType petType);
+
     PetTypeFieldsDto toPetTypeFieldsDto(PetType petType);
 
     List<PetTypeDto> toPetTypeDtos(Collection<PetType> petTypes);

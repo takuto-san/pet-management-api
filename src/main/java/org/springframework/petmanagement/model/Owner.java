@@ -5,6 +5,7 @@ import org.springframework.beans.support.PropertyComparator;
 import org.springframework.core.style.ToStringCreator;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -16,18 +17,22 @@ import java.util.UUID;
 public class Owner extends Person {
 
     @Column(name = "postal_code", length = 8)
+    @Size(max = 8)
     private String postalCode;
 
     @Column(name = "prefecture")
     private String prefecture;
-    
+
     @Column(name = "city", length = 80)
+    @Size(max = 80)
     private String city;
 
     @Column(name = "address", length = 255)
+    @Size(max = 255)
     private String address;
 
-    @Column(name = "telephone")
+    @Column(name = "telephone", length = 20)
+    @NotEmpty
     @Size(max = 20)
     @Pattern(regexp = "^[0-9-]*$", message = "Telephone number must contain only digits and hyphens")
     private String telephone;
@@ -50,7 +55,7 @@ public class Owner extends Person {
     public void setPrefecture(String prefecture) {
         this.prefecture = prefecture;
     }
-    
+
     public String getAddress() {
         return this.address;
     }
@@ -120,7 +125,10 @@ public class Owner extends Person {
     }
 
     public Pet getPet(UUID petId) {
-        return getPetsInternal().stream().filter(p -> p.getId() != null && p.getId().equals(petId)).findFirst().orElse(null);
+        return getPetsInternal().stream()
+                .filter(p -> p.getId() != null && p.getId().equals(petId))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

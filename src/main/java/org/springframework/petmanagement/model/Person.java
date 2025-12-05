@@ -4,32 +4,34 @@ import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 import java.time.OffsetDateTime;
 
-/**
- * Simple JavaBean domain object representing an person.
- */
 @MappedSuperclass
 public class Person extends BaseEntity {
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 30)
     @NotEmpty
+    @Size(min = 1, max = 30)
     protected String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = 30)
     @NotEmpty
+    @Size(min = 1, max = 30)
     protected String lastName;
 
-    @Column(name = "first_name_kana")
+    @Column(name = "first_name_kana", length = 30)
     @NotEmpty
+    @Size(min = 1, max = 30)
     protected String firstNameKana;
 
-    @Column(name = "last_name_kana")
+    @Column(name = "last_name_kana", length = 30)
     @NotEmpty
+    @Size(min = 1, max = 30)
     protected String lastNameKana;
 
-    @Column(name = "email")
+    @Column(name = "email", length = 255)
     @NotEmpty
     @Email
     protected String email;
@@ -39,7 +41,6 @@ public class Person extends BaseEntity {
 
     @Column(name = "updated_at")
     protected OffsetDateTime updatedAt;
-
 
     public String getFirstName() {
         return this.firstName;
@@ -56,7 +57,7 @@ public class Person extends BaseEntity {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
     public String getFirstNameKana() {
         return firstNameKana;
     }
@@ -96,5 +97,4 @@ public class Person extends BaseEntity {
     public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 }

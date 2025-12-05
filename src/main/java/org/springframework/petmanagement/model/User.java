@@ -8,6 +8,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -18,21 +19,28 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "users")
 public class User extends BaseEntity {
 
-    @Column(name = "username", length = 20)
+    @Column(name = "username", length = 20, unique = true)
     @NotEmpty
-    @Size(max = 20)
+    @Size(min = 1, max = 20)
     private String username;
 
     @Column(name = "password", length = 255)
     @NotEmpty
-    @Size(max = 255)
+    @Size(min = 1, max = 255)
     private String password;
 
     @Column(name = "enabled")
     private Boolean enabled;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
+
+    @PrePersist
+    protected void prePersist() {
+        if (enabled == null) {
+            enabled = true;
+        }
+    }
 
     public String getUsername() {
         return username;
@@ -63,16 +71,13 @@ public class User extends BaseEntity {
     }
 
     public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+        this.roles = (roles != null) ? roles : new HashSet<>();
     }
 
     @JsonIgnore
     public void addRole(String roleName) {
-        if(this.roles == null) {
-            this.roles = new HashSet<>();
-        }
         Role role = new Role();
-        role.setRole(roleName); 
+        role.setRole(roleName);
         role.setUser(this);
         this.roles.add(role);
     }
