@@ -10,7 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.petmanagement.mapper.OwnerMapper;
 import org.springframework.petmanagement.model.Owner;
 import org.springframework.petmanagement.rest.dto.OwnerDto;
+import org.springframework.petmanagement.rest.dto.OwnerFieldsDto;
 import org.springframework.petmanagement.rest.dto.PetDto;
+import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 import org.springframework.petmanagement.rest.dto.PetTypeDto;
 import org.springframework.petmanagement.service.ManagementService;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -53,16 +55,16 @@ class OwnerRestControllerTests {
         OwnerDto owner1 = new OwnerDto()
             .id(OWNER_ID_1)
             .firstName("George").lastName("Franklin")
-            .firstNameKana("ジョージ").lastNameKana("フランクリン") // 必須
-            .email("george.franklin@example.com")             // 必須
+            .firstNameKana("ジョージ").lastNameKana("フランクリン")
+            .email("george.franklin@example.com")
             .address("110 W. Liberty St.").city("Madison").telephone("0123456789")
             .addPetsItem(getTestPetWithIdAndName(PET_ID_1, "Rosy"));
         
         OwnerDto owner2 = new OwnerDto()
             .id(OWNER_ID_2)
             .firstName("Betty").lastName("Davis")
-            .firstNameKana("ベティ").lastNameKana("デイビス")   // 必須
-            .email("betty.davis@example.com")                 // 必須
+            .firstNameKana("ベティ").lastNameKana("デイビス")
+            .email("betty.davis@example.com")
             .address("638 Cardinal Ave.").city("Sun Prairie").telephone("0123456789");
 
         owners.add(owner1);
@@ -74,6 +76,26 @@ class OwnerRestControllerTests {
         PetDto pet = new PetDto();
         pet.id(id).name(name).birthDate(LocalDate.now()).type(petType.id(PET_TYPE_ID_2).name("dog"));
         return pet;
+    }
+
+    private OwnerFieldsDto createOwnerFieldsDto(OwnerDto ownerDto) {
+        return new OwnerFieldsDto()
+            .firstName(ownerDto.getFirstName())
+            .lastName(ownerDto.getLastName())
+            .firstNameKana(ownerDto.getFirstNameKana())
+            .lastNameKana(ownerDto.getLastNameKana())
+            .email(ownerDto.getEmail())
+            .address(ownerDto.getAddress())
+            .city(ownerDto.getCity())
+            .telephone(ownerDto.getTelephone());
+    }
+    
+    private PetFieldsDto createPetFieldsDto(PetDto petDto) {
+        return new PetFieldsDto()
+            .name(petDto.getName())
+            .birthDate(petDto.getBirthDate())
+            .sex(petDto.getSex())
+            .typeId(petDto.getType().getId());
     }
 
     @Test
@@ -112,15 +134,17 @@ class OwnerRestControllerTests {
         given(this.managementService.findOwnerById(OWNER_ID_1))
             .willReturn(Optional.of(ownerMapper.toOwner(owners.get(0))));
         
-        OwnerDto updateDto = owners.get(0);
-        updateDto.setFirstName("George Updated");
+        OwnerDto originalDto = owners.get(0);
+        originalDto.setFirstName("George Updated");
+        
+        OwnerFieldsDto fieldsDto = createOwnerFieldsDto(originalDto);
 
         this.mockMvc.perform(put("/api/owners/" + OWNER_ID_1)
-                .with(csrf()) // CSRFトークン
-                .content(objectMapper.writeValueAsString(updateDto))
+                .with(csrf())
+                .content(objectMapper.writeValueAsString(fieldsDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk()); // 204 No Content
+            .andExpect(status().isOk());
     }
 
     @Test

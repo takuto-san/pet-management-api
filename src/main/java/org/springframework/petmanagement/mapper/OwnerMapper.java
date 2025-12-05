@@ -21,7 +21,10 @@ public interface OwnerMapper {
     @Mapping(source = "pets", target = "pets")
     OwnerDto toOwnerDto(Owner owner);
 
-    List<OwnerDto> toOwnerDtoCollection(Collection<Owner> ownerCollection);
+    @Mapping(target = "pets", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Owner toOwner(OwnerDto ownerDto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "pets", ignore = true)
@@ -37,4 +40,6 @@ public interface OwnerMapper {
     Owner toOwner(OwnerFieldsDto ownerFieldsDto, @MappingTarget Owner currentOwner);
 
     Collection<Owner> toOwners(Collection<OwnerDto> ownerDtos);
+    List<OwnerDto> toOwnerDtoCollection(Collection<Owner> ownerCollection);  
+
 }
