@@ -13,10 +13,9 @@ CREATE TABLE IF NOT EXISTS types (
 CREATE TABLE IF NOT EXISTS users (
     id              UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     username        VARCHAR(20)  NOT NULL,
-    password        VARCHAR(255) NOT NULL,  -- ハッシュを保存
+    password        VARCHAR(255) NOT NULL,
     enabled         BOOLEAN      NOT NULL DEFAULT true,
 
-    -- 飼い主としての情報
     first_name      TEXT         NOT NULL,
     last_name       TEXT         NOT NULL,
     first_name_kana TEXT         NOT NULL,
@@ -28,7 +27,6 @@ CREATE TABLE IF NOT EXISTS users (
     address         TEXT,
     telephone       TEXT UNIQUE,
 
-    -- ロール（admin / user など）
     role            VARCHAR(20)  NOT NULL DEFAULT 'user',
 
     created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,

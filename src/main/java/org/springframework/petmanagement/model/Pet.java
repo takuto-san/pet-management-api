@@ -1,39 +1,47 @@
 package org.springframework.petmanagement.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
+
+import org.springframework.petmanagement.model.base.Time;
 
 @Entity
 @Table(name = "pets")
-public class Pet extends NamedEntity {
+public class Pet extends Time { 
 
+    @Column(name = "name", nullable = false)
+    @NotEmpty
+    private String name;
+    
     @Column(name = "birth_date", columnDefinition = "DATE")
-    @NotNull
     private LocalDate birthDate;
 
     @Column(name = "sex", length = 10)
     @Size(max = 10)
     private String sex;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id", nullable = false)
     @NotNull
     private PetType type;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private Owner owner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull
+    private User user;
 
-    @Column(name = "created_at")
-    private OffsetDateTime createdAt;
+    public String getName() {
+        return name;
+    }
 
-    @Column(name = "updated_at")
-    private OffsetDateTime updatedAt;
-
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public LocalDate getBirthDate() {
         return this.birthDate;
     }
@@ -58,27 +66,15 @@ public class Pet extends NamedEntity {
         this.type = type;
     }
 
-    public Owner getOwner() {
-        return this.owner;
+    public User getUser() {
+        return this.user;
     }
 
-    public void setOwner(Owner owner) {
-        this.owner = owner;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(OffsetDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public OffsetDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(OffsetDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public boolean isNew() {
+        return this.getId() == null;
     }
 }

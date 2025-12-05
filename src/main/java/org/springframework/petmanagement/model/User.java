@@ -1,46 +1,35 @@
 package org.springframework.petmanagement.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import org.springframework.beans.support.MutableSortDefinition;
+import org.springframework.beans.support.PropertyComparator;
+import org.springframework.petmanagement.model.base.Person;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity {
-
+public class User extends Person {
+        
     @Column(name = "username", length = 20, unique = true)
     @NotEmpty
-    @Size(min = 1, max = 20)
     private String username;
 
-    @Column(name = "password", length = 255)
+    @Column(name = "password")
     @NotEmpty
-    @Size(min = 1, max = 255)
     private String password;
 
     @Column(name = "enabled")
-    private Boolean enabled;
+    private boolean enabled = true;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
-    private Set<Role> roles = new HashSet<>();
+    @Column(name = "role", length = 20)
+    @NotEmpty
+    private String role = "user";
 
-    @PrePersist
-    protected void prePersist() {
-        if (enabled == null) {
-            enabled = true;
-        }
-    }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<Pet> pets;
+
 
     public String getUsername() {
         return username;
@@ -58,27 +47,66 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    public Boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = (roles != null) ? roles : new HashSet<>();
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    @JsonIgnore
-    public void addRole(String roleName) {
-        Role role = new Role();
-        role.setRole(roleName);
-        role.setUser(this);
-        this.roles.add(role);
+    protected Set<Pet> getPetsInternal() {
+        if (this.pets == null) {
+            this.pets = new HashSet<>();
+        }
+        return this.pets;
+    }
+
+    protected void setPetsInternal(Set<Pet> pets) {
+        this.pets = pets;
+    }
+
+    public List<Pet> getPets() {
+        List<Pet> sortedPets = new ArrayList<>(getPetsInternal());
+        PropertyComparator.sort(sortedPets, new MutableSortDefinition("name", true, true));
+        return Collections.unmodifiableList(sortedPets);
+    }
+
+    public void setPets(List<Pet> pets) {
+        this.pets = new HashSet<>(pets);
+    }
+
+    public void addPet(Pet pet) {
+        getPetsInternal().add(pet);
+        pet.setUser(this); 
+    }
+
+    public Pet getPet(String name, boolean ignoreNew) {
+        name = name.toLowerCase();
+        for (Pet pet : getPetsInternal()) {
+            if (!ignoreNew || !pet.isNew()) {
+                String compName = pet.getName();
+                compName = compName.toLowerCase();
+                if (compName.equals(name)) {
+                    return pet;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Pet getPet(UUID petId) {
+        return getPetsInternal().stream()
+                .filter(p -> p.getId() != null && p.getId().equals(petId))
+                .findFirst()
+                .orElse(null);
     }
 }
