@@ -8,6 +8,7 @@ import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.repository.UserRepository;
 
 @Profile("spring-data-jpa")
-public interface SpringDataUserRepository extends UserRepository, Repository<User, UUID> {
+public interface SpringDataUserRepository extends UserRepository, Repository<User, UUID>, UserRepositoryOverride {
 
+    
 }
