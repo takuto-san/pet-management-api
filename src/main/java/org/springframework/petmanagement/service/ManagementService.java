@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.petmanagement.model.Owner;
 import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.User;
 
 public interface ManagementService {
 
@@ -21,13 +22,14 @@ public interface ManagementService {
     Collection<Owner> findAllOwners() throws DataAccessException;
     void saveOwner(Owner owner) throws DataAccessException;
     void deleteOwner(Owner owner) throws DataAccessException;
-    
     Collection<Owner> findOwnerByKana(@Nullable String lastNameKana, @Nullable String firstNameKana) throws DataAccessException;
 
-    Optional<PetType> findPetTypeById(UUID id); 
-    
+    Optional<PetType> findPetTypeById(UUID id) throws DataAccessException; 
     Collection<PetType> findAllPetTypes() throws DataAccessException; 
-    
     void savePetType(PetType petType) throws DataAccessException;
     void deletePetType(PetType petType) throws DataAccessException;
+
+    Optional<User> findUserById(UUID id) throws DataAccessException;
+    void saveUser(User user) throws DataAccessException;
+    void deleteUser(User user) throws DataAccessException;
 }

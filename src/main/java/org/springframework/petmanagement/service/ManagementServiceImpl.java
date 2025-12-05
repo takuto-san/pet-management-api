@@ -5,9 +5,11 @@ import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.petmanagement.model.Owner;
 import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.repository.OwnerRepository;
 import org.springframework.petmanagement.repository.PetRepository;
 import org.springframework.petmanagement.repository.PetTypeRepository;
+import org.springframework.petmanagement.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.lang.Nullable;
@@ -23,14 +25,41 @@ public class ManagementServiceImpl implements ManagementService {
     private final PetRepository petRepository;
     private final OwnerRepository ownerRepository;
     private final PetTypeRepository petTypeRepository;
+    private final UserRepository userRepository;
 
     public ManagementServiceImpl(
         PetRepository petRepository,
         OwnerRepository ownerRepository,
-        PetTypeRepository petTypeRepository) {
+        PetTypeRepository petTypeRepository,
+        UserRepository userRepository) {
         this.petRepository = petRepository;
         this.ownerRepository = ownerRepository;
         this.petTypeRepository = petTypeRepository;
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<User> findUserById(UUID id) throws DataAccessException {
+        return Optional.ofNullable(userRepository.findById(id));
+    }
+    
+    @Override
+    @Transactional
+    public void saveUser(User user) throws DataAccessException {
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(User user) throws DataAccessException {
+        userRepository.delete(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Pet> findPetById(UUID id) throws DataAccessException {
+        return Optional.ofNullable(petRepository.findById(id));
     }
 
     @Override
@@ -43,6 +72,25 @@ public class ManagementServiceImpl implements ManagementService {
     @Transactional
     public void deletePet(Pet pet) throws DataAccessException {
         petRepository.delete(pet);
+    }
+
+    @Override
+    @Transactional
+    public void savePet(Pet pet) throws DataAccessException {
+        PetType petType = findPetTypeById(pet.getType().getId())
+            .orElseThrow(() -> new ObjectRetrievalFailureException(
+                PetType.class, 
+                pet.getType().getId()
+            ));
+            
+        pet.setType(petType);
+        petRepository.save(pet);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Owner> findOwnerById(UUID id) throws DataAccessException {
+        return ownerRepository.findById(id);    
     }
 
     @Override
@@ -60,8 +108,27 @@ public class ManagementServiceImpl implements ManagementService {
     }
 
     @Override
+    @Transactional
+    public void saveOwner(Owner owner) throws DataAccessException {
+        ownerRepository.save(owner);
+    }
+    
+    @Override
     @Transactional(readOnly = true)
-    public Optional<PetType> findPetTypeById(UUID id) {
+    public Collection<Owner> findOwnerByKana(@Nullable String lastNameKana, @Nullable String firstNameKana) throws DataAccessException {
+        if (lastNameKana != null && firstNameKana != null) {
+            return ownerRepository.findByLastNameKanaLikeAndFirstNameKanaLike(lastNameKana, firstNameKana);
+        } else if (lastNameKana != null) {
+            return ownerRepository.findByLastNameKanaLike(lastNameKana);
+        } else if (firstNameKana != null) {
+            return ownerRepository.findByFirstNameKanaLike(firstNameKana);
+        }
+        return List.of();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<PetType> findPetTypeById(UUID id) throws DataAccessException {
         return Optional.ofNullable(petTypeRepository.findById(id)); 
     }
 
@@ -81,49 +148,5 @@ public class ManagementServiceImpl implements ManagementService {
     @Transactional
     public void deletePetType(PetType petType) throws DataAccessException {
         petTypeRepository.delete(petType);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Owner> findOwnerById(UUID id) throws DataAccessException {
-        return ownerRepository.findById(id);    
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Pet> findPetById(UUID id) throws DataAccessException {
-        return Optional.ofNullable(petRepository.findById(id));
-    }
-
-    @Override
-    @Transactional
-    public void savePet(Pet pet) throws DataAccessException {
-        PetType petType = findPetTypeById(pet.getType().getId())
-            .orElseThrow(() -> new ObjectRetrievalFailureException(
-                PetType.class, 
-                pet.getType().getId()
-            ));
-            
-        pet.setType(petType);
-        petRepository.save(pet);
-    }
-
-    @Override
-    @Transactional
-    public void saveOwner(Owner owner) throws DataAccessException {
-        ownerRepository.save(owner);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Collection<Owner> findOwnerByKana(@Nullable String lastNameKana, @Nullable String firstNameKana) throws DataAccessException {
-        if (lastNameKana != null && firstNameKana != null) {
-            return ownerRepository.findByLastNameKanaLikeAndFirstNameKanaLike(lastNameKana, firstNameKana);
-        } else if (lastNameKana != null) {
-            return ownerRepository.findByLastNameKanaLike(lastNameKana);
-        } else if (firstNameKana != null) {
-            return ownerRepository.findByFirstNameKanaLike(firstNameKana);
-        }
-        return List.of();
     }
 }
