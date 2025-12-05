@@ -25,7 +25,6 @@ import java.util.Collection;
 public class PetRestController implements PetsApi {
 
     private final ManagementService managementService;
-
     private final PetMapper petMapper;
     
     public PetRestController(ManagementService managementService, PetMapper petMapper) {
@@ -53,7 +52,6 @@ public class PetRestController implements PetsApi {
         return new ResponseEntity<>(petDtos, HttpStatus.OK);
     }
 
-
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<PetDto> updatePet(UUID petId, PetFieldsDto petFieldsDto) {
@@ -62,10 +60,7 @@ public class PetRestController implements PetsApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         
-        currentPet.setBirthDate(petFieldsDto.getBirthDate());
-        currentPet.setName(petFieldsDto.getName());
-        
-        currentPet.setSex(petFieldsDto.getSex()); 
+        petMapper.updatePetFromFields(petFieldsDto, currentPet);
         
         UUID newTypeId = petFieldsDto.getTypeId();
         PetType newPetType = this.managementService.findPetTypeById(newTypeId).orElse(null); 
@@ -88,5 +83,4 @@ public class PetRestController implements PetsApi {
         this.managementService.deletePet(pet);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

@@ -3,6 +3,7 @@ package org.springframework.petmanagement.rest.controller;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.petmanagement.mapper.OwnerMapper;
 import org.springframework.petmanagement.mapper.PetMapper;
 import org.springframework.petmanagement.model.Owner;
@@ -21,11 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.transaction.Transactional;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.lang.Nullable;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
@@ -33,9 +32,7 @@ import org.springframework.lang.Nullable;
 public class OwnerRestController implements OwnersApi {
 
     private final ManagementService managementService;
-
     private final OwnerMapper ownerMapper;
-
     private final PetMapper petMapper;
 
     public OwnerRestController(ManagementService managementService,
@@ -119,8 +116,16 @@ public class OwnerRestController implements OwnersApi {
         if (owner == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         pet.setOwner(owner);
+
+        UUID typeId = petFieldsDto.getTypeId();
+        if (typeId != null) {
+            PetType petType = this.managementService.findPetTypeById(typeId).orElse(null);
+            if (petType == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            pet.setType(petType);
+        }
         
         this.managementService.savePet(pet);
         
@@ -140,24 +145,23 @@ public class OwnerRestController implements OwnersApi {
         
         Pet currentPet = this.managementService.findPetById(petId).orElse(null);
         
-        if (currentPet != null && currentPet.getOwner().getId().equals(ownerId)) {
-            
-            UUID newTypeId = petFieldsDto.getTypeId();
+        if (currentPet == null || !currentPet.getOwner().getId().equals(ownerId)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        petMapper.updatePetFromFields(petFieldsDto, currentPet);
+        
+        UUID newTypeId = petFieldsDto.getTypeId();
+        if (newTypeId != null) {
             PetType newPetType = this.managementService.findPetTypeById(newTypeId).orElse(null);
             if (newPetType == null) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             currentPet.setType(newPetType);
-            
-            currentPet.setBirthDate(petFieldsDto.getBirthDate());
-            currentPet.setName(petFieldsDto.getName());
-            currentPet.setSex(petFieldsDto.getSex());
-
-            this.managementService.savePet(currentPet);
-            return new ResponseEntity<>(petMapper.toPetDto(currentPet), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        this.managementService.savePet(currentPet);
+        return new ResponseEntity<>(petMapper.toPetDto(currentPet), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
