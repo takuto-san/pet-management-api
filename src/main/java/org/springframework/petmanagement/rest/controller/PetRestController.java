@@ -8,7 +8,7 @@ import org.springframework.petmanagement.model.PetType;
 import org.springframework.petmanagement.rest.api.PetsApi;
 import org.springframework.petmanagement.rest.dto.PetDto;
 import org.springframework.petmanagement.rest.dto.PetFieldsDto;
-import org.springframework.petmanagement.service.ClinicService;
+import org.springframework.petmanagement.service.ManagementService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,19 +24,19 @@ import java.util.Collection;
 @RequestMapping("api")
 public class PetRestController implements PetsApi {
 
-    private final ClinicService clinicService;
+    private final ManagementService managementService;
 
     private final PetMapper petMapper;
-
-    public PetRestController(ClinicService clinicService, PetMapper petMapper) {
-        this.clinicService = clinicService;
+    
+    public PetRestController(ManagementService managementService, PetMapper petMapper) {
+        this.managementService = managementService;
         this.petMapper = petMapper;
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<PetDto> getPet(UUID petId) {
-        return this.clinicService.findPetById(petId)
+        return this.managementService.findPetById(petId)
             .map(pet -> new ResponseEntity<>(petMapper.toPetDto(pet), HttpStatus.OK))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -44,7 +44,7 @@ public class PetRestController implements PetsApi {
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<List<PetDto>> listPets() {
-        Collection<Pet> pets = this.clinicService.findAllPets();
+        Collection<Pet> pets = this.managementService.findAllPets();
         
         if (pets.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -57,7 +57,7 @@ public class PetRestController implements PetsApi {
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<PetDto> updatePet(UUID petId, PetFieldsDto petFieldsDto) {
-        Pet currentPet = this.clinicService.findPetById(petId).orElse(null);
+        Pet currentPet = this.managementService.findPetById(petId).orElse(null);
         if (currentPet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -68,24 +68,24 @@ public class PetRestController implements PetsApi {
         currentPet.setSex(petFieldsDto.getSex()); 
         
         UUID newTypeId = petFieldsDto.getTypeId();
-        PetType newPetType = this.clinicService.findPetTypeById(newTypeId).orElse(null); 
+        PetType newPetType = this.managementService.findPetTypeById(newTypeId).orElse(null); 
         if (newPetType == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         currentPet.setType(newPetType);
         
-        this.clinicService.savePet(currentPet);
+        this.managementService.savePet(currentPet);
         return new ResponseEntity<>(petMapper.toPetDto(currentPet), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<Void> deletePet(UUID petId) {
-        Pet pet = this.clinicService.findPetById(petId).orElse(null);
+        Pet pet = this.managementService.findPetById(petId).orElse(null);
         if (pet == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        this.clinicService.deletePet(pet);
+        this.managementService.deletePet(pet);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

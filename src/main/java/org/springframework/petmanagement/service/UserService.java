@@ -1,10 +1,10 @@
 package org.springframework.petmanagement.service;
 
 import java.util.Collection;
-import java.util.Optional; // Optionalをインポート
-import java.util.UUID; // UUIDをインポート
+import java.util.Optional;
+import java.util.UUID;
 
-import org.springframework.dao.DataAccessException; // DataAccessExceptionをインポート
+import org.springframework.dao.DataAccessException;
 import org.springframework.petmanagement.model.User;
 
 public interface UserService {

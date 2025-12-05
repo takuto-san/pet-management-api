@@ -15,15 +15,16 @@ import org.springframework.lang.Nullable;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.List;
 
 @Service
-public class ClinicServiceImpl implements ClinicService {
+public class ManagementServiceImpl implements ManagementService {
 
     private final PetRepository petRepository;
     private final OwnerRepository ownerRepository;
     private final PetTypeRepository petTypeRepository;
 
-    public ClinicServiceImpl(
+    public ManagementServiceImpl(
         PetRepository petRepository,
         OwnerRepository ownerRepository,
         PetTypeRepository petTypeRepository) {
@@ -116,6 +117,13 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public Collection<Owner> findOwnerByKana(@Nullable String lastNameKana, @Nullable String firstNameKana) throws DataAccessException {
-        return ownerRepository.findByLastNameKanaAndFirstNameKana(lastNameKana, firstNameKana);
+        if (lastNameKana != null && firstNameKana != null) {
+            return ownerRepository.findByLastNameKanaLikeAndFirstNameKanaLike(lastNameKana, firstNameKana);
+        } else if (lastNameKana != null) {
+            return ownerRepository.findByLastNameKanaLike(lastNameKana);
+        } else if (firstNameKana != null) {
+            return ownerRepository.findByFirstNameKanaLike(firstNameKana);
+        }
+        return List.of();
     }
 }

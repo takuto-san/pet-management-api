@@ -1,7 +1,7 @@
 package org.springframework.petmanagement.service;
 
 import java.util.Collection;
-import java.util.Optional; // Optionalをインポート
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.dao.DataAccessException;
@@ -10,7 +10,7 @@ import org.springframework.petmanagement.model.Owner;
 import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.PetType;
 
-public interface ClinicService {
+public interface ManagementService {
 
     Optional<Pet> findPetById(UUID id) throws DataAccessException;
     Collection<Pet> findAllPets() throws DataAccessException;

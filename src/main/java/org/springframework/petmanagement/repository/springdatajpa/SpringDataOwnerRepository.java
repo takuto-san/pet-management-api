@@ -16,10 +16,6 @@ import org.springframework.petmanagement.repository.OwnerRepository;
 public interface SpringDataOwnerRepository extends OwnerRepository {
 
     @Override
-    @Query("SELECT DISTINCT owner FROM Owner owner left join fetch owner.pets WHERE owner.lastName LIKE :lastName")
-    List<Owner> findByLastName(@Param("lastName") String lastName);
-
-    @Override
     @Query("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id = :id")
     @NonNull
     Optional<Owner> findById(@NonNull @Param("id") UUID id);
@@ -28,7 +24,7 @@ public interface SpringDataOwnerRepository extends OwnerRepository {
     @Query("SELECT DISTINCT owner FROM Owner owner " +
            "WHERE (:lastNameKana IS NULL OR owner.lastNameKana LIKE :lastNameKana) " +
            "AND (:firstNameKana IS NULL OR owner.firstNameKana LIKE :firstNameKana)")
-    List<Owner> findByLastNameKanaAndFirstNameKana(
+    List<Owner> findByLastNameKanaLikeAndFirstNameKanaLike(
         @Param("lastNameKana") @Nullable String lastNameKana,
         @Param("firstNameKana") @Nullable String firstNameKana
     );

@@ -13,7 +13,7 @@ import org.springframework.petmanagement.model.PetType;
 import org.springframework.petmanagement.rest.dto.PetDto;
 import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 import org.springframework.petmanagement.rest.dto.PetTypeDto;
-import org.springframework.petmanagement.service.ClinicService;
+import org.springframework.petmanagement.service.ManagementService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,7 +38,7 @@ class PetRestControllerTests {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private PetMapper petMapper;
-    @MockitoBean private ClinicService clinicService;
+    @MockitoBean private ManagementService managementService;
 
     @Autowired private ObjectMapper objectMapper;
 
@@ -62,8 +62,8 @@ class PetRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdatePetSuccess() throws Exception {
-        given(this.clinicService.findPetById(PET_ID)).willReturn(Optional.of(pet));
-        given(this.clinicService.findPetTypeById(PET_TYPE_ID)).willReturn(Optional.of(petType));
+        given(this.managementService.findPetById(PET_ID)).willReturn(Optional.of(pet));
+        given(this.managementService.findPetTypeById(PET_TYPE_ID)).willReturn(Optional.of(petType));
 
         PetFieldsDto fieldsDto = new PetFieldsDto();
         fieldsDto.setName("Rosy Updated");
@@ -83,7 +83,7 @@ class PetRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetPetSuccess() throws Exception {
-        given(this.clinicService.findPetById(PET_ID)).willReturn(Optional.of(pet));
+        given(this.managementService.findPetById(PET_ID)).willReturn(Optional.of(pet));
         this.mockMvc.perform(get("/api/pets/{id}", PET_ID).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
@@ -91,7 +91,7 @@ class PetRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetPetNotFound() throws Exception {
-        given(this.clinicService.findPetById(PET_ID_NOT_FOUND)).willReturn(Optional.empty());
+        given(this.managementService.findPetById(PET_ID_NOT_FOUND)).willReturn(Optional.empty());
         this.mockMvc.perform(get("/api/pets/{id}", PET_ID_NOT_FOUND).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -99,7 +99,7 @@ class PetRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetAllPetsSuccess() throws Exception {
-        given(this.clinicService.findAllPets()).willReturn(Collections.singletonList(pet));
+        given(this.managementService.findAllPets()).willReturn(Collections.singletonList(pet));
         this.mockMvc.perform(get("/api/pets").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
@@ -107,7 +107,7 @@ class PetRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetAllPetsNotFound() throws Exception {
-        given(this.clinicService.findAllPets()).willReturn(Collections.emptyList());
+        given(this.managementService.findAllPets()).willReturn(Collections.emptyList());
         this.mockMvc.perform(get("/api/pets").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -130,7 +130,7 @@ class PetRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testDeletePetSuccess() throws Exception {
-        given(this.clinicService.findPetById(PET_ID)).willReturn(Optional.of(pet));
+        given(this.managementService.findPetById(PET_ID)).willReturn(Optional.of(pet));
         this.mockMvc.perform(delete("/api/pets/{id}", PET_ID).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
     }
@@ -138,7 +138,7 @@ class PetRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testDeletePetError() throws Exception {
-        given(this.clinicService.findPetById(PET_ID_NOT_FOUND)).willReturn(Optional.empty());
+        given(this.managementService.findPetById(PET_ID_NOT_FOUND)).willReturn(Optional.empty());
         this.mockMvc.perform(delete("/api/pets/{id}", PET_ID_NOT_FOUND).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }

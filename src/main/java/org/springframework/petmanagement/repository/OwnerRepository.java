@@ -9,11 +9,10 @@ import java.util.UUID;
 
 public interface OwnerRepository extends ListCrudRepository<Owner, UUID> {
 
-    List<Owner> findByLastName(String lastName);
+    List<Owner> findByLastNameKanaLikeAndFirstNameKanaLike(@Nullable String lastNameKana, @Nullable String firstNameKana);
 
-    List<Owner> findByLastNameKanaAndFirstNameKana(@Nullable String lastNameKana, @Nullable String firstNameKana);
-
-    List<Owner> findByLastNameKana(String lastNameKana);
-    List<Owner> findByFirstNameKana(String firstNameKana);
+    List<Owner> findByLastNameKanaLike(String lastNameKana);
+    
+    List<Owner> findByFirstNameKanaLike(String firstNameKana);
 
 }

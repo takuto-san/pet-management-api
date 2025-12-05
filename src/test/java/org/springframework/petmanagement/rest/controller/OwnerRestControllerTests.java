@@ -12,7 +12,7 @@ import org.springframework.petmanagement.model.Owner;
 import org.springframework.petmanagement.rest.dto.OwnerDto;
 import org.springframework.petmanagement.rest.dto.PetDto;
 import org.springframework.petmanagement.rest.dto.PetTypeDto;
-import org.springframework.petmanagement.service.ClinicService;
+import org.springframework.petmanagement.service.ManagementService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,7 +42,7 @@ class OwnerRestControllerTests {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
     @Autowired private OwnerMapper ownerMapper;
-    @MockitoBean private ClinicService clinicService;
+    @MockitoBean private ManagementService managementService;
 
     private List<OwnerDto> owners;
 
@@ -79,7 +79,7 @@ class OwnerRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetOwnerSuccess() throws Exception {
-        given(this.clinicService.findOwnerById(OWNER_ID_1)).willReturn(Optional.of(ownerMapper.toOwner(owners.get(0))));
+        given(this.managementService.findOwnerById(OWNER_ID_1)).willReturn(Optional.of(ownerMapper.toOwner(owners.get(0))));
         this.mockMvc.perform(get("/api/owners/" + OWNER_ID_1).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(OWNER_ID_1.toString()));
@@ -88,7 +88,7 @@ class OwnerRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetOwnerNotFound() throws Exception {
-        given(this.clinicService.findOwnerById(OWNER_ID_2)).willReturn(Optional.empty());
+        given(this.managementService.findOwnerById(OWNER_ID_2)).willReturn(Optional.empty());
         this.mockMvc.perform(get("/api/owners/" + OWNER_ID_2).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -97,7 +97,7 @@ class OwnerRestControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetOwnersListSuccess() throws Exception {
         List<Owner> ownerEntities = (List<Owner>) ownerMapper.toOwners(owners);
-        given(this.clinicService.findOwnerByKana(eq("デイビス"), any()))
+        given(this.managementService.findOwnerByKana(eq("デイビス"), any()))
             .willReturn(List.of(ownerEntities.get(1))); 
 
         this.mockMvc.perform(get("/api/owners").param("lastNameKana", "デイビス").accept(MediaType.APPLICATION_JSON))
@@ -109,7 +109,7 @@ class OwnerRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdateOwnerSuccess() throws Exception {
-        given(this.clinicService.findOwnerById(OWNER_ID_1))
+        given(this.managementService.findOwnerById(OWNER_ID_1))
             .willReturn(Optional.of(ownerMapper.toOwner(owners.get(0))));
         
         OwnerDto updateDto = owners.get(0);
@@ -126,7 +126,7 @@ class OwnerRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testDeleteOwnerSuccess() throws Exception {
-        given(this.clinicService.findOwnerById(OWNER_ID_1)).willReturn(Optional.of(ownerMapper.toOwner(owners.get(0))));
+        given(this.managementService.findOwnerById(OWNER_ID_1)).willReturn(Optional.of(ownerMapper.toOwner(owners.get(0))));
         this.mockMvc.perform(delete("/api/owners/" + OWNER_ID_1).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
     }

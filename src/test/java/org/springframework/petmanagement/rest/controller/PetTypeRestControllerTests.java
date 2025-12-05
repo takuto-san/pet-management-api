@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.petmanagement.mapper.PetTypeMapper;
 import org.springframework.petmanagement.model.PetType;
 import org.springframework.petmanagement.rest.dto.PetTypeFieldsDto;
-import org.springframework.petmanagement.service.ClinicService;
+import org.springframework.petmanagement.service.ManagementService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf; // 追加: CSRF対策
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -44,7 +44,7 @@ class PetTypeRestControllerTests {
     private PetTypeMapper petTypeMapper;
 
     @MockitoBean
-    private ClinicService clinicService;
+    private ManagementService managementService;
 
     private List<PetType> petTypes;
 
@@ -66,7 +66,7 @@ class PetTypeRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testGetPetTypeSuccessAsOwnerAdmin() throws Exception {
-        given(this.clinicService.findPetTypeById(TYPE_ID_1)).willReturn(Optional.of(petTypes.get(0)));
+        given(this.managementService.findPetTypeById(TYPE_ID_1)).willReturn(Optional.of(petTypes.get(0)));
         
         this.mockMvc.perform(get("/api/pettypes/{id}", TYPE_ID_1)
             .accept(MediaType.APPLICATION_JSON))
@@ -79,7 +79,7 @@ class PetTypeRestControllerTests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testGetPetTypeSuccessAsVetAdmin() throws Exception {
-        given(this.clinicService.findPetTypeById(TYPE_ID_1)).willReturn(Optional.of(petTypes.get(0)));
+        given(this.managementService.findPetTypeById(TYPE_ID_1)).willReturn(Optional.of(petTypes.get(0)));
         
         this.mockMvc.perform(get("/api/pettypes/{id}", TYPE_ID_1)
             .accept(MediaType.APPLICATION_JSON))
@@ -92,7 +92,7 @@ class PetTypeRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testGetPetTypeNotFound() throws Exception {
-        given(this.clinicService.findPetTypeById(TYPE_ID_NOT_FOUND)).willReturn(Optional.empty());
+        given(this.managementService.findPetTypeById(TYPE_ID_NOT_FOUND)).willReturn(Optional.empty());
         
         this.mockMvc.perform(get("/api/pettypes/{id}", TYPE_ID_NOT_FOUND)
             .accept(MediaType.APPLICATION_JSON))
@@ -102,7 +102,7 @@ class PetTypeRestControllerTests {
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
     void testGetAllPetTypesSuccessAsOwnerAdmin() throws Exception {
-        given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
+        given(this.managementService.findAllPetTypes()).willReturn(petTypes);
         
         this.mockMvc.perform(get("/api/pettypes")
             .accept(MediaType.APPLICATION_JSON))
@@ -116,7 +116,7 @@ class PetTypeRestControllerTests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testGetAllPetTypesSuccessAsVetAdmin() throws Exception {
-        given(this.clinicService.findAllPetTypes()).willReturn(petTypes);
+        given(this.managementService.findAllPetTypes()).willReturn(petTypes);
         
         this.mockMvc.perform(get("/api/pettypes")
             .accept(MediaType.APPLICATION_JSON))
@@ -127,7 +127,7 @@ class PetTypeRestControllerTests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testGetAllPetTypesNotFound() throws Exception {
-        given(this.clinicService.findAllPetTypes()).willReturn(Collections.emptyList());
+        given(this.managementService.findAllPetTypes()).willReturn(Collections.emptyList());
         
         this.mockMvc.perform(get("/api/pettypes")
             .accept(MediaType.APPLICATION_JSON))
@@ -142,7 +142,7 @@ class PetTypeRestControllerTests {
         String jsonBody = objectMapper.writeValueAsString(newPetTypeDto);
         
         this.mockMvc.perform(post("/api/pettypes")
-            .with(csrf()) // 追加: CSRFトークン
+            .with(csrf())
             .content(jsonBody)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
@@ -167,7 +167,7 @@ class PetTypeRestControllerTests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testUpdatePetTypeSuccess() throws Exception {
-        given(this.clinicService.findPetTypeById(TYPE_ID_2)).willReturn(Optional.of(petTypes.get(1)));
+        given(this.managementService.findPetTypeById(TYPE_ID_2)).willReturn(Optional.of(petTypes.get(1)));
         
         PetTypeFieldsDto updatedPetTypeDto = new PetTypeFieldsDto();
         updatedPetTypeDto.setName("dog I"); 
@@ -175,20 +175,20 @@ class PetTypeRestControllerTests {
         String jsonBody = objectMapper.writeValueAsString(updatedPetTypeDto);
         
         this.mockMvc.perform(put("/api/pettypes/{id}", TYPE_ID_2)
-            .with(csrf()) // 追加: CSRFトークン
+            .with(csrf())
             .content(jsonBody)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk()); // Controllerの実装によっては isNoContent()
+            .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testUpdatePetTypeError() throws Exception {
-        given(this.clinicService.findPetTypeById(TYPE_ID_1)).willReturn(Optional.of(petTypes.get(0)));
+        given(this.managementService.findPetTypeById(TYPE_ID_1)).willReturn(Optional.of(petTypes.get(0)));
 
         PetTypeFieldsDto updatedPetTypeDto = new PetTypeFieldsDto();
-        updatedPetTypeDto.setName(""); // 修正: null ではなく 空文字 をセット
+        updatedPetTypeDto.setName("");
         
         String jsonBody = objectMapper.writeValueAsString(updatedPetTypeDto);
         
@@ -203,10 +203,10 @@ class PetTypeRestControllerTests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testDeletePetTypeSuccess() throws Exception {
-        given(this.clinicService.findPetTypeById(TYPE_ID_1)).willReturn(Optional.of(petTypes.get(0)));
+        given(this.managementService.findPetTypeById(TYPE_ID_1)).willReturn(Optional.of(petTypes.get(0)));
         
         this.mockMvc.perform(delete("/api/pettypes/{id}", TYPE_ID_1)
-            .with(csrf()) // 追加: CSRFトークン
+            .with(csrf())
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
     }
@@ -214,10 +214,10 @@ class PetTypeRestControllerTests {
     @Test
     @WithMockUser(roles="VET_ADMIN")
     void testDeletePetTypeError() throws Exception {
-        given(this.clinicService.findPetTypeById(TYPE_ID_NOT_FOUND)).willReturn(Optional.empty());
+        given(this.managementService.findPetTypeById(TYPE_ID_NOT_FOUND)).willReturn(Optional.empty());
         
         this.mockMvc.perform(delete("/api/pettypes/{id}", TYPE_ID_NOT_FOUND)
-            .with(csrf()) // 追加: CSRFトークン
+            .with(csrf())
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
