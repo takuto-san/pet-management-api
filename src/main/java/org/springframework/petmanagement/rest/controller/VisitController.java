@@ -87,18 +87,27 @@ public class VisitController implements VisitsApi {
         Visit visit = visitMapper.toVisit(visitFieldsDto);
         
         // Set related entities
+        if (visitFieldsDto.getUserId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
         User user = userRepository.findById(visitFieldsDto.getUserId());
         if (user == null) {
             return ResponseEntity.badRequest().build();
         }
         visit.setUser(user);
         
+        if (visitFieldsDto.getPetId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
         Pet pet = petRepository.findById(visitFieldsDto.getPetId());
         if (pet == null) {
             return ResponseEntity.badRequest().build();
         }
         visit.setPet(pet);
         
+        if (visitFieldsDto.getClinicId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
         Clinic clinic = clinicRepository.findById(visitFieldsDto.getClinicId());
         if (clinic == null) {
             return ResponseEntity.badRequest().build();
@@ -188,6 +197,9 @@ public class VisitController implements VisitsApi {
         visitPrescription.setVisit(visitOpt.get());
         
         // Set prescription
+        if (visitPrescriptionFieldsDto.getPrescriptionId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
         Prescription prescription = prescriptionRepository.findById(visitPrescriptionFieldsDto.getPrescriptionId());
         if (prescription == null) {
             return ResponseEntity.badRequest().build();

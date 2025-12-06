@@ -50,6 +50,13 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public Pet createPet(PetFieldsDto fields) {
+        if (fields.getTypeId() == null) {
+            throw new IllegalArgumentException("pet type id is required");
+        }
+        if (fields.getUserId() == null) {
+            throw new IllegalArgumentException("user id is required");
+        }
+        
         PetType type = petTypeRepository.findById(fields.getTypeId());
         if (type == null) throw new IllegalArgumentException("pet type not found");
         
