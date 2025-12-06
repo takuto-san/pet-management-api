@@ -1,5 +1,6 @@
 package org.springframework.petmanagement.rest.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.petmanagement.mapper.PetMapper;
@@ -12,7 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -44,6 +47,24 @@ public class PetRestController implements PetsApi {
         List<Pet> pets = petService.findAll();
         List<PetDto> petDtos = new ArrayList<>(petMapper.toPetsDto(pets));
         return new ResponseEntity<>(petDtos, HttpStatus.OK); // 空でも200
+    }
+
+    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @Override
+    public ResponseEntity<PetDto> addPet(@Valid PetFieldsDto petFieldsDto) {
+        try {
+            Pet created = petService.createPet(petFieldsDto);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(
+                UriComponentsBuilder.newInstance()
+                    .path("/api/pets/{id}")
+                    .buildAndExpand(created.getId())
+                    .toUri()
+            );
+            return new ResponseEntity<>(petMapper.toPetDto(created), headers, HttpStatus.CREATED);
+        } catch (IllegalArgumentException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")

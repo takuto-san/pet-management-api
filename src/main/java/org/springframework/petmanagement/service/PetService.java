@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface PetService {
     List<Pet> findAll();
     Optional<Pet> findById(UUID petId);
+    Pet createPet(PetFieldsDto fields);
     Pet updatePet(UUID petId, PetFieldsDto fields);
     void deletePet(UUID petId);
 }

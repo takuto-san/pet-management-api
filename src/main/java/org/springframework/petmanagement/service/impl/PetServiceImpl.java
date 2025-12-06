@@ -3,8 +3,10 @@ package org.springframework.petmanagement.service.impl;
 import org.springframework.petmanagement.mapper.PetMapper;
 import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.repository.PetRepository;
 import org.springframework.petmanagement.repository.PetTypeRepository;
+import org.springframework.petmanagement.repository.UserRepository;
 import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 import org.springframework.petmanagement.service.PetService;
 import org.springframework.stereotype.Service;
@@ -21,13 +23,16 @@ public class PetServiceImpl implements PetService {
 
     private final PetRepository petRepository;
     private final PetTypeRepository petTypeRepository;
+    private final UserRepository userRepository;
     private final PetMapper petMapper;
 
     public PetServiceImpl(PetRepository petRepository,
                           PetTypeRepository petTypeRepository,
+                          UserRepository userRepository,
                           PetMapper petMapper) {
         this.petRepository = petRepository;
         this.petTypeRepository = petTypeRepository;
+        this.userRepository = userRepository;
         this.petMapper = petMapper;
     }
 
@@ -41,6 +46,29 @@ public class PetServiceImpl implements PetService {
     @Transactional(readOnly = true)
     public Optional<Pet> findById(UUID petId) {
         return Optional.ofNullable(petRepository.findById(petId));
+    }
+
+    @Override
+    public Pet createPet(PetFieldsDto fields) {
+        if (fields.getTypeId() == null) {
+            throw new IllegalArgumentException("pet type id is required");
+        }
+        if (fields.getUserId() == null) {
+            throw new IllegalArgumentException("user id is required");
+        }
+        
+        PetType type = petTypeRepository.findById(fields.getTypeId());
+        if (type == null) throw new IllegalArgumentException("pet type not found");
+        
+        User user = userRepository.findById(fields.getUserId());
+        if (user == null) throw new IllegalArgumentException("user not found");
+
+        Pet pet = petMapper.toPet(fields);
+        pet.setType(type);
+        pet.setUser(user);
+
+        petRepository.save(pet);
+        return pet;
     }
 
     @Override

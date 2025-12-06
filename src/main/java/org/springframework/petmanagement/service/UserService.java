@@ -1,9 +1,7 @@
 package org.springframework.petmanagement.service;
 
 import org.springframework.lang.Nullable;
-import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.User;
-import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 import org.springframework.petmanagement.rest.dto.UserFieldsDto;
 
 import java.util.List;
@@ -17,8 +15,4 @@ public interface UserService {
 
     Optional<User> findById(UUID userId);
     List<User> search(@Nullable String lastNameKana, @Nullable String firstNameKana);
-
-    Pet addPetToUser(UUID userId, PetFieldsDto fields);
-    Pet updateUsersPet(UUID userId, UUID petId, PetFieldsDto fields);
-    Optional<Pet> findUsersPet(UUID userId, UUID petId);
 }
