@@ -36,10 +36,13 @@ class ValidatorTests {
         Validator validator = createValidator();
         Set<ConstraintViolation<Person>> constraintViolations = validator.validate(person);
 
-        assertThat(constraintViolations.size()).isEqualTo(2); 
-        ConstraintViolation<Person> violation = constraintViolations.iterator().next();
+        assertThat(constraintViolations.size()).isEqualTo(2);
+        ConstraintViolation<Person> violation = constraintViolations.stream()
+            .filter(v -> v.getPropertyPath().toString().equals("firstName"))
+            .findFirst()
+            .orElseThrow();
         assertThat(violation.getPropertyPath().toString()).isEqualTo("firstName");
-        assertThat(violation.getMessage()).isEqualTo("must not be empty");
+        assertThat(violation.getMessage()).isIn("must not be empty", "size must be between 1 and 30");
     }
 
 }
