@@ -8,14 +8,14 @@ import org.springframework.petmanagement.model.PetType;
 
 public interface PetTypeRepository {
 
+    void save(PetType petType) throws DataAccessException;
+
+    void delete(PetType petType) throws DataAccessException;
+
     PetType findById(UUID id) throws DataAccessException;
 
     PetType findByName(String name) throws DataAccessException;
 
     Collection<PetType> findAll() throws DataAccessException;
-
-    void save(PetType petType) throws DataAccessException;
-
-    void delete(PetType petType) throws DataAccessException;
 
 }

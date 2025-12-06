@@ -17,24 +17,25 @@ import java.util.Collection;
 )
 public interface PetMapper {
 
-    @Mapping(source = "owner.id", target = "ownerId")
-    @Mapping(source = "type", target = "type")
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "typeId", source = "type.id")
+    @Mapping(target = "type", source = "type")
     PetDto toPetDto(Pet pet);
 
     Collection<PetDto> toPetsDto(Collection<Pet> pets);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "user", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(source = "typeId", target = "type.id")
     Pet toPet(PetFieldsDto petFieldsDto);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "user", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(source = "typeId", target = "type.id")
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updatePetFromFields(PetFieldsDto petFieldsDto, @MappingTarget Pet currentPet);
 }

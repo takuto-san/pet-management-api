@@ -15,13 +15,13 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface PetTypeMapper {
 
-    @Mapping(target = "id", ignore = true)
     PetType toPetType(PetTypeDto petTypeDto);
 
     @Mapping(target = "id", ignore = true)
     PetType toPetType(PetTypeFieldsDto petTypeFieldsDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
     void updatePetTypeFromFields(PetTypeFieldsDto petTypeFieldsDto, @MappingTarget PetType currentPetType);
 
     PetTypeDto toPetTypeDto(PetType petType);

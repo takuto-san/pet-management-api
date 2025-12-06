@@ -1,7 +1,8 @@
-package org.springframework.petmanagement.repository.springdatajpa;
+package org.springframework.petmanagement.repository.springdatajpa.impl;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.repository.springdatajpa.override.PetTypeRepositoryOverride;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

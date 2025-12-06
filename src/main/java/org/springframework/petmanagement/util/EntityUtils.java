@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
-import org.springframework.petmanagement.model.BaseEntity;
+import org.springframework.petmanagement.model.base.BaseEntity;
 
 public abstract class EntityUtils {
 
