@@ -26,3 +26,5 @@ springboot-petclinic-server/
 ./src/test/postman/reports/
 
 ./vscode/
+
+./docker-compose.yml

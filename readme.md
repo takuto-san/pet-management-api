@@ -209,8 +209,8 @@ Here is a list of the generated packages and the corresponding tooling:
 
 | Package name                                   | Tool             |
 |------------------------------------------------|------------------|
-| org.springframework.samples.petclinic.mapper   | [MapStruct](https://mapstruct.org/)        |
-| org.springframework.samples.petclinic.rest.dto | [OpenAPI Generator maven plugin](https://github.com/OpenAPITools/openapi-generator/) |
+| org.springframework.petmanagement.mapper   | [MapStruct](https://mapstruct.org/)        |
+| org.springframework.petmanagement.rest.dto | [OpenAPI Generator maven plugin](https://github.com/OpenAPITools/openapi-generator/) |
 
 
 To get both, you have to run the following command:
@@ -277,11 +277,11 @@ File -> Import -> Maven -> Existing Maven project
 | Layer | Source |
 |--|--|
 | REST API controllers | [REST folder](src/main/java/org/springframework/samples/petclinic/rest) |
-| Service | [ClinicServiceImpl.java](src/main/java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java) |
+| Service | [ManagementServiceImpl.java](src/main/java/org/springframework/samples/petclinic/service/ManagementServiceImpl.java) |
 | JDBC | [jdbc folder](src/main/java/org/springframework/samples/petclinic/repository/jdbc) |
 | JPA | [jpa folder](src/main/java/org/springframework/samples/petclinic/repository/jpa) |
 | Spring Data JPA | [springdatajpa folder](src/main/java/org/springframework/samples/petclinic/repository/springdatajpa) |
-| Tests | [AbstractClinicServiceTests.java](src/test/java/org/springframework/samples/petclinic/service/clinicService/AbstractClinicServiceTests.java) |
+| Tests | [AbstractPetManagementServiceTests.java](src/test/java/org/springframework/samples/petclinic/service/managementService/AbstractPetManagementServiceTests.java) |
 
 ## Publishing a Docker image
 
