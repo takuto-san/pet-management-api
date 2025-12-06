@@ -3,13 +3,9 @@ package org.springframework.petmanagement.rest.controller;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.petmanagement.mapper.PetMapper;
 import org.springframework.petmanagement.mapper.UserMapper;
-import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.rest.api.UsersApi;
-import org.springframework.petmanagement.rest.dto.PetDto;
-import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 import org.springframework.petmanagement.rest.dto.UserDto;
 import org.springframework.petmanagement.rest.dto.UserFieldsDto;
 import org.springframework.petmanagement.service.UserService;
@@ -31,14 +27,11 @@ public class UserRestController implements UsersApi {
 
     private final UserService userService;
     private final UserMapper userMapper;
-    private final PetMapper petMapper;
 
     public UserRestController(UserService userService,
-                              UserMapper userMapper,
-                              PetMapper petMapper) {
+                              UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
-        this.petMapper = petMapper;
     }
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
@@ -97,56 +90,5 @@ public class UserRestController implements UsersApi {
             .map(userMapper::toUserDto)
             .collect(Collectors.toList());
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> getUsersPet(@NotNull UUID userId, @NotNull UUID petId) {
-        Optional<Pet> petOpt = userService.findUsersPet(userId, petId);
-        return petOpt
-            .map(p -> new ResponseEntity<>(petMapper.toPetDto(p), HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @PreAuthorize("hasRole(@roles.ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> addPetToUser(@NotNull UUID userId, @Valid @RequestBody PetFieldsDto petFieldsDto) {
-        try {
-            Pet pet = userService.addPetToUser(userId, petFieldsDto);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(
-                UriComponentsBuilder.newInstance()
-                    .path("/api/users/{userId}/pets/{petId}")
-                    .buildAndExpand(userId, pet.getId())
-                    .toUri()
-            );
-            return new ResponseEntity<>(petMapper.toPetDto(pet), headers, HttpStatus.CREATED);
-        } catch (IllegalArgumentException ex) {
-            String msg = ex.getMessage() == null ? "" : ex.getMessage();
-            if (msg.contains("user not found")) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } else if (msg.contains("pet type not found")) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PreAuthorize("hasRole(@roles.ADMIN)")
-    @Override
-    public ResponseEntity<PetDto> updateUsersPet(@NotNull UUID userId, @NotNull UUID petId,
-                                                 @Valid @RequestBody PetFieldsDto petFieldsDto) {
-        try {
-            Pet pet = userService.updateUsersPet(userId, petId, petFieldsDto);
-            return new ResponseEntity<>(petMapper.toPetDto(pet), HttpStatus.OK);
-        } catch (IllegalArgumentException ex) {
-            String msg = ex.getMessage() == null ? "" : ex.getMessage();
-            if (msg.contains("user not found") || msg.contains("pet not found")) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } else if (msg.contains("pet type not found")) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
     }
 }

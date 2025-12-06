@@ -20,7 +20,6 @@ public interface UserMapper {
     User toUserFromDto(UserDto userDto);
 
     @Mapping(target = "password", ignore = true)
-    @Mapping(target = "pets", ignore = true)
     UserDto toUserDto(User user);
 
     @Mapping(target = "id", ignore = true)
