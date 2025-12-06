@@ -1,4 +1,4 @@
-package org.springframework.petmanagement.repository.springdatajpa;
+package org.springframework.petmanagement.repository.springdatajpa.override;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.petmanagement.model.User;

@@ -8,82 +8,82 @@ import org.springframework.petmanagement.model.PetType;
 import org.springframework.petmanagement.rest.api.PettypesApi;
 import org.springframework.petmanagement.rest.dto.PetTypeDto;
 import org.springframework.petmanagement.rest.dto.PetTypeFieldsDto;
-import org.springframework.petmanagement.service.ManagementService;
+import org.springframework.petmanagement.service.PetTypeService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.Collection;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("/api")
 public class PetTypeRestController implements PettypesApi {
 
-    private final ManagementService managementService;
+    private final PetTypeService petTypeService;
     private final PetTypeMapper petTypeMapper;
 
-    public PetTypeRestController(ManagementService managementService, PetTypeMapper petTypeMapper) {
-        this.managementService = managementService;
+    public PetTypeRestController(PetTypeService petTypeService, PetTypeMapper petTypeMapper) {
+        this.petTypeService = petTypeService;
         this.petTypeMapper = petTypeMapper;
     }
 
     @PreAuthorize("hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)")
     @Override
     public ResponseEntity<List<PetTypeDto>> listPetTypes() {
-        Collection<PetType> petTypes = this.managementService.findAllPetTypes();
-        if (petTypes.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(petTypeMapper.toPetTypeDtos(petTypes), HttpStatus.OK);
+        List<PetType> petTypes = petTypeService.findAll();
+        List<PetTypeDto> petTypeDtos = new ArrayList<>(petTypeMapper.toPetTypeDtos(petTypes));
+        return new ResponseEntity<>(petTypeDtos, HttpStatus.OK); // 空でも200で返す
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @Override
     public ResponseEntity<PetTypeDto> addPetType(@Valid @RequestBody PetTypeFieldsDto petTypeFieldsDto) {
+        PetType type = petTypeService.create(petTypeFieldsDto);
+
         HttpHeaders headers = new HttpHeaders();
-        final PetType type = petTypeMapper.toPetType(petTypeFieldsDto);
-        this.managementService.savePetType(type);
-        headers.setLocation(UriComponentsBuilder.newInstance().path("/api/pettypes/{id}").buildAndExpand(type.getId()).toUri());
+        headers.setLocation(
+            UriComponentsBuilder.newInstance()
+                .path("/api/pettypes/{id}")
+                .buildAndExpand(type.getId())
+                .toUri()
+        );
         return new ResponseEntity<>(petTypeMapper.toPetTypeDto(type), headers, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyRole(@roles.OWNER_ADMIN, @roles.VET_ADMIN)")
     @GetMapping("/pettypes/{petTypeId}")
     public ResponseEntity<PetTypeDto> getPetType(@PathVariable("petTypeId") UUID petTypeId) {
-        return this.managementService.findPetTypeById(petTypeId)
-            .map(petType -> new ResponseEntity<>(petTypeMapper.toPetTypeDto(petType), HttpStatus.OK))
+        Optional<PetType> petTypeOpt = petTypeService.findById(petTypeId);
+        return petTypeOpt
+            .map(p -> new ResponseEntity<>(petTypeMapper.toPetTypeDto(p), HttpStatus.OK))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
     @PutMapping("/pettypes/{petTypeId}")
-    public ResponseEntity<PetTypeDto> updatePetType(@PathVariable("petTypeId") UUID petTypeId, @Valid @RequestBody PetTypeFieldsDto petTypeFieldsDto) {
-        PetType currentPetType = this.managementService.findPetTypeById(petTypeId).orElse(null);
-        if (currentPetType == null) {
+    public ResponseEntity<PetTypeDto> updatePetType(@PathVariable("petTypeId") UUID petTypeId,
+                                                    @Valid @RequestBody PetTypeFieldsDto petTypeFieldsDto) {
+        try {
+            PetType updated = petTypeService.update(petTypeId, petTypeFieldsDto);
+            return new ResponseEntity<>(petTypeMapper.toPetTypeDto(updated), HttpStatus.OK);
+        } catch (IllegalArgumentException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        
-        petTypeMapper.updatePetTypeFromFields(petTypeFieldsDto, currentPetType);
-        
-        this.managementService.savePetType(currentPetType);
-        return new ResponseEntity<>(petTypeMapper.toPetTypeDto(currentPetType), HttpStatus.OK);
     }
-    
+
     @PreAuthorize("hasRole(@roles.VET_ADMIN)")
-    @Transactional
     @DeleteMapping("/pettypes/{petTypeId}")
     public ResponseEntity<Void> deletePetType(@PathVariable("petTypeId") UUID petTypeId) {
-        PetType petType = this.managementService.findPetTypeById(petTypeId).orElse(null);
-        if (petType == null) {
+        try {
+            petTypeService.delete(petTypeId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        this.managementService.deletePetType(petType);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
