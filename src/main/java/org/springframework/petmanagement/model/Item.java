@@ -15,12 +15,14 @@
  */
 package org.springframework.petmanagement.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.springframework.petmanagement.model.base.BaseEntity;
 
 import java.util.Map;
 import java.util.UUID;
@@ -28,22 +30,30 @@ import java.util.UUID;
 /**
  * Model representing an item master record.
  */
-@Data
-@Builder
+@Entity
+@Table(name = "items")
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item {
-    
-    @NotNull
-    private UUID id;
+public class Item extends BaseEntity {
     
     @NotBlank
+    @Column(name = "name")
     private String name;
     
     @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
     private ItemCategory category;
     
+    @Column(name = "note")
     private String note;
     
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "metadata", columnDefinition = "jsonb")
     private Map<String, Object> metadata;
 }

@@ -119,8 +119,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId);
         if (user == null) throw new IllegalArgumentException("user not found");
 
-        Pet pet = user.getPet(petId);
-        if (pet == null) throw new IllegalArgumentException("pet not found for this user");
+        Pet pet = petRepository.findById(petId);
+        if (pet == null || !pet.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("pet not found for this user");
+        }
 
         PetType type = petTypeRepository.findById(fields.getTypeId());
         if (type == null) throw new IllegalArgumentException("pet type not found");
@@ -137,6 +139,11 @@ public class UserServiceImpl implements UserService {
     public Optional<Pet> findUsersPet(UUID userId, UUID petId) {
         User user = userRepository.findById(userId);
         if (user == null) return Optional.empty();
-        return Optional.ofNullable(user.getPet(petId));
+        
+        Pet pet = petRepository.findById(petId);
+        if (pet == null || !pet.getUser().getId().equals(userId)) {
+            return Optional.empty();
+        }
+        return Optional.of(pet);
     }
 }

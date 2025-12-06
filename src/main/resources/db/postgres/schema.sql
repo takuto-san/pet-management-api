@@ -47,6 +47,8 @@ CREATE TABLE IF NOT EXISTS users (
     address         TEXT,
     telephone       TEXT UNIQUE,
     role            VARCHAR(20)  NOT NULL DEFAULT 'user',
+    created_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
     CONSTRAINT uni_users_username UNIQUE (username)
 );
@@ -69,7 +71,9 @@ CREATE TABLE IF NOT EXISTS pets (
     birth_date DATE,
     sex        VARCHAR(10),
     type_id    UUID NOT NULL REFERENCES types (id),
-    user_id    UUID NOT NULL REFERENCES users (id) ON DELETE CASCADE
+    user_id    UUID NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_pets_name ON pets (name);
 CREATE INDEX IF NOT EXISTS idx_pets_user_id ON pets (user_id);

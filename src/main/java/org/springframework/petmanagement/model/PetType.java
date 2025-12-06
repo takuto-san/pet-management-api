@@ -15,27 +15,30 @@
  */
 package org.springframework.petmanagement.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.petmanagement.model.base.BaseEntity;
 
 import java.util.UUID;
 
 /**
  * Model representing a pet type.
  */
-@Data
-@Builder
+@Entity
+@Table(name = "types")
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PetType {
-    
-    @NotNull
-    private UUID id;
+public class PetType extends BaseEntity {
     
     @NotBlank
+    @Column(name = "name", unique = true)
     private String name;
 }

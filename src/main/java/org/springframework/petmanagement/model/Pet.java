@@ -17,13 +17,13 @@ package org.springframework.petmanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.petmanagement.model.base.Time;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -31,32 +31,37 @@ import java.util.UUID;
 /**
  * Model representing a pet.
  */
-@Data
-@Builder
+@Entity
+@Table(name = "pets")
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pet {
-    
-    @NotNull
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private UUID id;
+public class Pet extends Time {
     
     @NotBlank
     @Size(max = 30)
+    @Column(name = "name")
     private String name;
     
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "birth_date")
     private LocalDate birthDate;
     
     @Size(max = 10)
+    @Column(name = "sex")
     private String sex;
     
     @NotNull
-    private UUID typeId;
-    
-    @NotNull
-    private UUID userId;
-    
-    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "type_id", nullable = false)
     private PetType type;
+    
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

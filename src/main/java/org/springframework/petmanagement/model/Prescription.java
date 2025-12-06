@@ -15,36 +15,44 @@
  */
 package org.springframework.petmanagement.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.petmanagement.model.base.BaseEntity;
 
 import java.util.UUID;
 
 /**
  * Model representing a prescription master record.
  */
-@Data
-@Builder
+@Entity
+@Table(name = "prescriptions")
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Prescription {
+public class Prescription extends BaseEntity {
     
     @NotNull
-    private UUID id;
-    
-    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
     private PrescriptionCategory category;
     
     @NotBlank
+    @Column(name = "name")
     private String name;
     
+    @Column(name = "form")
     private String form;
     
+    @Column(name = "strength")
     private String strength;
     
+    @Column(name = "note")
     private String note;
 }
