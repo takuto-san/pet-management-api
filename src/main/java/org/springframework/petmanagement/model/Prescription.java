@@ -25,17 +25,26 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 /**
- * Model representing a pet type.
+ * Model representing a prescription master record.
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PetType {
+public class Prescription {
     
     @NotNull
     private UUID id;
     
+    @NotNull
+    private PrescriptionCategory category;
+    
     @NotBlank
     private String name;
+    
+    private String form;
+    
+    private String strength;
+    
+    private String note;
 }

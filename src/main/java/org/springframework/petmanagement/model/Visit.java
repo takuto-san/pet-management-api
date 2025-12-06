@@ -15,27 +15,60 @@
  */
 package org.springframework.petmanagement.model;
 
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 /**
- * Model representing a pet type.
+ * Model representing a veterinary visit.
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PetType {
+public class Visit {
     
     @NotNull
     private UUID id;
     
-    @NotBlank
-    private String name;
+    @NotNull
+    private UUID userId;
+    
+    @NotNull
+    private UUID petId;
+    
+    @NotNull
+    private UUID clinicId;
+    
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate visitedOn;
+    
+    private Float weight;
+    
+    private VisitType visitType;
+    
+    private String reason;
+    
+    private String diagnosis;
+    
+    private String treatment;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate nextDueOn;
+    
+    private Integer totalFee;
+    
+    @Builder.Default
+    @Pattern(regexp = "^[A-Z]{3}$")
+    private String currency = "JPY";
+    
+    private String note;
 }

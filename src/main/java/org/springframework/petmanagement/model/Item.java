@@ -22,20 +22,28 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
- * Model representing a pet type.
+ * Model representing an item master record.
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PetType {
+public class Item {
     
     @NotNull
     private UUID id;
     
     @NotBlank
     private String name;
+    
+    @NotNull
+    private ItemCategory category;
+    
+    private String note;
+    
+    private Map<String, Object> metadata;
 }

@@ -15,27 +15,25 @@
  */
 package org.springframework.petmanagement.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Model representing a pet type.
+ * Enum representing prescription categories.
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class PetType {
-    
-    @NotNull
-    private UUID id;
-    
-    @NotBlank
-    private String name;
+public enum PrescriptionCategory {
+    VACCINE("vaccine"),
+    HEARTWORM("heartworm"),
+    FLEA_TICK("flea_tick"),
+    OTHER("other");
+
+    private final String value;
+
+    PrescriptionCategory(String value) {
+        this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+        return value;
+    }
 }

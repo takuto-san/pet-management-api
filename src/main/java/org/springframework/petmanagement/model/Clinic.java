@@ -25,17 +25,27 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 /**
- * Model representing a pet type.
+ * Model representing a veterinary clinic.
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PetType {
+public class Clinic {
     
     @NotNull
     private UUID id;
     
     @NotBlank
     private String name;
+    
+    private String telephone;
+    
+    private String address;
+    
+    private String websiteUrl;
+    
+    private String openingHours;
+    
+    private String note;
 }

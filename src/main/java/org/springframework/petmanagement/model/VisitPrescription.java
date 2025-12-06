@@ -15,8 +15,10 @@
  */
 package org.springframework.petmanagement.model;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,17 +27,34 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 /**
- * Model representing a pet type.
+ * Model representing a prescription linked to a specific visit.
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PetType {
+public class VisitPrescription {
     
     @NotNull
     private UUID id;
     
+    @NotNull
+    private UUID visitId;
+    
+    @NotNull
+    private UUID prescriptionId;
+    
+    @NotNull
+    @Positive
+    private Float quantity;
+    
     @NotBlank
-    private String name;
+    private String unit;
+    
+    @Min(1)
+    private Integer days;
+    
+    private String dosageInstructions;
+    
+    private String purpose;
 }
