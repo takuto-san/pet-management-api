@@ -35,6 +35,7 @@ class PetRestControllerTests {
     private static final UUID PET_ID_NOT_FOUND = UUID.fromString("99999999-9999-9999-9999-999999999999");
     private static final UUID PET_TYPE_ID = UUID.fromString("20000000-0000-0000-0000-000000000002");
     private static final UUID PET_TYPE_ID_INVALID = UUID.fromString("30000000-0000-0000-0000-000000000003");
+    private static final UUID USER_ID = UUID.fromString("30000000-0000-0000-0000-000000000001");
 
     @Autowired private MockMvc mockMvc;
     @MockitoBean private PetService petService;
@@ -61,7 +62,8 @@ class PetRestControllerTests {
             .name("Rosy Updated")
             .birthDate(LocalDate.now())
             .sex("メス")
-            .typeId(PET_TYPE_ID);
+            .typeId(PET_TYPE_ID)
+            .userId(USER_ID);
     }
 
     @Test

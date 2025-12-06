@@ -5,7 +5,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 
 @SpringBootTest
-@ActiveProfiles({"spring-data-jpa", "postgres"})
+@ActiveProfiles({"spring-data-jpa", "hsqldb"})
 class PetServiceSpringDataJpaTests extends AbstractPetServiceTests {
     
 }
