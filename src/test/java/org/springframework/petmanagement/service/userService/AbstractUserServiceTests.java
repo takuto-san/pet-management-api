@@ -41,7 +41,7 @@ public abstract class AbstractUserServiceTests {
 
         assertThat(fetchedUser.getId()).isNotNull();
         assertThat(fetchedUser.getUsername()).isEqualTo(testUsername);
-        assertThat(fetchedUser.isEnabled()).isTrue();
+        assertThat(fetchedUser.getEnabled()).isTrue();
         assertThat(fetchedUser.getRole()).isEqualTo("user");
         assertThat(fetchedUser.getPassword()).isNotEqualTo("securepassword");
     }

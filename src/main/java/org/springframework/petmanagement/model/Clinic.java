@@ -15,37 +15,47 @@
  */
 package org.springframework.petmanagement.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.petmanagement.model.base.BaseEntity;
 
 import java.util.UUID;
 
 /**
  * Model representing a veterinary clinic.
  */
-@Data
-@Builder
+@Entity
+@Table(name = "clinics")
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Clinic {
-    
-    @NotNull
-    private UUID id;
+public class Clinic extends BaseEntity {
     
     @NotBlank
+    @Column(name = "name")
     private String name;
     
+    @Column(name = "telephone")
     private String telephone;
     
+    @Column(name = "address")
     private String address;
     
+    @Column(name = "website_url")
     private String websiteUrl;
     
+    @Column(name = "opening_hours")
     private String openingHours;
     
+    @Column(name = "note")
     private String note;
 }
