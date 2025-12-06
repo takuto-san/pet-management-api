@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -56,7 +57,7 @@ public class UserRestController implements UsersApi {
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
-    public ResponseEntity<UserDto> updateUser(UUID userId, @Valid @RequestBody UserFieldsDto userFieldsDto) {
+    public ResponseEntity<UserDto> updateUser(@NotNull UUID userId, @Valid @RequestBody UserFieldsDto userFieldsDto) {
         try {
             User updated = userService.updateUser(userId, userFieldsDto);
             return new ResponseEntity<>(userMapper.toUserDto(updated), HttpStatus.OK);
@@ -70,7 +71,7 @@ public class UserRestController implements UsersApi {
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
-    public ResponseEntity<Void> deleteUser(UUID userId) {
+    public ResponseEntity<Void> deleteUser(@NotNull UUID userId) {
         try {
             userService.deleteUser(userId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -81,7 +82,7 @@ public class UserRestController implements UsersApi {
 
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<UserDto> getUser(UUID userId) {
+    public ResponseEntity<UserDto> getUser(@NotNull UUID userId) {
         Optional<User> userOpt = userService.findById(userId);
         return userOpt
             .map(user -> new ResponseEntity<>(userMapper.toUserDto(user), HttpStatus.OK))
@@ -100,7 +101,7 @@ public class UserRestController implements UsersApi {
 
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
     @Override
-    public ResponseEntity<PetDto> getUsersPet(UUID userId, UUID petId) {
+    public ResponseEntity<PetDto> getUsersPet(@NotNull UUID userId, @NotNull UUID petId) {
         Optional<Pet> petOpt = userService.findUsersPet(userId, petId);
         return petOpt
             .map(p -> new ResponseEntity<>(petMapper.toPetDto(p), HttpStatus.OK))
@@ -109,7 +110,7 @@ public class UserRestController implements UsersApi {
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
-    public ResponseEntity<PetDto> addPetToUser(UUID userId, @Valid @RequestBody PetFieldsDto petFieldsDto) {
+    public ResponseEntity<PetDto> addPetToUser(@NotNull UUID userId, @Valid @RequestBody PetFieldsDto petFieldsDto) {
         try {
             Pet pet = userService.addPetToUser(userId, petFieldsDto);
             HttpHeaders headers = new HttpHeaders();
@@ -133,7 +134,7 @@ public class UserRestController implements UsersApi {
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
-    public ResponseEntity<PetDto> updateUsersPet(UUID userId, UUID petId,
+    public ResponseEntity<PetDto> updateUsersPet(@NotNull UUID userId, @NotNull UUID petId,
                                                  @Valid @RequestBody PetFieldsDto petFieldsDto) {
         try {
             Pet pet = userService.updateUsersPet(userId, petId, petFieldsDto);
