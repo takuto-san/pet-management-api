@@ -2,9 +2,7 @@
 
 This backend application provides a REST API for managing a veterinary clinic system, including **Users, Pets, Clinics, Visits, Prescriptions, and Inventory Items**.
 
-## Understanding the Spring Petclinic application with a few diagrams
-
-[See the presentation of the Spring Petclinic Framework version](http://fr.slideshare.net/AntoineRey/spring-framework-petclinic-sample-application)
+## Understanding the Pet Management application with a few diagrams
 
 ### PetcManagement ER Model
 
