@@ -1,0 +1,976 @@
+openapi: 3.0.1
+info:
+  title: Pet Management API
+  description: Pet Management API with health logs, prescriptions, and item master.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: '1.2'
+servers:
+  - url: http://localhost:9966/petclinic/api
+tags:
+  - name: failing
+    description: Endpoint which always returns an error.
+  - name: owner
+    description: Endpoints related to pet owners.
+  - name: user
+    description: Endpoints related to users.
+  - name: pet
+    description: Endpoints related to pets.
+  - name: pettypes
+    description: Endpoints related to pet types.
+  - name: clinic
+    description: Endpoints related to veterinary clinics.
+  - name: visit
+    description: Endpoints related to visits and health records.
+  - name: prescription
+    description: Endpoints related to prescription master data.
+  - name: visit-prescription
+    description: Endpoints related to prescriptions assigned to a visit.
+  - name: item
+    description: Endpoints related to item master data.
+paths:
+  /oops:
+    get:
+      tags: [failing]
+      operationId: failingRequest
+      summary: Always fails
+      description: Produces sample error response.
+      responses:
+        400:
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
+  /users:
+    post:
+      tags: [user]
+      operationId: addUser
+      summary: Create a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserFields'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+    get:
+      tags: [user]
+      operationId: listUsers
+      summary: Lists users
+      parameters:
+        - name: lastNameKana
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: firstNameKana
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /users/{userId}:
+    get:
+      tags: [user]
+      operationId: getUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+    put:
+      tags: [user]
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserFields'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+    delete:
+      tags: [user]
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: No Content
+
+  /pettypes:
+    get:
+      tags: [pettypes]
+      operationId: listPetTypes
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PetType'
+    post:
+      tags: [pettypes]
+      operationId: addPetType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetTypeFields'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetType'
+
+  /pets:
+    get:
+      tags: [pet]
+      operationId: listPets
+      summary: Lists all pets
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+    post:
+      tags: [pet]
+      operationId: addPet
+      summary: Add a new pet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetFields'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+
+  /pets/{petId}:
+    get:
+      tags: [pet]
+      operationId: getPet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+    put:
+      tags: [pet]
+      operationId: updatePet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetFields'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+    delete:
+      tags: [pet]
+      operationId: deletePet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: No Content
+
+  # --- Clinics Endpoints ---
+  /clinics:
+    get:
+      tags: [clinic]
+      operationId: listClinics
+      summary: List all clinics
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Clinic'
+    post:
+      tags: [clinic]
+      operationId: addClinic
+      summary: Add a new clinic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClinicFields'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Clinic'
+
+  /clinics/{clinicId}:
+    get:
+      tags: [clinic]
+      operationId: getClinic
+      parameters:
+        - name: clinicId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Clinic'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+    put:
+      tags: [clinic]
+      operationId: updateClinic
+      parameters:
+        - name: clinicId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClinicFields'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Clinic'
+    delete:
+      tags: [clinic]
+      operationId: deleteClinic
+      parameters:
+        - name: clinicId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: No Content
+
+  # --- Visits Endpoints ---
+  /visits:
+    get:
+      tags: [visit]
+      operationId: listVisits
+      summary: List visits (can filter by petId)
+      parameters:
+        - name: petId
+          in: query
+          description: Filter visits by Pet ID
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Visit'
+    post:
+      tags: [visit]
+      operationId: addVisit
+      summary: Record a new visit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitFields'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+
+  /visits/{visitId}:
+    get:
+      tags: [visit]
+      operationId: getVisit
+      parameters:
+        - name: visitId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+    put:
+      tags: [visit]
+      operationId: updateVisit
+      parameters:
+        - name: visitId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitFields'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Visit'
+    delete:
+      tags: [visit]
+      operationId: deleteVisit
+      parameters:
+        - name: visitId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: No Content
+
+  # --- Visit Prescriptions Endpoints ---
+  /visits/{visitId}/prescriptions:
+    get:
+      tags: [visit-prescription]
+      operationId: listVisitPrescriptions
+      summary: List prescriptions for a specific visit
+      parameters:
+        - name: visitId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VisitPrescription'
+    post:
+      tags: [visit-prescription]
+      operationId: addVisitPrescription
+      summary: Add a prescription to a visit
+      parameters:
+        - name: visitId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitPrescriptionFields'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitPrescription'
+
+  /visits/{visitId}/prescriptions/{visitPrescriptionId}:
+    delete:
+      tags: [visit-prescription]
+      operationId: deleteVisitPrescription
+      summary: Remove a prescription from a visit
+      parameters:
+        - name: visitId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: visitPrescriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: No Content
+
+  # --- Prescriptions Master Endpoints ---
+  /prescriptions:
+    get:
+      tags: [prescription]
+      operationId: listPrescriptions
+      summary: List prescription master data
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prescription'
+    post:
+      tags: [prescription]
+      operationId: addPrescription
+      summary: Add new prescription master data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrescriptionFields'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+
+  # --- Items Master Endpoints ---
+  /items:
+    get:
+      tags: [item]
+      operationId: listItems
+      summary: List item master data
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+    post:
+      tags: [item]
+      operationId: addItem
+      summary: Add new item master data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemFields'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+components:
+  schemas:
+    ProblemDetail:
+      title: Problem Detail
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    # --- Enums ---
+    PrescriptionCategory:
+      type: string
+      enum: [vaccine, heartworm, flea_tick, other]
+    VisitType:
+      type: string
+      enum: [vaccine, heartworm, flea_tick, checkup, general]
+    ItemCategory:
+      type: string
+      enum: [food, treat, supplement, pad, toy, collar, hygiene, medical, other]
+
+    # --- Clinic ---
+    ClinicFields:
+      title: Clinic Fields
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Sunflower Vet Clinic'
+        telephone:
+          type: string
+          example: '03-1234-5678'
+        address:
+          type: string
+          example: 'Tokyo, Shibuya 1-1'
+        websiteUrl:
+          type: string
+          example: 'https://example.com'
+        openingHours:
+          type: string
+          example: '9:00 - 18:00'
+        note:
+          type: string
+      required:
+        - name
+    Clinic:
+      allOf:
+        - $ref: '#/components/schemas/ClinicFields'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+          required:
+            - id
+
+    # --- Prescription Master ---
+    PrescriptionFields:
+      title: Prescription Fields
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/PrescriptionCategory'
+        name:
+          type: string
+          example: 'Heartgard Plus'
+        form:
+          type: string
+          description: Tablet, Injection, Spot-on, etc.
+          example: 'Tablet'
+        strength:
+          type: string
+          example: 'S (up to 11kg)'
+        note:
+          type: string
+      required:
+        - category
+        - name
+    Prescription:
+      allOf:
+        - $ref: '#/components/schemas/PrescriptionFields'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+          required:
+            - id
+
+    # --- Item Master ---
+    ItemFields:
+      title: Item Fields
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Premium Dog Food'
+        category:
+          $ref: '#/components/schemas/ItemCategory'
+        note:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+          description: JSONB metadata for external links or details
+      required:
+        - name
+        - category
+    Item:
+      allOf:
+        - $ref: '#/components/schemas/ItemFields'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+          required:
+            - id
+
+    # --- Visit ---
+    VisitFields:
+      title: Visit Fields
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        petId:
+          type: string
+          format: uuid
+        clinicId:
+          type: string
+          format: uuid
+        visitedOn:
+          type: string
+          format: date
+          example: '2025-05-20'
+        weight:
+          type: number
+          format: float
+          description: Weight in kg
+          example: 5.50
+        visitType:
+          $ref: '#/components/schemas/VisitType'
+        reason:
+          type: string
+          example: 'Annual vaccination'
+        diagnosis:
+          type: string
+        treatment:
+          type: string
+        nextDueOn:
+          type: string
+          format: date
+          example: '2026-05-20'
+        totalFee:
+          type: integer
+          example: 5000
+        currency:
+          type: string
+          default: 'JPY'
+          pattern: '^[A-Z]{3}$'
+        note:
+          type: string
+      required:
+        - userId
+        - petId
+        - clinicId
+        - visitedOn
+    Visit:
+      allOf:
+        - $ref: '#/components/schemas/VisitFields'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+          required:
+            - id
+
+    # --- Visit Prescription (Link) ---
+    VisitPrescriptionFields:
+      title: Visit Prescription Fields
+      type: object
+      properties:
+        prescriptionId:
+          type: string
+          format: uuid
+        quantity:
+          type: number
+          format: float
+          minimum: 0
+          exclusiveMinimum: true
+          description: Quantity (e.g., 1.5)
+          example: 1.0
+        unit:
+          type: string
+          example: 'Tablet'
+        days:
+          type: integer
+          minimum: 1
+          example: 7
+        dosageInstructions:
+          type: string
+          example: 'Once a day after meals'
+        purpose:
+          type: string
+      required:
+        - prescriptionId
+        - quantity
+        - unit
+    VisitPrescription:
+      allOf:
+        - $ref: '#/components/schemas/VisitPrescriptionFields'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            visitId:
+              type: string
+              format: uuid
+          required:
+            - id
+            - visitId
+
+    # --- Pet & Type ---
+    PetFields:
+      title: Pet fields
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 30
+          example: ポチ
+        birthDate:
+          type: string
+          format: date
+          example: '2020-01-01'
+        sex:
+          type: string
+          maxLength: 10
+          example: オス
+        typeId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+          description: The owner ID
+      required:
+        - name
+        - typeId
+        - userId
+    Pet:
+      allOf:
+        - $ref: '#/components/schemas/PetFields'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              readOnly: true
+            type:
+              $ref: '#/components/schemas/PetType'
+          required:
+            - id
+            - type
+
+    PetTypeFields:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    PetType:
+      allOf:
+        - $ref: '#/components/schemas/PetTypeFields'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+          required:
+            - id
+
+    # --- User ---
+    UserFields:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 20
+          example: john.doe
+        password:
+          type: string
+          maxLength: 255
+          writeOnly: true
+        enabled:
+          type: boolean
+          default: true
+        firstName:
+          type: string
+        lastName:
+          type: string
+        firstNameKana:
+          type: string
+        lastNameKana:
+          type: string
+        email:
+          type: string
+          format: email
+        postalCode:
+          type: string
+          maxLength: 8
+        prefecture:
+          type: string
+        city:
+          type: string
+          maxLength: 80
+        address:
+          type: string
+          maxLength: 255
+        telephone:
+          type: string
+          maxLength: 20
+          pattern: '^[0-9-]*$'
+        role:
+          type: string
+          maxLength: 20
+          default: user
+      required:
+        - username
+        - password
+        - firstName
+        - lastName
+        - firstNameKana
+        - lastNameKana
+        - email
+    User:
+      allOf:
+        - $ref: '#/components/schemas/UserFields'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              readOnly: true
+          required:
+            - id

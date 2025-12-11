@@ -1,0 +1,4 @@
+docker-compose --profile postgres up -d
+docker-compose --profile postgres stop
+./mvnw spring-boot:run
+http://localhost:9966/petmanagement/api/swagger-ui/index.html
