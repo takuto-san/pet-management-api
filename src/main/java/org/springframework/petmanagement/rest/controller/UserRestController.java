@@ -57,6 +57,8 @@ public class UserRestController implements UsersApi {
             User updated = userService.updateUser(userId, userFieldsDto);
             return new ResponseEntity<>(userMapper.toUserDto(updated), HttpStatus.OK);
         } catch (IllegalArgumentException ex) {
+            // セキュリティ上、存在しないIDへのアクセスと区別がつかないようにNOT_FOUNDを返すのが一般的ですが
+            // 開発中はエラーの詳細を知るためにBAD_REQUESTを返す分岐を残しても構いません
             if (ex.getMessage() != null && ex.getMessage().contains("not found")) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -75,7 +77,9 @@ public class UserRestController implements UsersApi {
         }
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    // 修正: OWNER_ADMIN -> CLINIC_ADMIN
+    // ※バリデーション実装時に、ここに「または本人のIDであれば許可」というロジックを追加します
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<UserDto> getUser(UUID userId) {
         Optional<User> userOpt = userService.findById(userId);
@@ -84,7 +88,7 @@ public class UserRestController implements UsersApi {
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<List<UserDto>> listUsers(String lastNameKana, String firstNameKana) {
         List<User> users = userService.search(lastNameKana, firstNameKana);

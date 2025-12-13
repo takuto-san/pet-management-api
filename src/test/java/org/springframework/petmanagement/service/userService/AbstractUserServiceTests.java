@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.petmanagement.model.User;
+import org.springframework.petmanagement.model.type.RoleType;
 import org.springframework.petmanagement.rest.dto.UserFieldsDto;
 import org.springframework.petmanagement.service.UserService;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +45,12 @@ public abstract class AbstractUserServiceTests {
         assertThat(fetchedUser.getId()).isNotNull();
         assertThat(fetchedUser.getUsername()).isEqualTo(testUsername);
         assertThat(fetchedUser.getEnabled()).isTrue();
-        assertThat(fetchedUser.getRole()).isEqualTo("user");
+        
+        assertThat(fetchedUser.getRoles()).isNotEmpty();
+        assertThat(fetchedUser.getRoles())
+            .extracting("name")
+            .contains(RoleType.OWNER);
+            
         assertThat(fetchedUser.getPassword()).isNotEqualTo("securepassword");
     }
 

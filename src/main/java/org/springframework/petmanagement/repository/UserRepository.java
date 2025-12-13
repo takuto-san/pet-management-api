@@ -1,6 +1,7 @@
 package org.springframework.petmanagement.repository;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.dao.DataAccessException;
@@ -14,7 +15,7 @@ public interface UserRepository {
 
     User findById(UUID id) throws DataAccessException;
 
-    User findByUsername(String username) throws DataAccessException;
+    Optional<User> findByUsername(String username);
 
     Collection<User> findAll() throws DataAccessException;
     

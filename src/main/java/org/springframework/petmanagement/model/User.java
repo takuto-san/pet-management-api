@@ -1,7 +1,9 @@
 package org.springframework.petmanagement.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.petmanagement.model.base.Time;
 
@@ -10,6 +12,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -24,9 +30,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-/**
- * Model representing a user.
- */
 @Entity
 @Table(name = "users")
 @Getter
@@ -94,10 +97,14 @@ public class User extends Time {
     @Column(name = "telephone", unique = true)
     private String telephone;
     
-    @lombok.Builder.Default 
-    @Size(max = 20)
-    @Column(name = "role")
-    private String role = "user";
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @lombok.Builder.Default
+    private Set<Role> roles = new HashSet<>();
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @lombok.Builder.Default

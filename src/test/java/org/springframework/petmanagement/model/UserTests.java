@@ -1,15 +1,15 @@
 package org.springframework.petmanagement.model;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-
 import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 
 class UserTests {
 
@@ -39,7 +39,6 @@ class UserTests {
             .city("渋谷区")
             .address("神宮前1-2-3")
             .telephone("090-1234-5678")
-            .role("user")
             .build();
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -252,7 +251,7 @@ class UserTests {
     }
 
     @Test
-    void shouldHaveDefaultRole() {
+    void shouldInitializeRolesEmpty() {
         User user = User.builder()
             .username("testuser")
             .password("password")
@@ -263,6 +262,7 @@ class UserTests {
             .email("test@example.com")
             .build();
 
-        assertThat(user.getRole()).isEqualTo("user");
+        assertThat(user.getRoles()).isNotNull();
+        assertThat(user.getRoles()).isEmpty();
     }
 }
