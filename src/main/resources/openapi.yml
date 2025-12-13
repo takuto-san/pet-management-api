@@ -633,6 +633,9 @@ components:
           format: date-time
 
     # --- Enums ---
+    RoleName:
+      type: string
+      enum: [owner, vet, nurse, receptionist, clinic_admin, admin]
     PrescriptionCategory:
       type: string
       enum: [vaccine, heartworm, flea_tick, other]
@@ -642,6 +645,21 @@ components:
     ItemCategory:
       type: string
       enum: [food, treat, supplement, pad, toy, collar, hygiene, medical, other]
+
+    # --- Role Master ---
+    Role:
+      title: Role
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          $ref: '#/components/schemas/RoleName'
+      required:
+        - id
+        - name
 
     # --- Clinic ---
     ClinicFields:
@@ -1018,10 +1036,6 @@ components:
           type: string
           maxLength: 20
           pattern: '^[0-9-]*$'
-        role:
-          type: string
-          maxLength: 20
-          default: user
       required:
         - username
         - password
@@ -1039,6 +1053,10 @@ components:
               type: string
               format: uuid
               readOnly: true
+            roles:
+              type: array
+              items:
+                $ref: '#/components/schemas/RoleName'
             createdAt:
               type: string
               format: date-time
@@ -1049,5 +1067,6 @@ components:
               readOnly: true
           required:
             - id
+            - roles
             - createdAt
             - updatedAt

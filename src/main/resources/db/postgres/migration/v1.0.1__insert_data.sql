@@ -289,3 +289,12 @@ VALUES
 ((SELECT id FROM visits WHERE pet_id = (SELECT id FROM pets WHERE name = 'ミケ') AND visited_on = '2024-09-05'),
  (SELECT id FROM prescriptions WHERE name = 'プレドニゾロン' AND strength = '5mg'),
  14, '錠', 14, '1日1回、朝食後に0.5錠', '皮膚炎症の抑制');
+
+
+INSERT INTO roles (name) VALUES 
+    ('owner'), 
+    ('vet'), 
+    ('nurse'), 
+    ('receptionist'), 
+    ('clinic_admin'), 
+    ('admin');
