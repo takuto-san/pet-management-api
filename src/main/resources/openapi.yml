@@ -631,8 +631,8 @@ components:
         timestamp:
           type: string
           format: date-time
-
-    # --- Enums ---
+    
+    # -- Enum --
     RoleName:
       type: string
       enum: [owner, vet, nurse, receptionist, clinic_admin, admin]
@@ -646,7 +646,7 @@ components:
       type: string
       enum: [food, treat, supplement, pad, toy, collar, hygiene, medical, other]
 
-    # --- Role Master ---
+    # -- Role --
     Role:
       title: Role
       type: object
@@ -661,7 +661,7 @@ components:
         - id
         - name
 
-    # --- Clinic ---
+    # -- Clinic --
     ClinicFields:
       title: Clinic Fields
       type: object
@@ -707,7 +707,7 @@ components:
             - createdAt
             - updatedAt
 
-    # --- Prescription Master ---
+    # -- Prescription --
     PrescriptionFields:
       title: Prescription Fields
       type: object
@@ -751,7 +751,7 @@ components:
             - createdAt
             - updatedAt
 
-    # --- Item Master ---
+    # -- Item --
     ItemFields:
       title: Item Fields
       type: object
@@ -791,8 +791,8 @@ components:
             - id
             - createdAt
             - updatedAt
-
-    # --- Visit ---
+    
+    # -- Visit --
     VisitFields:
       title: Visit Fields
       type: object
@@ -834,7 +834,7 @@ components:
         currency:
           type: string
           default: 'JPY'
-          pattern: '^[A-Z]{3}$'
+          pattern: '^[0-9-]*$'
         note:
           type: string
       required:
@@ -863,8 +863,6 @@ components:
             - id
             - createdAt
             - updatedAt
-
-    # --- Visit Prescription (Link) ---
     VisitPrescriptionFields:
       title: Visit Prescription Fields
       type: object
@@ -922,7 +920,7 @@ components:
             - createdAt
             - updatedAt
 
-    # --- Pet & Type ---
+    # -- Pet --
     PetFields:
       title: Pet fields
       type: object
@@ -974,7 +972,6 @@ components:
             - type
             - createdAt
             - updatedAt
-
     PetTypeFields:
       type: object
       properties:
@@ -993,8 +990,8 @@ components:
               readOnly: true
           required:
             - id
-
-    # --- User ---
+          
+    # -- User --
     UserFields:
       type: object
       properties:
@@ -1007,6 +1004,10 @@ components:
           type: string
           maxLength: 255
           writeOnly: true
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleName'
         enabled:
           type: boolean
           default: true
@@ -1056,7 +1057,7 @@ components:
             roles:
               type: array
               items:
-                $ref: '#/components/schemas/RoleName'
+                $ref: '#/components/schemas/Role'
             createdAt:
               type: string
               format: date-time
