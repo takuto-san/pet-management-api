@@ -1,9 +1,14 @@
 package org.springframework.petmanagement.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.petmanagement.mapper.PetMapper;
 import org.springframework.petmanagement.model.Pet;
-import org.springframework.petmanagement.model.PetType;
 import org.springframework.petmanagement.model.User;
+import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.repository.PetRepository;
 import org.springframework.petmanagement.repository.PetTypeRepository;
 import org.springframework.petmanagement.repository.UserRepository;
@@ -11,11 +16,6 @@ import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 import org.springframework.petmanagement.service.PetService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional

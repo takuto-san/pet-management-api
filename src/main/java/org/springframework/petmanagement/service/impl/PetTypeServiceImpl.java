@@ -1,7 +1,7 @@
 package org.springframework.petmanagement.service.impl;
 
 import org.springframework.petmanagement.mapper.PetTypeMapper;
-import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.repository.PetTypeRepository;
 import org.springframework.petmanagement.rest.dto.PetTypeFieldsDto;
 import org.springframework.petmanagement.service.PetTypeService;

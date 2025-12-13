@@ -8,7 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.petmanagement.model.Pet;
-import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.repository.PetRepository;
 import org.springframework.petmanagement.repository.springdatajpa.override.PetRepositoryOverride;
 

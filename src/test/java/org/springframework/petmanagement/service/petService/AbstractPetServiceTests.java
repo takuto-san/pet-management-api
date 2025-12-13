@@ -7,7 +7,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.rest.dto.PetTypeFieldsDto;
 import org.springframework.petmanagement.service.PetService;
 import org.springframework.petmanagement.service.PetTypeService;

@@ -1,13 +1,14 @@
 package org.springframework.petmanagement.repository.springdatajpa.impl;
 
+import java.util.UUID;
+
 import org.springframework.context.annotation.Profile;
-import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.repository.springdatajpa.override.PetTypeRepositoryOverride;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import java.util.UUID;
 
 @Profile("spring-data-jpa")
 public class SpringDataPetTypeRepositoryImpl implements PetTypeRepositoryOverride {

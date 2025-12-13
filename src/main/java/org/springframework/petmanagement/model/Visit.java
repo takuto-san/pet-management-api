@@ -17,7 +17,7 @@ package org.springframework.petmanagement.model;
 
 import java.time.LocalDate;
 
-import org.springframework.petmanagement.model.base.BaseEntity;
+import org.springframework.petmanagement.model.base.Time;
 import org.springframework.petmanagement.model.type.VisitType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -50,7 +50,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Visit extends BaseEntity {
+public class Visit extends Time {
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)

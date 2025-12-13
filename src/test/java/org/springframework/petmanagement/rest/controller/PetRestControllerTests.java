@@ -15,7 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.petmanagement.model.Pet;
-import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 import org.springframework.petmanagement.service.PetService;
 import org.springframework.security.test.context.support.WithMockUser;

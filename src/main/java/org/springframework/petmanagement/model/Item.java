@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import org.springframework.petmanagement.model.base.BaseEntity;
+import org.springframework.petmanagement.model.base.Time;
 import org.springframework.petmanagement.model.type.ItemType;
 
 import jakarta.persistence.Column;
@@ -47,7 +47,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item extends BaseEntity {
+public class Item extends Time {
     
     @NotBlank
     @Column(name = "name")

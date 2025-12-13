@@ -9,7 +9,7 @@ import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.rest.dto.UserDto;
 import org.springframework.petmanagement.rest.dto.UserFieldsDto;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = DateTimeMapper.class)
 public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
