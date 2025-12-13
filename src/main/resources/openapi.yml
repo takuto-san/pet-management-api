@@ -613,7 +613,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Item'
-
+# ---------------------------------------------------
 components:
   schemas:
     ProblemDetail:
@@ -675,8 +675,19 @@ components:
             id:
               type: string
               format: uuid
+              readOnly: true
+            createdAt:
+              type: string
+              format: date-time
+              readOnly: true
+            updatedAt:
+              type: string
+              format: date-time
+              readOnly: true
           required:
             - id
+            - createdAt
+            - updatedAt
 
     # --- Prescription Master ---
     PrescriptionFields:
@@ -708,8 +719,19 @@ components:
             id:
               type: string
               format: uuid
+              readOnly: true
+            createdAt:
+              type: string
+              format: date-time
+              readOnly: true
+            updatedAt:
+              type: string
+              format: date-time
+              readOnly: true
           required:
             - id
+            - createdAt
+            - updatedAt
 
     # --- Item Master ---
     ItemFields:
@@ -738,8 +760,19 @@ components:
             id:
               type: string
               format: uuid
+              readOnly: true 
+            createdAt: 
+              type: string
+              format: date-time
+              readOnly: true
+            updatedAt:
+              type: string
+              format: date-time
+              readOnly: true
           required:
             - id
+            - createdAt
+            - updatedAt
 
     # --- Visit ---
     VisitFields:
@@ -799,8 +832,19 @@ components:
             id:
               type: string
               format: uuid
+              readOnly: true
+            createdAt:
+              type: string
+              format: date-time
+              readOnly: true
+            updatedAt:
+              type: string
+              format: date-time
+              readOnly: true
           required:
             - id
+            - createdAt
+            - updatedAt
 
     # --- Visit Prescription (Link) ---
     VisitPrescriptionFields:
@@ -841,12 +885,24 @@ components:
             id:
               type: string
               format: uuid
+              readOnly: true
             visitId:
               type: string
               format: uuid
+              readOnly: true
+            createdAt:
+              type: string
+              format: date-time
+              readOnly: true
+            updatedAt:
+              type: string
+              format: date-time
+              readOnly: true
           required:
             - id
             - visitId
+            - createdAt
+            - updatedAt
 
     # --- Pet & Type ---
     PetFields:
@@ -887,9 +943,19 @@ components:
               readOnly: true
             type:
               $ref: '#/components/schemas/PetType'
+            createdAt:
+              type: string
+              format: date-time
+              readOnly: true
+            updatedAt:
+              type: string
+              format: date-time
+              readOnly: true
           required:
             - id
             - type
+            - createdAt
+            - updatedAt
 
     PetTypeFields:
       type: object
@@ -906,6 +972,7 @@ components:
             id:
               type: string
               format: uuid
+              readOnly: true
           required:
             - id
 
@@ -972,5 +1039,15 @@ components:
               type: string
               format: uuid
               readOnly: true
+            createdAt:
+              type: string
+              format: date-time
+              readOnly: true
+            updatedAt:
+              type: string
+              format: date-time
+              readOnly: true
           required:
             - id
+            - createdAt
+            - updatedAt

@@ -1,5 +1,7 @@
 package org.springframework.petmanagement.mapper;
 
+import java.util.Collection;
+
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,11 +11,9 @@ import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.rest.dto.PetDto;
 import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 
-import java.util.Collection;
-
 @Mapper(
     componentModel = "spring",
-    uses = PetTypeMapper.class
+    uses = { PetTypeMapper.class, DateTimeMapper.class }
 )
 public interface PetMapper {
 

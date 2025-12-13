@@ -15,7 +15,7 @@
  */
 package org.springframework.petmanagement.model;
 
-import org.springframework.petmanagement.model.base.BaseEntity;
+import org.springframework.petmanagement.model.base.Time;
 import org.springframework.petmanagement.model.type.MedicationType;
 
 import jakarta.persistence.Column;
@@ -43,7 +43,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Prescription extends BaseEntity {
+public class Prescription extends Time {
     
     @NotNull
     @Column(name = "category", nullable = false)

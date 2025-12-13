@@ -9,7 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.petmanagement.mapper.PetTypeMapper;
-import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.rest.api.PettypesApi;
 import org.springframework.petmanagement.rest.dto.PetTypeDto;
 import org.springframework.petmanagement.rest.dto.PetTypeFieldsDto;

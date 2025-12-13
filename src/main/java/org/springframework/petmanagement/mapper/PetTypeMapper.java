@@ -1,18 +1,18 @@
 package org.springframework.petmanagement.mapper;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.rest.dto.PetTypeDto;
 import org.springframework.petmanagement.rest.dto.PetTypeFieldsDto;
 
-import java.util.Collection;
-import java.util.List;
-
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = DateTimeMapper.class)
 public interface PetTypeMapper {
 
     PetType toPetType(PetTypeDto petTypeDto);

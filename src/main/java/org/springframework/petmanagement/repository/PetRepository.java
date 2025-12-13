@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.petmanagement.model.Pet;
-import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.type.PetType;
 
 public interface PetRepository {
 

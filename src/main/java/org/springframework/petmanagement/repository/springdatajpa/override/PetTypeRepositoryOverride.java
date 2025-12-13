@@ -17,7 +17,7 @@
 package org.springframework.petmanagement.repository.springdatajpa.override;
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.petmanagement.model.PetType;
+import org.springframework.petmanagement.model.type.PetType;
 
 /**
  * @author Vitaliy Fedoriv

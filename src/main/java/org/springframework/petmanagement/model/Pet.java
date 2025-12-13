@@ -15,18 +15,29 @@
  */
 package org.springframework.petmanagement.model;
 
+import java.time.LocalDate;
+
+import org.springframework.petmanagement.model.base.Time;
+import org.springframework.petmanagement.model.type.PetType;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.springframework.petmanagement.model.base.Time;
-
-import java.time.LocalDate;
-import java.util.UUID;
 
 /**
  * Model representing a pet.
