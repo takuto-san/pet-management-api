@@ -189,6 +189,10 @@
             <artifactId>jaxb-api</artifactId>
             <version>${jaxb-api.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
     </dependencies>
 
     <reporting>
@@ -488,6 +492,15 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>${maven.site-plugin.version}</version>
             </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <configuration>
+                    <locations>
+                        <location>classpath:db/postgres/migration</location>
+                    </locations>
+                </configuration>
+            </plugin>        
         </plugins>
     </build>
 </project>
