@@ -1,11 +1,11 @@
 package org.springframework.petmanagement.repository.springdatajpa.override;
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.petmanagement.model.type.PetType;
+import org.springframework.petmanagement.model.Role;
 
 @Profile("spring-data-jpa")
-public interface PetTypeRepositoryOverride {
+public interface RoleRepositoryOverride {
 	
-	void delete(PetType petType);
+	void delete(Role Role);
 
 }
