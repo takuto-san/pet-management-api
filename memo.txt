@@ -2,3 +2,9 @@ docker-compose --profile postgres up -d
 docker-compose --profile postgres stop
 ./mvnw spring-boot:run
 http://localhost:9966/petmanagement/api/swagger-ui/index.html
+
+export FLYWAY_URL=jdbc:postgresql://localhost:5432/petmanagement
+export FLYWAY_USER=petmanagement
+export FLYWAY_PASSWORD=petmanagement
+mvn flyway:clean -Dflyway.cleanDisabled=false
+mvn flyway:migrate
