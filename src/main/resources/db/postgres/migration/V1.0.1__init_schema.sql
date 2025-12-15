@@ -1,12 +1,8 @@
--- ====================================================================
--- 1. 拡張機能の有効化
--- ====================================================================
+-- 1. Extention
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 
--- ====================================================================
--- 2. ENUM 型（列挙型）の定義
--- ====================================================================
+-- 2. Enum
 
 -- 処方薬カテゴリ
 CREATE TYPE prescription_category AS ENUM ('vaccine', 'heartworm', 'flea_tick', 'other');
@@ -38,10 +34,21 @@ CREATE TYPE pet_type AS ENUM (
     'fish'
 );
 
+-- ペットの性別
+CREATE TYPE pet_sex AS ENUM (
+    'male',
+    'female',
+    'unknown'
+);
 
--- ====================================================================
--- 3. 共通関数の定義
--- ====================================================================
+-- 通貨
+CREATE TYPE currency_type AS ENUM (
+    'JPY',
+    'USD'
+);
+
+
+-- 3. Method
 CREATE OR REPLACE FUNCTION update_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -53,9 +60,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- ====================================================================
--- 4. テーブルの定義
--- ====================================================================
+-- 4. Table
 
 -- ユーザーテーブル
 CREATE TABLE users (
@@ -100,7 +105,7 @@ CREATE TABLE pets (
     id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name       TEXT NOT NULL,
     birth_date DATE,
-    sex        VARCHAR(10),
+    sex        pet_sex,
     type       pet_type NOT NULL,
     user_id    UUID NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -145,7 +150,6 @@ CREATE INDEX idx_prescriptions_created_at ON prescriptions (created_at);
 -- 診察記録テーブル
 CREATE TABLE visits (
     id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    user_id     UUID NOT NULL REFERENCES users (id),
     pet_id      UUID NOT NULL REFERENCES pets (id),
     clinic_id   UUID NOT NULL REFERENCES clinics (id),
     visited_on  DATE NOT NULL,
@@ -156,13 +160,12 @@ CREATE TABLE visits (
     treatment   TEXT,
     next_due_on DATE,
     total_fee   NUMERIC(10,0),
-    currency    VARCHAR(3) DEFAULT 'JPY',
+    currency    currency_type DEFAULT 'JPY',
     note        TEXT,
     created_at  TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at  TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 CREATE INDEX idx_visits_pet ON visits (pet_id, visited_on);
-CREATE INDEX idx_visits_user ON visits (user_id, visited_on);
 CREATE INDEX idx_visits_clinic ON visits (clinic_id, visited_on);
 CREATE INDEX idx_visits_type ON visits (visit_type, visited_on);
 CREATE INDEX idx_visits_created_at ON visits (created_at);
@@ -204,9 +207,7 @@ CREATE INDEX idx_items_metadata_external_id ON items ((metadata->>'external_id')
 CREATE INDEX idx_items_created_at ON items (created_at);
 
 
--- ====================================================================
--- 5. トリガーの適用
--- ====================================================================
+-- 5. Trigger
 
 CREATE OR REPLACE TRIGGER set_update_at_on_users
 BEFORE UPDATE ON users
