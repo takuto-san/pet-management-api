@@ -18,7 +18,6 @@ import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 public interface PetMapper {
 
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "typeId", source = "type.id")
     @Mapping(target = "type", source = "type")
     PetDto toPetDto(Pet pet);
 

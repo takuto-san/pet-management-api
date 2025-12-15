@@ -6,9 +6,23 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 
 @MappedSuperclass
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Person extends Time {
 
     @Column(name = "first_name")
@@ -52,34 +66,4 @@ public class Person extends Time {
     @Size(max = 20)
     @Pattern(regexp = "^[0-9-]*$", message = "Telephone number must contain only digits and hyphens")
     protected String telephone;
-
-    public String getFirstName() { return this.firstName; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-
-    public String getLastName() { return this.lastName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
-
-    public String getFirstNameKana() { return firstNameKana; }
-    public void setFirstNameKana(String firstNameKana) { this.firstNameKana = firstNameKana; }
-
-    public String getLastNameKana() { return lastNameKana; }
-    public void setLastNameKana(String lastNameKana) { this.lastNameKana = lastNameKana; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getPostalCode() { return postalCode; }
-    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
-
-    public String getPrefecture() { return prefecture; }
-    public void setPrefecture(String prefecture) { this.prefecture = prefecture; }
-
-    public String getCity() { return city; }
-    public void setCity(String city) { this.city = city; }
-
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
-
-    public String getTelephone() { return telephone; }
-    public void setTelephone(String telephone) { this.telephone = telephone; }
 }
