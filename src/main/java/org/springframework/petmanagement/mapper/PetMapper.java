@@ -13,19 +13,21 @@ import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 
 @Mapper(
     componentModel = "spring",
-    uses = { PetTypeMapper.class, DateTimeMapper.class }
+    uses = { PetTypeMapper.class, PetSexMapper.class, DateTimeMapper.class }
 )
 public interface PetMapper {
 
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "type", source = "type")
+    @Mapping(target = "sex", source = "sex")
     PetDto toPetDto(Pet pet);
 
     Collection<PetDto> toPetsDto(Collection<Pet> pets);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "type", ignore = true)
+    @Mapping(target = "type", source = "type")
+    @Mapping(target = "sex", source = "sex")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Pet toPet(PetFieldsDto petFieldsDto);
@@ -33,7 +35,8 @@ public interface PetMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "type", ignore = true)
+    @Mapping(target = "type", source = "type")
+    @Mapping(target = "sex", source = "sex")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     void updatePetFromFields(PetFieldsDto petFieldsDto, @MappingTarget Pet currentPet);
