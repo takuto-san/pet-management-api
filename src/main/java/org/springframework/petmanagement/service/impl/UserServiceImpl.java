@@ -14,8 +14,9 @@ import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.model.type.RoleType;
 import org.springframework.petmanagement.repository.RoleRepository;
 import org.springframework.petmanagement.repository.UserRepository;
+import org.springframework.petmanagement.rest.dto.AdminUserUpdateDto;
 import org.springframework.petmanagement.rest.dto.RoleNameDto;
-import org.springframework.petmanagement.rest.dto.UserFieldsDto;
+import org.springframework.petmanagement.rest.dto.UserRegistrationDto;
 import org.springframework.petmanagement.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(UserFieldsDto fields) {
+    public User createUser(UserRegistrationDto fields) {
         if (fields.getUsername() == null || fields.getUsername().trim().isEmpty()) {
             throw new IllegalArgumentException("username cannot be blank");
         }
@@ -51,21 +52,13 @@ public class UserServiceImpl implements UserService {
 
         User user = userMapper.toUser(fields);
 
-        user.setEnabled(fields.getEnabled() == null || fields.getEnabled());
+        user.setEnabled(true);
         user.setPassword(passwordEncoder.encode(fields.getPassword()));
 
         Set<Role> roles = new HashSet<>();
-        if (fields.getRoles() != null && !fields.getRoles().isEmpty()) {
-            for (RoleNameDto roleNameDto : fields.getRoles()) {
-                Role role = roleRepository.findByName(RoleType.valueOf(roleNameDto.name()))
-                        .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleNameDto));
-                roles.add(role);
-            }
-        } else {
-            Role defaultRole = roleRepository.findByName(RoleType.OWNER)
-                    .orElseThrow(() -> new IllegalStateException("Default role OWNER not found in DB"));
-            roles.add(defaultRole);
-        }
+        Role defaultRole = roleRepository.findByName(RoleType.OWNER)
+                .orElseThrow(() -> new IllegalStateException("Default role OWNER not found in DB"));
+        roles.add(defaultRole);
         user.setRoles(roles);
 
         userRepository.save(user);
@@ -73,7 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(UUID userId, UserFieldsDto fields) {
+    public User updateUser(UUID userId, AdminUserUpdateDto fields) {
         User current = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
 
@@ -81,10 +74,6 @@ public class UserServiceImpl implements UserService {
 
         if (fields.getEnabled() != null) {
             current.setEnabled(fields.getEnabled());
-        }
-        
-        if (fields.getPassword() != null && !fields.getPassword().isEmpty()) {
-            current.setPassword(passwordEncoder.encode(fields.getPassword()));
         }
 
         if (fields.getRoles() != null) {
@@ -110,15 +99,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findById(UUID userId) {
+    public Optional<User> getUser(UUID userId) {
         return userRepository.findById(userId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> search(@Nullable String lastNameKana, @Nullable String firstNameKana) {
+    public List<User> listUsersByName(@Nullable String lastNameKana, @Nullable String firstNameKana) {
         List<User> all = userRepository.findAll();
-        
+
         if (lastNameKana == null && firstNameKana == null) return all;
 
         return all.stream()
