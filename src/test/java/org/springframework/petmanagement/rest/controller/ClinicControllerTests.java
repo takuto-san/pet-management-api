@@ -1,8 +1,14 @@
 package org.springframework.petmanagement.rest.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,19 +17,16 @@ import org.springframework.petmanagement.model.Clinic;
 import org.springframework.petmanagement.rest.dto.ClinicFieldsDto;
 import org.springframework.petmanagement.service.ClinicService;
 import org.springframework.security.test.context.support.WithMockUser;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -57,7 +60,7 @@ class ClinicControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testListClinicsSuccess() throws Exception {
-        given(this.clinicService.findAll()).willReturn(java.util.List.of(clinic));
+        given(this.clinicService.listClinics()).willReturn(java.util.List.of(clinic));
         this.mockMvc.perform(get("/api/clinics").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
@@ -65,7 +68,7 @@ class ClinicControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetClinicSuccess() throws Exception {
-        given(this.clinicService.findById(CLINIC_ID)).willReturn(Optional.of(clinic));
+        given(this.clinicService.getClinic(CLINIC_ID)).willReturn(Optional.of(clinic));
         this.mockMvc.perform(get("/api/clinics/{id}", CLINIC_ID).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
@@ -73,7 +76,7 @@ class ClinicControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetClinicNotFound() throws Exception {
-        given(this.clinicService.findById(CLINIC_ID_NOT_FOUND)).willReturn(Optional.empty());
+        given(this.clinicService.getClinic(CLINIC_ID_NOT_FOUND)).willReturn(Optional.empty());
         this.mockMvc.perform(get("/api/clinics/{id}", CLINIC_ID_NOT_FOUND).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -84,7 +87,7 @@ class ClinicControllerTests {
         Clinic newClinic = new Clinic();
         newClinic.setId(UUID.randomUUID());
         newClinic.setName("New Clinic");
-        given(this.clinicService.save(any(Clinic.class))).willReturn(newClinic);
+        given(this.clinicService.createClinic(any(ClinicFieldsDto.class))).willReturn(newClinic);
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 
@@ -99,8 +102,7 @@ class ClinicControllerTests {
     @Test
     @WithMockUser(roles = "ADMIN")
     void testUpdateClinicSuccess() throws Exception {
-        given(this.clinicService.findById(CLINIC_ID)).willReturn(Optional.of(clinic));
-        given(this.clinicService.save(any(Clinic.class))).willReturn(clinic);
+        given(this.clinicService.updateClinic(eq(CLINIC_ID), any(ClinicFieldsDto.class))).willReturn(clinic);
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 
@@ -115,7 +117,7 @@ class ClinicControllerTests {
     @Test
     @WithMockUser(roles = "ADMIN")
     void testUpdateClinicNotFound() throws Exception {
-        given(this.clinicService.findById(CLINIC_ID_NOT_FOUND)).willReturn(Optional.empty());
+        doThrow(new IllegalArgumentException("clinic not found")).when(clinicService).updateClinic(eq(CLINIC_ID_NOT_FOUND), any(ClinicFieldsDto.class));
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 
