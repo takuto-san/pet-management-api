@@ -613,7 +613,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Item'
-# ---------------------------------------------------
+# ------------------------------------------------------------------------------------------------------
 components:
   schemas:
     ProblemDetail:
@@ -636,12 +636,19 @@ components:
     RoleName:
       type: string
       enum: [owner, vet, nurse, receptionist, clinic_admin, admin]
+    
+    PetType:
+      type: string
+      enum: [dog, cat, rabbit, hamster, bird, turtle, fish]
+
     PrescriptionCategory:
       type: string
       enum: [vaccine, heartworm, flea_tick, other]
+    
     VisitType:
       type: string
       enum: [vaccine, heartworm, flea_tick, checkup, general]
+    
     ItemCategory:
       type: string
       enum: [food, treat, supplement, pad, toy, collar, hygiene, medical, other]
@@ -834,7 +841,9 @@ components:
         currency:
           type: string
           default: 'JPY'
-          pattern: '^[0-9-]*$'
+          minLength: 3
+          maxLength: 3
+          example: 'JPY'
         note:
           type: string
       required:
@@ -937,16 +946,15 @@ components:
           type: string
           maxLength: 10
           example: オス
-        typeId:
-          type: string
-          format: uuid
+        type:
+          $ref: '#/components/schemas/PetType'
         userId:
           type: string
           format: uuid
           description: The owner ID
       required:
         - name
-        - typeId
+        - type
         - userId
     Pet:
       allOf:
@@ -957,8 +965,6 @@ components:
               type: string
               format: uuid
               readOnly: true
-            type:
-              $ref: '#/components/schemas/PetType'
             createdAt:
               type: string
               format: date-time
@@ -969,28 +975,9 @@ components:
               readOnly: true
           required:
             - id
-            - type
             - createdAt
             - updatedAt
-    PetTypeFields:
-      type: object
-      properties:
-        name:
-          type: string
-      required:
-        - name
-    PetType:
-      allOf:
-        - $ref: '#/components/schemas/PetTypeFields'
-        - type: object
-          properties:
-            id:
-              type: string
-              format: uuid
-              readOnly: true
-          required:
-            - id
-          
+
     # -- User --
     UserFields:
       type: object

@@ -1,4 +1,6 @@
+-- ====================================================================
 -- 1. ロール（役割）マスタ
+-- ====================================================================
 INSERT INTO roles (name) VALUES 
     ('owner'), 
     ('vet'), 
@@ -9,17 +11,9 @@ INSERT INTO roles (name) VALUES
 ON CONFLICT (name) DO NOTHING;
 
 
--- 2. ペット種別マスタ
-INSERT INTO types (name) VALUES ('dog')     ON CONFLICT (name) DO NOTHING;
-INSERT INTO types (name) VALUES ('cat')     ON CONFLICT (name) DO NOTHING;
-INSERT INTO types (name) VALUES ('rabbit')  ON CONFLICT (name) DO NOTHING;
-INSERT INTO types (name) VALUES ('hamster') ON CONFLICT (name) DO NOTHING;
-INSERT INTO types (name) VALUES ('bird')    ON CONFLICT (name) DO NOTHING;
-INSERT INTO types (name) VALUES ('turtle')  ON CONFLICT (name) DO NOTHING;
-INSERT INTO types (name) VALUES ('fish')    ON CONFLICT (name) DO NOTHING;
-
-
--- 3. ユーザー（roleカラム削除済み）
+-- ====================================================================
+-- 2. ユーザーマスタ
+-- ====================================================================
 INSERT INTO users (
     username, password, enabled,
     first_name, last_name, first_name_kana, last_name_kana,
@@ -50,8 +44,7 @@ INSERT INTO users (
  'kenji.watanabe@example.com', '220-0001', '神奈川県', '横浜市西区', 'みなとみらい1-1', '070-1234-5678')
 ON CONFLICT (username) DO NOTHING;
 
-
--- 管理者ユーザー（roleカラム削除済み）
+-- 管理者ユーザー
 INSERT INTO users (
     username, password, enabled,
     first_name, last_name, first_name_kana, last_name_kana,
@@ -65,7 +58,9 @@ INSERT INTO users (
 ) ON CONFLICT (username) DO NOTHING;
 
 
--- 4. ユーザーとロールの紐付け（新規追加）
+-- ====================================================================
+-- 3. ユーザーとロールの紐付け
+-- ====================================================================
 -- 一般ユーザーを owner ロールに紐付け
 INSERT INTO user_roles (user_id, role_id)
 SELECT u.id, r.id
@@ -83,42 +78,39 @@ WHERE r.name = 'admin'
 ON CONFLICT DO NOTHING;
 
 
--- 5. ペット情報
-INSERT INTO pets (name, birth_date, sex, type_id, user_id) VALUES 
-('ポチ', '2020-01-15', 'オス',
- (SELECT id FROM types WHERE name = 'dog'),
+-- ====================================================================
+-- 4. ペット情報
+-- NOTE: typeカラムにはENUM値('dog', 'cat'等)を直接指定します
+-- ====================================================================
+INSERT INTO pets (name, birth_date, sex, type, user_id) VALUES 
+('ポチ', '2020-01-15', 'オス', 'dog',
  (SELECT id FROM users WHERE email = 'taro.yamada@example.com')),
 
-('ミケ', '2021-05-05', 'メス',
- (SELECT id FROM types WHERE name = 'cat'),
+('ミケ', '2021-05-05', 'メス', 'cat',
  (SELECT id FROM users WHERE email = 'hanako.suzuki@example.com')),
 
-('ハム助', '2022-12-10', 'オス',
- (SELECT id FROM types WHERE name = 'hamster'),
+('ハム助', '2022-12-10', 'オス', 'hamster',
  (SELECT id FROM users WHERE email = 'jiro.sato@example.com')),
 
-('カメ吉', '2015-08-20', '不明',
- (SELECT id FROM types WHERE name = 'turtle'),
+('カメ吉', '2015-08-20', '不明', 'turtle',
  (SELECT id FROM users WHERE email = 'jiro.sato@example.com')),
 
-('ピーちゃん', '2019-03-15', 'メス',
- (SELECT id FROM types WHERE name = 'bird'),
+('ピーちゃん', '2019-03-15', 'メス', 'bird',
  (SELECT id FROM users WHERE email = 'yumi.tanaka@example.com')),
 
-('ラビット', '2018-11-30', 'オス',
- (SELECT id FROM types WHERE name = 'rabbit'),
+('ラビット', '2018-11-30', 'オス', 'rabbit',
  (SELECT id FROM users WHERE email = 'ichiro.takahashi@example.com')),
 
-('ニモ', '2021-07-07', '不明',
- (SELECT id FROM types WHERE name = 'fish'),
+('ニモ', '2021-07-07', '不明', 'fish',
  (SELECT id FROM users WHERE email = 'kenji.watanabe@example.com')),
 
-('チロ', '2019-06-20', 'メス',
- (SELECT id FROM types WHERE name = 'dog'),
+('チロ', '2019-06-20', 'メス', 'dog',
  (SELECT id FROM users WHERE email = 'taro.yamada@example.com'));
 
 
--- 6. クリニック情報
+-- ====================================================================
+-- 5. クリニック情報
+-- ====================================================================
 INSERT INTO clinics (name, telephone, address, website_url, opening_hours, note) VALUES
 ('さくら動物病院',
  '03-1234-5678',
@@ -156,7 +148,9 @@ INSERT INTO clinics (name, telephone, address, website_url, opening_hours, note)
  'CT・MRI完備');
 
 
--- 7. 処方薬マスタ
+-- ====================================================================
+-- 6. 処方薬マスタ
+-- ====================================================================
 INSERT INTO prescriptions (category, name, form, strength, note) VALUES
 ('vaccine', '犬5種混合ワクチン', '注射', '1mL', '子犬・成犬用'),
 ('vaccine', '犬8種混合ワクチン', '注射', '1mL', 'レプトスピラ含む'),
@@ -181,7 +175,9 @@ INSERT INTO prescriptions (category, name, form, strength, note) VALUES
 ON CONFLICT (category, name, form, strength) DO NOTHING;
 
 
--- 8. 商品マスタ
+-- ====================================================================
+-- 7. 商品マスタ
+-- ====================================================================
 INSERT INTO items (name, category, note, metadata) VALUES
 ('ロイヤルカナン 腎臓サポート', 'food', '療法食', 
  '{"brand": "Royal Canin", "weight": "2kg"}'::jsonb),
@@ -217,7 +213,9 @@ INSERT INTO items (name, category, note, metadata) VALUES
  '{"brand": "リッチェル", "size": "S"}'::jsonb);
 
 
--- 9. 診察記録
+-- ====================================================================
+-- 8. 診察記録
+-- ====================================================================
 INSERT INTO visits (user_id, pet_id, clinic_id, visited_on, weight, visit_type, reason, diagnosis, treatment, next_due_on, total_fee, note)
 VALUES
 ((SELECT id FROM users WHERE email = 'taro.yamada@example.com'),
@@ -251,7 +249,9 @@ VALUES
  '2024-11-15', 0.12, 'general', '食欲低下', '軽度の歯の伸びすぎ', '歯のトリミング実施', NULL, 3000, 'エキゾチック専門医対応');
 
 
--- 10. 診察に紐づく処方薬
+-- ====================================================================
+-- 9. 診察に紐づく処方薬
+-- ====================================================================
 INSERT INTO visit_prescriptions (visit_id, prescription_id, quantity, unit, days, dosage_instructions, purpose)
 VALUES
 ((SELECT id FROM visits WHERE pet_id = (SELECT id FROM pets WHERE name = 'ポチ') AND visited_on = '2024-04-15'),
