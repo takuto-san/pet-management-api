@@ -25,7 +25,7 @@ public abstract class AbstractPrescriptionServiceTests {
     void shouldCreatePrescription() {
         PrescriptionFieldsDto fields = new PrescriptionFieldsDto()
             .name("Test Prescription")
-            .category(PrescriptionCategory.VACCINE);
+            .category(PrescriptionCategoryDto.VACCINE);
 
         Prescription saved = prescriptionService.createPrescription(fields);
         assertThat(saved.getId()).isNotNull();
@@ -36,7 +36,7 @@ public abstract class AbstractPrescriptionServiceTests {
     void shouldFindPrescriptionById() {
         PrescriptionFieldsDto fields = new PrescriptionFieldsDto()
             .name("Test Prescription")
-            .category(PrescriptionCategory.VACCINE);
+            .category(PrescriptionCategoryDto.VACCINE);
 
         Prescription saved = prescriptionService.createPrescription(fields);
         assertThat(prescriptionService.getPrescription(saved.getId())).isPresent();

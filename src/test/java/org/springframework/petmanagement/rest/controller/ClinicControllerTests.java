@@ -60,7 +60,7 @@ class ClinicControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testListClinicsSuccess() throws Exception {
-        given(this.clinicService.listClinics()).willReturn(java.util.List.of(clinic));
+        given(this.clinicService.listClinics(any())).willReturn(org.springframework.data.domain.Page.empty());
         this.mockMvc.perform(get("/api/clinics").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }

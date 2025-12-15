@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,6 @@ import org.springframework.petmanagement.model.Clinic;
 import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.model.Visit;
-import org.springframework.petmanagement.repository.ClinicRepository;
-import org.springframework.petmanagement.repository.PetRepository;
-import org.springframework.petmanagement.repository.UserRepository;
 import org.springframework.petmanagement.rest.dto.VisitFieldsDto;
 import org.springframework.petmanagement.rest.dto.VisitTypeDto;
 import org.springframework.petmanagement.service.VisitService;
@@ -47,9 +45,6 @@ class VisitControllerTests {
 
     @Autowired private MockMvc mockMvc;
     @MockitoBean private VisitService visitService;
-    @MockitoBean private UserRepository userRepository;
-    @MockitoBean private PetRepository petRepository;
-    @MockitoBean private ClinicRepository clinicRepository;
     @Autowired private ObjectMapper objectMapper;
 
     private Visit visit;
@@ -75,23 +70,17 @@ class VisitControllerTests {
         visit = new Visit();
         visit.setId(VISIT_ID);
         visit.setVisitedOn(LocalDate.now());
-        visit.setUser(user);
         visit.setPet(pet);
         visit.setClinic(clinic);
-
-        // Mock repositories
-        given(this.userRepository.findById(USER_ID)).willReturn(user);
-        given(this.petRepository.findById(PET_ID)).willReturn(pet);
-        given(this.clinicRepository.findById(CLINIC_ID)).willReturn(clinic);
     }
 
     private VisitFieldsDto createValidFieldsDto() {
         return new VisitFieldsDto()
+            .userId(USER_ID)
             .visitedOn(LocalDate.now())
             .petId(PET_ID)
-            .userId(USER_ID)
             .clinicId(CLINIC_ID)
-            .visitType(VisitTypeDto.CHECKUP) 
+            .visitType(VisitTypeDto.CHECKUP)
             .weight(5.0f)
             .totalFee(5000);
     }
@@ -99,7 +88,7 @@ class VisitControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testListVisitsSuccess() throws Exception {
-        given(this.visitService.findAll(PET_ID)).willReturn(java.util.List.of(visit));
+        given(this.visitService.listVisits(eq(PET_ID), any())).willReturn(org.springframework.data.domain.Page.empty());
         this.mockMvc.perform(get("/api/visits").param("petId", PET_ID.toString()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
@@ -107,7 +96,7 @@ class VisitControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetVisitSuccess() throws Exception {
-        given(this.visitService.findById(VISIT_ID)).willReturn(Optional.of(visit));
+        given(this.visitService.getVisit(VISIT_ID)).willReturn(Optional.of(visit));
         this.mockMvc.perform(get("/api/visits/{id}", VISIT_ID).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
@@ -115,7 +104,7 @@ class VisitControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetVisitNotFound() throws Exception {
-        given(this.visitService.findById(VISIT_ID_NOT_FOUND)).willReturn(Optional.empty());
+        given(this.visitService.getVisit(VISIT_ID_NOT_FOUND)).willReturn(Optional.empty());
         this.mockMvc.perform(get("/api/visits/{id}", VISIT_ID_NOT_FOUND).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -126,10 +115,7 @@ class VisitControllerTests {
         Visit newVisit = new Visit();
         newVisit.setId(UUID.randomUUID());
         newVisit.setVisitedOn(LocalDate.now());
-        given(this.visitService.save(any(Visit.class))).willReturn(newVisit);
-        given(this.userRepository.findById(USER_ID)).willReturn(user);
-        given(this.petRepository.findById(PET_ID)).willReturn(pet);
-        given(this.clinicRepository.findById(CLINIC_ID)).willReturn(clinic);
+        given(this.visitService.createVisit(any(VisitFieldsDto.class))).willReturn(newVisit);
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 
@@ -144,8 +130,8 @@ class VisitControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdateVisitSuccess() throws Exception {
-        given(this.visitService.findById(VISIT_ID)).willReturn(Optional.of(visit));
-        given(this.visitService.save(any(Visit.class))).willReturn(visit);
+        given(this.visitService.getVisit(VISIT_ID)).willReturn(Optional.of(visit));
+        given(this.visitService.updateVisit(VISIT_ID, any(VisitFieldsDto.class))).willReturn(visit);
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 
@@ -160,7 +146,7 @@ class VisitControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdateVisitNotFound() throws Exception {
-        given(this.visitService.findById(VISIT_ID_NOT_FOUND)).willReturn(Optional.empty());
+        given(this.visitService.getVisit(VISIT_ID_NOT_FOUND)).willReturn(Optional.empty());
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 

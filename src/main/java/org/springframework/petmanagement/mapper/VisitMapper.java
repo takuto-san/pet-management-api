@@ -24,6 +24,7 @@ public interface VisitMapper {
     @Mapping(target = "updatedAt", ignore = true)
     Visit toVisit(VisitFieldsDto visitFieldsDto);
 
+    @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "pet.id", target = "petId")
     @Mapping(source = "clinic.id", target = "clinicId")
     @Mapping(target = "visitType", source = "visitType")
