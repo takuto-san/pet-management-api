@@ -12,3 +12,10 @@ export FLYWAY_USER=petmanagement
 export FLYWAY_PASSWORD=petmanagement
 mvn flyway:clean -Dflyway.cleanDisabled=false
 mvn flyway:migrate
+
+
+memo
+repository/：Service層のインターフェース
+repository/springdatajpa：Spring Data JPAのインターフェース。他3つを統合する
+repository/springdatajpa/override：標準CRUDにないメソッド（カスタムメソッド）を定義するインターフェース
+repository/springdatajpa/impl：カスタムメソッドの実装
