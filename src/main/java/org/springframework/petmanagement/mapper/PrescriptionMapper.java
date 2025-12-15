@@ -1,5 +1,7 @@
 package org.springframework.petmanagement.mapper;
 
+import java.util.List;
+
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,16 +11,16 @@ import org.springframework.petmanagement.model.Prescription;
 import org.springframework.petmanagement.rest.dto.PrescriptionDto;
 import org.springframework.petmanagement.rest.dto.PrescriptionFieldsDto;
 
-import java.util.List;
-
-@Mapper(componentModel = "spring", uses = DateTimeMapper.class)
+@Mapper(componentModel = "spring", uses = {DateTimeMapper.class, MedicationTypeMapper.class})
 public interface PrescriptionMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "category", source = "category")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Prescription toPrescription(PrescriptionFieldsDto prescriptionFieldsDto);
 
+    @Mapping(target = "category", source = "category")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
     PrescriptionDto toPrescriptionDto(Prescription prescription);
@@ -27,6 +29,7 @@ public interface PrescriptionMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "category", source = "category")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     void updatePrescriptionFromFields(PrescriptionFieldsDto prescriptionFieldsDto, @MappingTarget Prescription prescription);
