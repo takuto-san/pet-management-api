@@ -979,7 +979,7 @@ components:
             - updatedAt
 
     # -- User --
-    UserFields:
+    UserBase:
       type: object
       properties:
         username:
@@ -987,17 +987,6 @@ components:
           minLength: 1
           maxLength: 20
           example: john.doe
-        password:
-          type: string
-          maxLength: 255
-          writeOnly: true
-        roles:
-          type: array
-          items:
-            $ref: '#/components/schemas/RoleName'
-        enabled:
-          type: boolean
-          default: true
         firstName:
           type: string
         lastName:
@@ -1026,35 +1015,62 @@ components:
           pattern: '^[0-9-]*$'
       required:
         - username
-        - password
         - firstName
         - lastName
         - firstNameKana
         - lastNameKana
         - email
-    User:
+
+    UserRegistration:
       allOf:
-        - $ref: '#/components/schemas/UserFields'
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          properties:
+            password:
+              type: string
+              maxLength: 255
+              writeOnly: true
+          required:
+            - password
+
+    UserResponse:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
         - type: object
           properties:
             id:
               type: string
               format: uuid
-              readOnly: true
             roles:
               type: array
               items:
                 $ref: '#/components/schemas/Role'
+            enabled:
+              type: boolean
             createdAt:
               type: string
               format: date-time
-              readOnly: true
             updatedAt:
               type: string
               format: date-time
-              readOnly: true
           required:
             - id
             - roles
+            - enabled
             - createdAt
             - updatedAt
+
+    UserUpdate:
+      $ref: '#/components/schemas/UserBase'
+
+    AdminUserUpdate:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          properties:
+            roles:
+              type: array
+              items:
+                $ref: '#/components/schemas/RoleName'
+            enabled:
+              type: boolean
