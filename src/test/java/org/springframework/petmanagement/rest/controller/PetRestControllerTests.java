@@ -13,10 +13,14 @@ import static org.mockito.Mockito.doThrow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.petmanagement.model.Pet;
+import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.rest.dto.PetFieldsDto;
+import org.springframework.petmanagement.rest.dto.PetSexDto;
+import org.springframework.petmanagement.rest.dto.PetTypeDto;
 import org.springframework.petmanagement.service.PetService;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -45,27 +49,24 @@ class PetRestControllerTests {
     @Autowired private ObjectMapper objectMapper;
 
     private Pet pet;
-    private PetType petType;
 
     @BeforeEach
     void initPets() {
-        petType = new PetType();
-        petType.setId(PET_TYPE_ID);
-        petType.setName("dog");
-
-        pet = new Pet();
-        pet.setId(PET_ID);
-        pet.setName("Rosy");
-        pet.setBirthDate(LocalDate.now());
-        pet.setType(petType);
+        pet = Pet.builder()
+            .id(PET_ID)
+            .name("Rosy")
+            .birthDate(LocalDate.now())
+            .type(PetType.DOG)
+            .user(User.builder().id(USER_ID).username("test").email("test@example.com").firstName("Test").lastName("User").build())
+            .build();
     }
 
     private PetFieldsDto createValidFieldsDto() {
         return new PetFieldsDto()
             .name("Rosy Updated")
             .birthDate(LocalDate.now())
-            .sex("メス")
-            .typeId(PET_TYPE_ID)
+            .sex(PetSexDto.FEMALE)
+            .type(PetTypeDto.DOG)
             .userId(USER_ID);
     }
 
@@ -91,7 +92,7 @@ class PetRestControllerTests {
         given(this.petService.createPet(any(PetFieldsDto.class)))
             .willThrow(new IllegalArgumentException("pet type not found"));
 
-        String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto().typeId(PET_TYPE_ID_INVALID));
+        String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto().type(PetTypeDto.DOG));
 
         this.mockMvc.perform(post("/api/pets")
                 .with(csrf())
@@ -157,7 +158,7 @@ class PetRestControllerTests {
         given(this.petService.updatePet(eq(PET_ID), any(PetFieldsDto.class)))
             .willThrow(new IllegalArgumentException("pet type not found"));
 
-        String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto().typeId(PET_TYPE_ID_INVALID));
+        String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto().type(PetTypeDto.DOG));
 
         this.mockMvc.perform(put("/api/pets/{id}", PET_ID)
                 .with(csrf())
@@ -171,7 +172,7 @@ class PetRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetPetSuccess() throws Exception {
-        given(this.petService.findById(PET_ID)).willReturn(Optional.of(pet));
+        given(this.petService.getPet(PET_ID)).willReturn(Optional.of(pet));
         this.mockMvc.perform(get("/api/pets/{id}", PET_ID).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
@@ -179,7 +180,7 @@ class PetRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetAllPetsSuccess() throws Exception {
-        given(this.petService.findAll()).willReturn(java.util.List.of(pet));
+        given(this.petService.listPets(null)).willReturn(new PageImpl<>(java.util.List.of(pet)));
         this.mockMvc.perform(get("/api/pets").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
@@ -187,7 +188,7 @@ class PetRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetAllPetsEmptyStillOk() throws Exception {
-        given(this.petService.findAll()).willReturn(java.util.List.of());
+        given(this.petService.listPets(null)).willReturn(new PageImpl<>(java.util.List.of()));
         this.mockMvc.perform(get("/api/pets").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
@@ -195,7 +196,7 @@ class PetRestControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetPetNotFound() throws Exception {
-        given(this.petService.findById(PET_ID_NOT_FOUND)).willReturn(Optional.empty());
+        given(this.petService.getPet(PET_ID_NOT_FOUND)).willReturn(Optional.empty());
         this.mockMvc.perform(get("/api/pets/{id}", PET_ID_NOT_FOUND).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }

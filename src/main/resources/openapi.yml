@@ -985,6 +985,9 @@ components:
       title: Visit Prescription Fields
       type: object
       properties:
+        visitId:
+          type: string
+          format: uuid
         prescriptionId:
           type: string
           format: uuid
@@ -1008,6 +1011,7 @@ components:
         purpose:
           type: string
       required:
+        - visitId
         - prescriptionId
         - quantity
         - unit

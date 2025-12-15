@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.type.PetType;
@@ -18,7 +17,6 @@ import org.springframework.petmanagement.repository.springdatajpa.override.PetRe
 public interface SpringDataPetRepository extends PetRepository, PagingAndSortingRepository<Pet, UUID>, PetRepositoryOverride {
 
     @Override
-    @Query("SELECT ptype FROM PetType ptype ORDER BY ptype.name")
     List<PetType> findPetTypes() throws DataAccessException;
 
     Page<Pet> findAll(Pageable pageable);

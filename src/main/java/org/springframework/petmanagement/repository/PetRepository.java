@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.type.PetType;
 
@@ -13,11 +15,12 @@ public interface PetRepository {
     void save(Pet pet) throws DataAccessException;
 
     void delete(Pet pet) throws DataAccessException;
-    
+
     Pet findById(UUID id) throws DataAccessException;
 
     List<PetType> findPetTypes() throws DataAccessException;
-    
+
     Collection<Pet> findAll() throws DataAccessException;
 
+    Page<Pet> findAll(Pageable pageable) throws DataAccessException;
 }

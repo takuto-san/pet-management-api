@@ -1,7 +1,4 @@
-package org.springframework.petmanagement.mapper;
-
-import java.util.Collection;
-import java.util.List;
+package org.springframework.petmanagement.mapper.type;
 
 import org.mapstruct.Mapper;
 import org.springframework.petmanagement.model.type.PetType;
@@ -13,6 +10,4 @@ public interface PetTypeMapper {
     PetType toPetType(PetTypeDto petTypeDto);
 
     PetTypeDto toPetTypeDto(PetType petType);
-
-    List<PetTypeDto> toPetTypeDtos(Collection<PetType> petTypes);
 }

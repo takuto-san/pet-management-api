@@ -7,6 +7,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.petmanagement.model.type.PetSex;
 import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -26,14 +27,14 @@ class PetTests {
 
     @Test
     void shouldCreateValidPet() {
-        PetType petType = PetType.builder().id(UUID.randomUUID()).name("dog").build();
-        User user = User.builder().id(UUID.randomUUID()).build();
+        PetType petType = PetType.DOG;
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
 
         Pet pet = Pet.builder()
             .id(UUID.randomUUID())
             .name("ポチ")
             .birthDate(LocalDate.of(2020, 1, 1))
-            .sex("オス")
+            .sex(PetSex.MALE)
             .type(petType)
             .user(user)
             .build();
@@ -46,8 +47,8 @@ class PetTests {
 
     @Test
     void shouldFailWhenNameIsNull() {
-        PetType petType = PetType.builder().id(UUID.randomUUID()).name("dog").build();
-        User user = User.builder().id(UUID.randomUUID()).build();
+        PetType petType = PetType.DOG;
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
 
         Pet pet = Pet.builder()
             .id(UUID.randomUUID())
@@ -63,8 +64,8 @@ class PetTests {
 
     @Test
     void shouldFailWhenNameIsBlank() {
-        PetType petType = PetType.builder().id(UUID.randomUUID()).name("dog").build();
-        User user = User.builder().id(UUID.randomUUID()).build();
+        PetType petType = PetType.DOG;
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
 
         Pet pet = Pet.builder()
             .id(UUID.randomUUID())
@@ -80,8 +81,8 @@ class PetTests {
 
     @Test
     void shouldFailWhenNameExceedsMaxLength() {
-        PetType petType = PetType.builder().id(UUID.randomUUID()).name("dog").build();
-        User user = User.builder().id(UUID.randomUUID()).build();
+        PetType petType = PetType.DOG;
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
 
         Pet pet = Pet.builder()
             .id(UUID.randomUUID())
@@ -97,7 +98,7 @@ class PetTests {
 
     @Test
     void shouldFailWhenTypeIsNull() {
-        User user = User.builder().id(UUID.randomUUID()).build();
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
 
         Pet pet = Pet.builder()
             .id(UUID.randomUUID())
@@ -113,7 +114,7 @@ class PetTests {
 
     @Test
     void shouldFailWhenUserIsNull() {
-        PetType petType = PetType.builder().id(UUID.randomUUID()).name("dog").build();
+        PetType petType = PetType.DOG;
 
         Pet pet = Pet.builder()
             .id(UUID.randomUUID())
@@ -129,8 +130,8 @@ class PetTests {
 
     @Test
     void shouldAllowNullOptionalFields() {
-        PetType petType = PetType.builder().id(UUID.randomUUID()).name("dog").build();
-        User user = User.builder().id(UUID.randomUUID()).build();
+        PetType petType = PetType.DOG;
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
 
         Pet pet = Pet.builder()
             .id(UUID.randomUUID())
@@ -147,8 +148,8 @@ class PetTests {
 
     @Test
     void shouldSupportBuilderPattern() {
-        PetType petType = PetType.builder().id(UUID.randomUUID()).name("cat").build();
-        User user = User.builder().id(UUID.randomUUID()).build();
+        PetType petType = PetType.CAT;
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
 
         Pet pet = Pet.builder()
             .name("ミケ")
@@ -158,32 +159,5 @@ class PetTests {
 
         assertThat(pet).isNotNull();
         assertThat(pet.getName()).isEqualTo("ミケ");
-    }
-
-    @Test
-    void shouldValidateSexMaxLength() {
-        PetType petType = PetType.builder().id(UUID.randomUUID()).name("dog").build();
-        User user = User.builder().id(UUID.randomUUID()).build();
-
-        Pet validPet = Pet.builder()
-            .name("ポチ")
-            .sex("オス")
-            .type(petType)
-            .user(user)
-            .build();
-
-        Set<ConstraintViolation<Pet>> violations = validator.validate(validPet);
-        assertThat(violations).isEmpty();
-
-        Pet invalidPet = Pet.builder()
-            .name("ポチ")
-            .sex("a".repeat(11))
-            .type(petType)
-            .user(user)
-            .build();
-
-        violations = validator.validate(invalidPet);
-        assertThat(violations).isNotEmpty();
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("sex"));
     }
 }

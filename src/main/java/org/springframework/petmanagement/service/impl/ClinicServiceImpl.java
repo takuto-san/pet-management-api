@@ -1,10 +1,10 @@
 package org.springframework.petmanagement.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.petmanagement.mapper.ClinicMapper;
 import org.springframework.petmanagement.model.Clinic;
 import org.springframework.petmanagement.repository.ClinicRepository;
@@ -27,8 +27,8 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Clinic> listClinics() {
-        return new ArrayList<>(clinicRepository.findAll());
+    public Page<Clinic> listClinics(Pageable pageable) {
+        return clinicRepository.findAll(pageable);
     }
 
     @Override

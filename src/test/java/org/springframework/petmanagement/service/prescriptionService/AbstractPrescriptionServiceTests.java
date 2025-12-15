@@ -3,8 +3,10 @@ package org.springframework.petmanagement.service.prescriptionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.petmanagement.model.Prescription;
-import org.springframework.petmanagement.model.type.MedicationType;
+import org.springframework.petmanagement.rest.dto.PrescriptionCategoryDto;
+import org.springframework.petmanagement.rest.dto.PrescriptionFieldsDto;
 import org.springframework.petmanagement.service.PrescriptionService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,28 +17,28 @@ public abstract class AbstractPrescriptionServiceTests {
     protected PrescriptionService prescriptionService;
 
     @Test
-    void shouldListPrescriptionsEvenIfEmpty() {
-        assertThat(prescriptionService.findAll()).isNotNull();
+    void shouldFindAll() {
+        assertThat(prescriptionService.listPrescriptions(PageRequest.of(0, 10))).isNotNull();
     }
 
     @Test
     void shouldCreatePrescription() {
-        Prescription prescription = new Prescription();
-        prescription.setName("Test Prescription");
-        prescription.setCategory(MedicationType.VACCINE);
+        PrescriptionFieldsDto fields = new PrescriptionFieldsDto()
+            .name("Test Prescription")
+            .category(PrescriptionCategory.VACCINE);
 
-        Prescription saved = prescriptionService.save(prescription);
+        Prescription saved = prescriptionService.createPrescription(fields);
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getName()).isEqualTo("Test Prescription");
     }
 
     @Test
     void shouldFindPrescriptionById() {
-        Prescription prescription = new Prescription();
-        prescription.setName("Test Prescription");
-        prescription.setCategory(MedicationType.VACCINE);
+        PrescriptionFieldsDto fields = new PrescriptionFieldsDto()
+            .name("Test Prescription")
+            .category(PrescriptionCategory.VACCINE);
 
-        Prescription saved = prescriptionService.save(prescription);
-        assertThat(prescriptionService.findById(saved.getId())).isPresent();
+        Prescription saved = prescriptionService.createPrescription(fields);
+        assertThat(prescriptionService.getPrescription(saved.getId())).isPresent();
     }
 }

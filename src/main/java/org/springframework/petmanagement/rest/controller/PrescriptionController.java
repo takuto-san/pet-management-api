@@ -1,7 +1,8 @@
 package org.springframework.petmanagement.rest.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.petmanagement.model.Prescription;
 import org.springframework.petmanagement.rest.api.PrescriptionsApi;
 import org.springframework.petmanagement.rest.dto.PrescriptionDto;
 import org.springframework.petmanagement.rest.dto.PrescriptionFieldsDto;
+import org.springframework.petmanagement.rest.dto.PrescriptionPageDto;
 import org.springframework.petmanagement.service.PrescriptionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,9 +34,10 @@ public class PrescriptionController implements PrescriptionsApi {
 
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
-    public ResponseEntity<List<PrescriptionDto>> listPrescriptions() {
-        List<Prescription> prescriptions = prescriptionService.listPrescriptions();
-        return ResponseEntity.ok(prescriptionMapper.toPrescriptionDtoList(prescriptions));
+    public ResponseEntity<PrescriptionPageDto> listPrescriptions(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Prescription> prescriptions = prescriptionService.listPrescriptions(pageable);
+        return ResponseEntity.ok(prescriptionMapper.toPrescriptionPageDto(prescriptions));
     }
 
     @PreAuthorize("hasRole(@roles.ADMIN)")

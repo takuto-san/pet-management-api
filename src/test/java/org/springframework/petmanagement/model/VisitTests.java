@@ -7,6 +7,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.petmanagement.model.type.Currency;
+import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.model.type.VisitType;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -26,13 +28,11 @@ class VisitTests {
 
     @Test
     void shouldCreateValidVisit() {
-        User user = User.builder().id(UUID.randomUUID()).build();
-        Pet pet = Pet.builder().id(UUID.randomUUID()).build();
-        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).build();
+        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build()).build();
+        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
-            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(LocalDate.of(2024, 1, 15))
@@ -43,7 +43,7 @@ class VisitTests {
             .treatment("特になし")
             .nextDueOn(LocalDate.of(2024, 7, 15))
             .totalFee(5000)
-            .currency("JPY")
+            .currency(Currency.JPY)
             .note("次回予約あり")
             .build();
 
@@ -54,31 +54,11 @@ class VisitTests {
     }
 
     @Test
-    void shouldFailWhenUserIsNull() {
-        Pet pet = Pet.builder().id(UUID.randomUUID()).build();
-        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).build();
-
-        Visit visit = Visit.builder()
-            .id(UUID.randomUUID())
-            .user(null)
-            .pet(pet)
-            .clinic(clinic)
-            .visitedOn(LocalDate.now())
-            .build();
-
-        Set<ConstraintViolation<Visit>> violations = validator.validate(visit);
-        assertThat(violations).isNotEmpty();
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("user"));
-    }
-
-    @Test
     void shouldFailWhenPetIsNull() {
-        User user = User.builder().id(UUID.randomUUID()).build();
-        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).build();
+        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
-            .user(user)
             .pet(null)
             .clinic(clinic)
             .visitedOn(LocalDate.now())
@@ -91,12 +71,10 @@ class VisitTests {
 
     @Test
     void shouldFailWhenClinicIsNull() {
-        User user = User.builder().id(UUID.randomUUID()).build();
-        Pet pet = Pet.builder().id(UUID.randomUUID()).build();
+        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build()).build();
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
-            .user(user)
             .pet(pet)
             .clinic(null)
             .visitedOn(LocalDate.now())
@@ -109,13 +87,11 @@ class VisitTests {
 
     @Test
     void shouldFailWhenVisitedOnIsNull() {
-        User user = User.builder().id(UUID.randomUUID()).build();
-        Pet pet = Pet.builder().id(UUID.randomUUID()).build();
-        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).build();
+        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build()).build();
+        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
-            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(null)
@@ -127,43 +103,11 @@ class VisitTests {
     }
 
     @Test
-    void shouldValidateCurrencyPattern() {
-        User user = User.builder().id(UUID.randomUUID()).build();
-        Pet pet = Pet.builder().id(UUID.randomUUID()).build();
-        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).build();
-
-        Visit validVisit = Visit.builder()
-            .user(user)
-            .pet(pet)
-            .clinic(clinic)
-            .visitedOn(LocalDate.now())
-            .currency("USD")
-            .build();
-
-        Set<ConstraintViolation<Visit>> violations = validator.validate(validVisit);
-        assertThat(violations).isEmpty();
-
-        Visit invalidVisit = Visit.builder()
-            .user(user)
-            .pet(pet)
-            .clinic(clinic)
-            .visitedOn(LocalDate.now())
-            .currency("US")
-            .build();
-
-        violations = validator.validate(invalidVisit);
-        assertThat(violations).isNotEmpty();
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("currency"));
-    }
-
-    @Test
     void shouldAllowNullOptionalFields() {
-        User user = User.builder().id(UUID.randomUUID()).build();
-        Pet pet = Pet.builder().id(UUID.randomUUID()).build();
-        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).build();
+        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build()).build();
+        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
-            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(LocalDate.now())
@@ -178,12 +122,10 @@ class VisitTests {
 
     @Test
     void shouldSupportBuilderPattern() {
-        User user = User.builder().id(UUID.randomUUID()).build();
-        Pet pet = Pet.builder().id(UUID.randomUUID()).build();
-        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).build();
+        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build()).build();
+        Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
-            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(LocalDate.of(2024, 6, 1))
