@@ -5,7 +5,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
-  version: '1.2'
+  version: '1.4'
 servers:
   - url: http://localhost:9966/petclinic/api
 tags:
@@ -29,6 +29,7 @@ tags:
     description: Endpoints related to prescriptions assigned to a visit.
   - name: item
     description: Endpoints related to item master data.
+
 paths:
   /oops:
     get:
@@ -44,24 +45,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
 
+  # --- Users Endpoints ---
   /users:
     post:
       tags: [user]
       operationId: addUser
-      summary: Create a user
+      summary: Create a user (Registration)
+      description: Creates a new user. Default role 'owner' is assigned.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserFields'
+              $ref: '#/components/schemas/UserRegistration'
       responses:
         201:
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
         400:
           description: Bad Request
           content:
@@ -71,8 +74,10 @@ paths:
     get:
       tags: [user]
       operationId: listUsers
-      summary: Lists users
+      summary: Lists users with pagination
       parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
         - name: lastNameKana
           in: query
           required: false
@@ -89,9 +94,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserPage'
 
   /users/{userId}:
     get:
@@ -110,7 +113,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
         404:
           description: Not Found
           content:
@@ -120,6 +123,7 @@ paths:
     put:
       tags: [user]
       operationId: updateUser
+      summary: Update user profile
       parameters:
         - name: userId
           in: path
@@ -132,14 +136,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserFields'
+              $ref: '#/components/schemas/UserUpdate'
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
         404:
           description: Not Found
           content:
@@ -159,11 +163,16 @@ paths:
       responses:
         204:
           description: No Content
+        403:
+          description: Forbidden
 
+  # --- Pet Types Endpoints ---
   /pettypes:
     get:
       tags: [pettypes]
       operationId: listPetTypes
+      summary: Get allowed pet types
+      description: Returns the list of enum values. (No pagination required for static enums)
       responses:
         200:
           description: OK
@@ -173,37 +182,23 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PetType'
-    post:
-      tags: [pettypes]
-      operationId: addPetType
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PetTypeFields'
-      responses:
-        201:
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PetType'
 
+  # --- Pets Endpoints ---
   /pets:
     get:
       tags: [pet]
       operationId: listPets
-      summary: Lists all pets
+      summary: Lists all pets with pagination
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Pet'
+                $ref: '#/components/schemas/PetPage'
     post:
       tags: [pet]
       operationId: addPet
@@ -288,16 +283,17 @@ paths:
     get:
       tags: [clinic]
       operationId: listClinics
-      summary: List all clinics
+      summary: List all clinics with pagination
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Clinic'
+                $ref: '#/components/schemas/ClinicPage'
     post:
       tags: [clinic]
       operationId: addClinic
@@ -374,7 +370,7 @@ paths:
             type: string
             format: uuid
       responses:
-        204:
+        24:
           description: No Content
 
   # --- Visits Endpoints ---
@@ -382,8 +378,10 @@ paths:
     get:
       tags: [visit]
       operationId: listVisits
-      summary: List visits (can filter by petId)
+      summary: List visits with pagination (can filter by petId)
       parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
         - name: petId
           in: query
           description: Filter visits by Pet ID
@@ -397,9 +395,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Visit'
+                $ref: '#/components/schemas/VisitPage'
     post:
       tags: [visit]
       operationId: addVisit
@@ -485,6 +481,7 @@ paths:
       tags: [visit-prescription]
       operationId: listVisitPrescriptions
       summary: List prescriptions for a specific visit
+      description: Returns list directly as pagination within a single visit is rare.
       parameters:
         - name: visitId
           in: path
@@ -553,16 +550,17 @@ paths:
     get:
       tags: [prescription]
       operationId: listPrescriptions
-      summary: List prescription master data
+      summary: List prescription master data with pagination
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Prescription'
+                $ref: '#/components/schemas/PrescriptionPage'
     post:
       tags: [prescription]
       operationId: addPrescription
@@ -586,16 +584,17 @@ paths:
     get:
       tags: [item]
       operationId: listItems
-      summary: List item master data
+      summary: List item master data with pagination
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Item'
+                $ref: '#/components/schemas/ItemPage'
     post:
       tags: [item]
       operationId: addItem
@@ -613,9 +612,125 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Item'
-# ---------------------------------------------------
+
 components:
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      description: Zero-based page index (0..N)
+      required: false
+      schema:
+        type: integer
+        default: 0
+        minimum: 0
+    SizeParam:
+      name: size
+      in: query
+      description: The size of the page to be returned
+      required: false
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+
   schemas:
+    # --- Pagination Metadata ---
+    PageMetadata:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The size of the page
+        totalElements:
+          type: integer
+          description: Total number of elements across all pages
+        totalPages:
+          type: integer
+          description: Total number of pages
+        number:
+          type: integer
+          description: Current page number (0-based)
+      required:
+        - size
+        - totalElements
+        - totalPages
+        - number
+
+    # --- Paged Responses ---
+    UserPage:
+      allOf:
+        - $ref: '#/components/schemas/PageMetadata'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/UserResponse'
+          required:
+            - content
+    
+    PetPage:
+      allOf:
+        - $ref: '#/components/schemas/PageMetadata'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/Pet'
+          required:
+            - content
+    
+    ClinicPage:
+      allOf:
+        - $ref: '#/components/schemas/PageMetadata'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/Clinic'
+          required:
+            - content
+            
+    VisitPage:
+      allOf:
+        - $ref: '#/components/schemas/PageMetadata'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/Visit'
+          required:
+            - content
+
+    PrescriptionPage:
+      allOf:
+        - $ref: '#/components/schemas/PageMetadata'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/Prescription'
+          required:
+            - content
+
+    ItemPage:
+      allOf:
+        - $ref: '#/components/schemas/PageMetadata'
+        - type: object
+          properties:
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/Item'
+          required:
+            - content
+
+    # --- Standard Schemas ---
     ProblemDetail:
       title: Problem Detail
       type: object
@@ -632,21 +747,34 @@ components:
           type: string
           format: date-time
     
-    # -- Enum --
     RoleName:
       type: string
       enum: [owner, vet, nurse, receptionist, clinic_admin, admin]
+    
+    PetType:
+      type: string
+      enum: [dog, cat, rabbit, hamster, bird, turtle, fish]
+    
+    PetSex:
+      type: string
+      enum: [male, female, unknown]
+
     PrescriptionCategory:
       type: string
       enum: [vaccine, heartworm, flea_tick, other]
+    
     VisitType:
       type: string
       enum: [vaccine, heartworm, flea_tick, checkup, general]
+    
+    Currency:
+      type: string
+      enum: [JPY, USD]
+    
     ItemCategory:
       type: string
       enum: [food, treat, supplement, pad, toy, collar, hygiene, medical, other]
 
-    # -- Role --
     Role:
       title: Role
       type: object
@@ -661,7 +789,6 @@ components:
         - id
         - name
 
-    # -- Clinic --
     ClinicFields:
       title: Clinic Fields
       type: object
@@ -707,7 +834,6 @@ components:
             - createdAt
             - updatedAt
 
-    # -- Prescription --
     PrescriptionFields:
       title: Prescription Fields
       type: object
@@ -751,7 +877,6 @@ components:
             - createdAt
             - updatedAt
 
-    # -- Item --
     ItemFields:
       title: Item Fields
       type: object
@@ -792,14 +917,10 @@ components:
             - createdAt
             - updatedAt
     
-    # -- Visit --
     VisitFields:
       title: Visit Fields
       type: object
       properties:
-        userId:
-          type: string
-          format: uuid
         petId:
           type: string
           format: uuid
@@ -832,13 +953,10 @@ components:
           type: integer
           example: 5000
         currency:
-          type: string
-          default: 'JPY'
-          pattern: '^[0-9-]*$'
+          $ref: '#/components/schemas/Currency'
         note:
           type: string
       required:
-        - userId
         - petId
         - clinicId
         - visitedOn
@@ -920,7 +1038,6 @@ components:
             - createdAt
             - updatedAt
 
-    # -- Pet --
     PetFields:
       title: Pet fields
       type: object
@@ -934,19 +1051,16 @@ components:
           format: date
           example: '2020-01-01'
         sex:
-          type: string
-          maxLength: 10
-          example: オス
-        typeId:
-          type: string
-          format: uuid
+          $ref: '#/components/schemas/PetSex'
+        type:
+          $ref: '#/components/schemas/PetType'
         userId:
           type: string
           format: uuid
           description: The owner ID
       required:
         - name
-        - typeId
+        - type
         - userId
     Pet:
       allOf:
@@ -957,8 +1071,6 @@ components:
               type: string
               format: uuid
               readOnly: true
-            type:
-              $ref: '#/components/schemas/PetType'
             createdAt:
               type: string
               format: date-time
@@ -969,30 +1081,10 @@ components:
               readOnly: true
           required:
             - id
-            - type
             - createdAt
             - updatedAt
-    PetTypeFields:
-      type: object
-      properties:
-        name:
-          type: string
-      required:
-        - name
-    PetType:
-      allOf:
-        - $ref: '#/components/schemas/PetTypeFields'
-        - type: object
-          properties:
-            id:
-              type: string
-              format: uuid
-              readOnly: true
-          required:
-            - id
-          
-    # -- User --
-    UserFields:
+
+    UserBase:
       type: object
       properties:
         username:
@@ -1000,17 +1092,6 @@ components:
           minLength: 1
           maxLength: 20
           example: john.doe
-        password:
-          type: string
-          maxLength: 255
-          writeOnly: true
-        roles:
-          type: array
-          items:
-            $ref: '#/components/schemas/RoleName'
-        enabled:
-          type: boolean
-          default: true
         firstName:
           type: string
         lastName:
@@ -1039,35 +1120,62 @@ components:
           pattern: '^[0-9-]*$'
       required:
         - username
-        - password
         - firstName
         - lastName
         - firstNameKana
         - lastNameKana
         - email
-    User:
+
+    UserRegistration:
       allOf:
-        - $ref: '#/components/schemas/UserFields'
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          properties:
+            password:
+              type: string
+              maxLength: 255
+              writeOnly: true
+          required:
+            - password
+
+    UserResponse:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
         - type: object
           properties:
             id:
               type: string
               format: uuid
-              readOnly: true
             roles:
               type: array
               items:
                 $ref: '#/components/schemas/Role'
+            enabled:
+              type: boolean
             createdAt:
               type: string
               format: date-time
-              readOnly: true
             updatedAt:
               type: string
               format: date-time
-              readOnly: true
           required:
             - id
             - roles
+            - enabled
             - createdAt
             - updatedAt
+
+    UserUpdate:
+      $ref: '#/components/schemas/UserBase'
+
+    AdminUserUpdate:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          properties:
+            roles:
+              type: array
+              items:
+                $ref: '#/components/schemas/RoleName'
+            enabled:
+              type: boolean
