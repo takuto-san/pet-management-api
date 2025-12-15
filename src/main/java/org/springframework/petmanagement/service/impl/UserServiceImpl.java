@@ -8,6 +8,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.lang.Nullable;
+
+import org.springframework.lang.Nullable;
 import org.springframework.petmanagement.mapper.UserMapper;
 import org.springframework.petmanagement.model.Role;
 import org.springframework.petmanagement.model.User;
@@ -16,6 +18,7 @@ import org.springframework.petmanagement.repository.RoleRepository;
 import org.springframework.petmanagement.repository.UserRepository;
 import org.springframework.petmanagement.rest.dto.AdminUserUpdateDto;
 import org.springframework.petmanagement.rest.dto.RoleNameDto;
+import org.springframework.petmanagement.rest.dto.UserBaseDto;
 import org.springframework.petmanagement.rest.dto.UserRegistrationDto;
 import org.springframework.petmanagement.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -91,6 +94,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User updateUserBase(UUID userId, UserBaseDto fields) {
+        User current = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("user not found"));
+
+        userMapper.updateUserFromBase(fields, current);
+
+        userRepository.save(current);
+        return current;
+    }
+
+    @Override
     public void deleteUser(UUID userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
@@ -99,14 +113,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> getUser(UUID userId) {
-        return userRepository.findById(userId);
+    public User getUser(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("user not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<User> listUsersByName(@Nullable String lastNameKana, @Nullable String firstNameKana) {
-        List<User> all = userRepository.findAll();
+        List<User> all = (List<User>) userRepository.findAll();
 
         if (lastNameKana == null && firstNameKana == null) return all;
 

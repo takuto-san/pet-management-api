@@ -13,7 +13,7 @@ public interface UserRepository {
 
     void delete(User user) throws DataAccessException;
 
-    User findById(UUID id) throws DataAccessException;
+    Optional<User> findById(UUID id) throws DataAccessException;
 
     Optional<User> findByUsername(String username);
 

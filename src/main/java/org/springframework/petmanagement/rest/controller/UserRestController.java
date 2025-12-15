@@ -1,7 +1,6 @@
 package org.springframework.petmanagement.rest.controller;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -11,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.petmanagement.mapper.UserMapper;
 import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.rest.api.UsersApi;
-import org.springframework.petmanagement.rest.dto.UserDto;
-import org.springframework.petmanagement.rest.dto.UserFieldsDto;
+import org.springframework.petmanagement.rest.dto.UserBaseDto;
+import org.springframework.petmanagement.rest.dto.UserPageDto;
+import org.springframework.petmanagement.rest.dto.UserRegistrationDto;
+import org.springframework.petmanagement.rest.dto.UserResponseDto;
 import org.springframework.petmanagement.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,8 +39,8 @@ public class UserRestController implements UsersApi {
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
-    public ResponseEntity<UserDto> addUser(@Valid UserFieldsDto userFieldsDto) {
-        User created = userService.createUser(userFieldsDto);
+    public ResponseEntity<UserResponseDto> addUser(@Valid UserRegistrationDto userRegistrationDto) {
+        User created = userService.createUser(userRegistrationDto);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
             UriComponentsBuilder.newInstance()
@@ -52,13 +53,11 @@ public class UserRestController implements UsersApi {
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
-    public ResponseEntity<UserDto> updateUser(UUID userId, UserFieldsDto userFieldsDto) {
+    public ResponseEntity<UserResponseDto> updateUser(UUID userId, UserBaseDto body) {
         try {
-            User updated = userService.updateUser(userId, userFieldsDto);
+            User updated = userService.updateUserBase(userId, body);
             return new ResponseEntity<>(userMapper.toUserDto(updated), HttpStatus.OK);
         } catch (IllegalArgumentException ex) {
-            // セキュリティ上、存在しないIDへのアクセスと区別がつかないようにNOT_FOUNDを返すのが一般的ですが
-            // 開発中はエラーの詳細を知るためにBAD_REQUESTを返す分岐を残しても構いません
             if (ex.getMessage() != null && ex.getMessage().contains("not found")) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -77,24 +76,30 @@ public class UserRestController implements UsersApi {
         }
     }
 
-    // 修正: OWNER_ADMIN -> CLINIC_ADMIN
-    // ※バリデーション実装時に、ここに「または本人のIDであれば許可」というロジックを追加します
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
-    public ResponseEntity<UserDto> getUser(UUID userId) {
-        Optional<User> userOpt = userService.findById(userId);
-        return userOpt
-            .map(user -> new ResponseEntity<>(userMapper.toUserDto(user), HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<UserResponseDto> getUser(UUID userId) {
+        try {
+            User user = userService.getUser(userId);
+            return new ResponseEntity<>(userMapper.toUserDto(user), HttpStatus.OK);
+        } catch (IllegalArgumentException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
-    public ResponseEntity<List<UserDto>> listUsers(String lastNameKana, String firstNameKana) {
-        List<User> users = userService.search(lastNameKana, firstNameKana);
-        List<UserDto> dtoList = users.stream()
+    public ResponseEntity<UserPageDto> listUsers(Integer page, Integer size, String lastNameKana, String firstNameKana) {
+        List<User> users = userService.listUsersByName(lastNameKana, firstNameKana);
+        List<UserResponseDto> dtoList = users.stream()
             .map(userMapper::toUserDto)
             .collect(Collectors.toList());
-        return new ResponseEntity<>(dtoList, HttpStatus.OK);
+        UserPageDto pageDto = new UserPageDto();
+        pageDto.setContent(dtoList);
+        pageDto.setSize(size);
+        pageDto.setNumber(page);
+        pageDto.setTotalElements(dtoList.size());
+        pageDto.setTotalPages(1); // TODO: ページネーション実装
+        return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
 }

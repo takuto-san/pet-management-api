@@ -40,4 +40,14 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "password", ignore = true)
     void updateUserFromFields(AdminUserUpdateDto userFieldsDto, @MappingTarget User currentUser);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "pets", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "enabled", ignore = true)
+    void updateUserFromBase(UserBaseDto userBaseDto, @MappingTarget User currentUser);
 }

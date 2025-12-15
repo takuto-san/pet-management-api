@@ -67,14 +67,14 @@ public class VisitController implements VisitsApi {
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<List<VisitDto>> listVisits(UUID petId) {
-        List<Visit> visits = visitService.findAll(petId);
+        List<Visit> visits = visitService.listVisits(petId);
         return ResponseEntity.ok(visitMapper.toVisitDtoList(visits));
     }
 
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<VisitDto> getVisit(UUID visitId) {
-        Optional<Visit> visitOpt = visitService.findById(visitId);
+        Optional<Visit> visitOpt = visitService.getVisit(visitId);
         return visitOpt
             .map(visit -> ResponseEntity.ok(visitMapper.toVisitDto(visit)))
             .orElseGet(() -> ResponseEntity.notFound().build());
@@ -113,7 +113,7 @@ public class VisitController implements VisitsApi {
         }
         visit.setClinic(clinic);
         
-        Visit saved = visitService.save(visit);
+        Visit saved = visitService.createVisit(visitFieldsDto);
         
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
@@ -128,41 +128,12 @@ public class VisitController implements VisitsApi {
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<VisitDto> updateVisit(UUID visitId, VisitFieldsDto visitFieldsDto) {
-        Optional<Visit> visitOpt = visitService.findById(visitId);
-        if (visitOpt.isEmpty()) {
+        try {
+            Visit updated = visitService.updateVisit(visitId, visitFieldsDto);
+            return ResponseEntity.ok(visitMapper.toVisitDto(updated));
+        } catch (IllegalArgumentException ex) {
             return ResponseEntity.notFound().build();
         }
-
-        Visit visit = visitOpt.get();
-        visitMapper.updateVisitFromFields(visitFieldsDto, visit);
-
-        // Update related entities if provided
-        if (visitFieldsDto.getUserId() != null) {
-            User user = userRepository.findById(visitFieldsDto.getUserId());
-            if (user == null) {
-                return ResponseEntity.badRequest().build();
-            }
-            visit.setUser(user);
-        }
-
-        if (visitFieldsDto.getPetId() != null) {
-            Pet pet = petRepository.findById(visitFieldsDto.getPetId());
-            if (pet == null) {
-                return ResponseEntity.badRequest().build();
-            }
-            visit.setPet(pet);
-        }
-
-        if (visitFieldsDto.getClinicId() != null) {
-            Clinic clinic = clinicRepository.findById(visitFieldsDto.getClinicId());
-            if (clinic == null) {
-                return ResponseEntity.badRequest().build();
-            }
-            visit.setClinic(clinic);
-        }
-
-        Visit updated = visitService.save(visit);
-        return ResponseEntity.ok(visitMapper.toVisitDto(updated));
     }
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
@@ -179,42 +150,26 @@ public class VisitController implements VisitsApi {
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<List<VisitPrescriptionDto>> listVisitPrescriptions(UUID visitId) {
-        List<VisitPrescription> visitPrescriptions = visitPrescriptionService.findByVisitId(visitId);
+        List<VisitPrescription> visitPrescriptions = visitPrescriptionService.listVisitPrescriptionsByVisitId(visitId);
         return ResponseEntity.ok(visitPrescriptionMapper.toVisitPrescriptionDtoList(visitPrescriptions));
     }
 
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<VisitPrescriptionDto> addVisitPrescription(UUID visitId, VisitPrescriptionFieldsDto visitPrescriptionFieldsDto) {
-        VisitPrescription visitPrescription = visitPrescriptionMapper.toVisitPrescription(visitPrescriptionFieldsDto);
-        
-        // Set visit
-        Optional<Visit> visitOpt = visitService.findById(visitId);
-        if (visitOpt.isEmpty()) {
+        try {
+            VisitPrescription saved = visitPrescriptionService.createVisitPrescription(visitPrescriptionFieldsDto);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(
+                UriComponentsBuilder.newInstance()
+                    .path("/api/visits/{visitId}/prescriptions/{id}")
+                    .buildAndExpand(visitId, saved.getId())
+                    .toUri()
+            );
+            return new ResponseEntity<>(visitPrescriptionMapper.toVisitPrescriptionDto(saved), headers, HttpStatus.CREATED);
+        } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().build();
         }
-        visitPrescription.setVisit(visitOpt.get());
-        
-        // Set prescription
-        if (visitPrescriptionFieldsDto.getPrescriptionId() == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        Prescription prescription = prescriptionRepository.findById(visitPrescriptionFieldsDto.getPrescriptionId());
-        if (prescription == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        visitPrescription.setPrescription(prescription);
-        
-        VisitPrescription saved = visitPrescriptionService.save(visitPrescription);
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(
-            UriComponentsBuilder.newInstance()
-                .path("/api/visits/{visitId}/prescriptions/{id}")
-                .buildAndExpand(visitId, saved.getId())
-                .toUri()
-        );
-        return new ResponseEntity<>(visitPrescriptionMapper.toVisitPrescriptionDto(saved), headers, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
