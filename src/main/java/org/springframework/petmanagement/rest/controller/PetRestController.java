@@ -32,23 +32,23 @@ public class PetRestController implements PetsApi {
         this.petMapper = petMapper;
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @PreAuthorize("hasRole(@roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<PetDto> getPet(UUID petId) {
-        return petService.findById(petId)
+        return petService.getPet(petId)
             .map(pet -> new ResponseEntity<>(petMapper.toPetDto(pet), HttpStatus.OK))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @PreAuthorize("hasRole(@roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<List<PetDto>> listPets() {
-        List<Pet> pets = petService.findAll();
+        List<Pet> pets = petService.listPets();
         List<PetDto> petDtos = new ArrayList<>(petMapper.toPetsDto(pets));
         return new ResponseEntity<>(petDtos, HttpStatus.OK); // 空でも200
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @PreAuthorize("hasRole(@roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<PetDto> addPet(PetFieldsDto petFieldsDto) {
         try {
@@ -66,7 +66,7 @@ public class PetRestController implements PetsApi {
         }
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @PreAuthorize("hasRole(@roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<PetDto> updatePet(UUID petId, PetFieldsDto petFieldsDto) {
         try {
@@ -83,7 +83,7 @@ public class PetRestController implements PetsApi {
         }
     }
 
-    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @PreAuthorize("hasRole(@roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<Void> deletePet(UUID petId) {
         try {

@@ -32,17 +32,17 @@ public class ClinicController implements ClinicsApi {
         this.clinicMapper = clinicMapper;
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<List<ClinicDto>> listClinics() {
-        List<Clinic> clinics = clinicService.findAll();
+        List<Clinic> clinics = clinicService.listClinics();
         return ResponseEntity.ok(clinicMapper.toClinicDtoList(clinics));
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<ClinicDto> getClinic(UUID clinicId) {
-        Optional<Clinic> clinicOpt = clinicService.findById(clinicId);
+        Optional<Clinic> clinicOpt = clinicService.getClinic(clinicId);
         return clinicOpt
             .map(clinic -> ResponseEntity.ok(clinicMapper.toClinicDto(clinic)))
             .orElseGet(() -> ResponseEntity.notFound().build());
@@ -51,9 +51,8 @@ public class ClinicController implements ClinicsApi {
     @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
     public ResponseEntity<ClinicDto> addClinic(ClinicFieldsDto clinicFieldsDto) {
-        Clinic clinic = clinicMapper.toClinic(clinicFieldsDto);
-        Clinic saved = clinicService.save(clinic);
-        
+        Clinic saved = clinicService.createClinic(clinicFieldsDto);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
             UriComponentsBuilder.newInstance()
@@ -67,15 +66,12 @@ public class ClinicController implements ClinicsApi {
     @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
     public ResponseEntity<ClinicDto> updateClinic(UUID clinicId, ClinicFieldsDto clinicFieldsDto) {
-        Optional<Clinic> clinicOpt = clinicService.findById(clinicId);
-        if (clinicOpt.isEmpty()) {
+        try {
+            Clinic updated = clinicService.updateClinic(clinicId, clinicFieldsDto);
+            return ResponseEntity.ok(clinicMapper.toClinicDto(updated));
+        } catch (IllegalArgumentException ex) {
             return ResponseEntity.notFound().build();
         }
-        
-        Clinic clinic = clinicOpt.get();
-        clinicMapper.updateClinicFromFields(clinicFieldsDto, clinic);
-        Clinic updated = clinicService.save(clinic);
-        return ResponseEntity.ok(clinicMapper.toClinicDto(updated));
     }
 
     @PreAuthorize("hasRole(@roles.ADMIN)")

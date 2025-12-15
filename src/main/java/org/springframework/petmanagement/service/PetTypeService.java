@@ -5,12 +5,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.petmanagement.model.type.PetType;
-import org.springframework.petmanagement.rest.dto.PetTypeFieldsDto;
 
 public interface PetTypeService {
-    List<PetType> findAll();
-    Optional<PetType> findById(UUID petTypeId);
-    PetType create(PetTypeFieldsDto fields);
-    PetType update(UUID petTypeId, PetTypeFieldsDto fields);
-    void delete(UUID petTypeId);
+    List<PetType> listPetTypes();
+    Optional<PetType> getPetType(UUID petTypeId);
+    PetType createPetType(PetType petType);
+    PetType updatePetType(UUID petTypeId, PetType petType);
+    void deletePetType(UUID petTypeId);
 }

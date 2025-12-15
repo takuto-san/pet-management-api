@@ -30,19 +30,18 @@ public class ItemController implements ItemsApi {
         this.itemMapper = itemMapper;
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<List<ItemDto>> listItems() {
-        List<Item> items = itemService.findAll();
+        List<Item> items = itemService.listItems();
         return ResponseEntity.ok(itemMapper.toItemDtoList(items));
     }
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
     public ResponseEntity<ItemDto> addItem(ItemFieldsDto itemFieldsDto) {
-        Item item = itemMapper.toItem(itemFieldsDto);
-        Item saved = itemService.save(item);
-        
+        Item saved = itemService.createItem(itemFieldsDto);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
             UriComponentsBuilder.newInstance()

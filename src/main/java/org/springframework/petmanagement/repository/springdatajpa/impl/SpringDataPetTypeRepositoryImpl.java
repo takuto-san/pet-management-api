@@ -1,7 +1,5 @@
 package org.springframework.petmanagement.repository.springdatajpa.impl;
 
-import java.util.UUID;
-
 import org.springframework.context.annotation.Profile;
 import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.repository.springdatajpa.override.PetTypeRepositoryOverride;
@@ -18,19 +16,12 @@ public class SpringDataPetTypeRepositoryImpl implements PetTypeRepositoryOverrid
 
     @Override
     public void delete(PetType petType) {
-        UUID petTypeId = petType.getId();
+        String petTypeName = petType.name();
 
-        Query petDeleteQuery = this.em.createQuery("DELETE FROM Pet pet WHERE pet.type.id = :petTypeId");
-        petDeleteQuery.setParameter("petTypeId", petTypeId);
+        Query petDeleteQuery = this.em.createQuery("DELETE FROM Pet pet WHERE pet.type = :petType");
+        petDeleteQuery.setParameter("petType", petType);
         petDeleteQuery.executeUpdate();
 
-        if (this.em.contains(petType)) {
-            this.em.remove(petType);
-        } else {
-            PetType managedPetType = this.em.find(PetType.class, petTypeId);
-            if (managedPetType != null) {
-                this.em.remove(managedPetType);
-            }
-        }
+        // PetType is enum, not entity, so no delete needed
     }
 }

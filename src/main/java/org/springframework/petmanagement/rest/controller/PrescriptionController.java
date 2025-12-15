@@ -30,19 +30,18 @@ public class PrescriptionController implements PrescriptionsApi {
         this.prescriptionMapper = prescriptionMapper;
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<List<PrescriptionDto>> listPrescriptions() {
-        List<Prescription> prescriptions = prescriptionService.findAll();
+        List<Prescription> prescriptions = prescriptionService.listPrescriptions();
         return ResponseEntity.ok(prescriptionMapper.toPrescriptionDtoList(prescriptions));
     }
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
     public ResponseEntity<PrescriptionDto> addPrescription(PrescriptionFieldsDto prescriptionFieldsDto) {
-        Prescription prescription = prescriptionMapper.toPrescription(prescriptionFieldsDto);
-        Prescription saved = prescriptionService.save(prescription);
-        
+        Prescription saved = prescriptionService.createPrescription(prescriptionFieldsDto);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
             UriComponentsBuilder.newInstance()
