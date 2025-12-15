@@ -64,14 +64,14 @@ public class VisitController implements VisitsApi {
         this.prescriptionRepository = prescriptionRepository;
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<List<VisitDto>> listVisits(UUID petId) {
         List<Visit> visits = visitService.findAll(petId);
         return ResponseEntity.ok(visitMapper.toVisitDtoList(visits));
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<VisitDto> getVisit(UUID visitId) {
         Optional<Visit> visitOpt = visitService.findById(visitId);
@@ -80,7 +80,7 @@ public class VisitController implements VisitsApi {
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<VisitDto> addVisit(VisitFieldsDto visitFieldsDto) {
         Visit visit = visitMapper.toVisit(visitFieldsDto);
@@ -125,17 +125,17 @@ public class VisitController implements VisitsApi {
         return new ResponseEntity<>(visitMapper.toVisitDto(saved), headers, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<VisitDto> updateVisit(UUID visitId, VisitFieldsDto visitFieldsDto) {
         Optional<Visit> visitOpt = visitService.findById(visitId);
         if (visitOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        
+
         Visit visit = visitOpt.get();
         visitMapper.updateVisitFromFields(visitFieldsDto, visit);
-        
+
         // Update related entities if provided
         if (visitFieldsDto.getUserId() != null) {
             User user = userRepository.findById(visitFieldsDto.getUserId());
@@ -144,7 +144,7 @@ public class VisitController implements VisitsApi {
             }
             visit.setUser(user);
         }
-        
+
         if (visitFieldsDto.getPetId() != null) {
             Pet pet = petRepository.findById(visitFieldsDto.getPetId());
             if (pet == null) {
@@ -152,7 +152,7 @@ public class VisitController implements VisitsApi {
             }
             visit.setPet(pet);
         }
-        
+
         if (visitFieldsDto.getClinicId() != null) {
             Clinic clinic = clinicRepository.findById(visitFieldsDto.getClinicId());
             if (clinic == null) {
@@ -160,7 +160,7 @@ public class VisitController implements VisitsApi {
             }
             visit.setClinic(clinic);
         }
-        
+
         Visit updated = visitService.save(visit);
         return ResponseEntity.ok(visitMapper.toVisitDto(updated));
     }
@@ -176,14 +176,14 @@ public class VisitController implements VisitsApi {
         }
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<List<VisitPrescriptionDto>> listVisitPrescriptions(UUID visitId) {
         List<VisitPrescription> visitPrescriptions = visitPrescriptionService.findByVisitId(visitId);
         return ResponseEntity.ok(visitPrescriptionMapper.toVisitPrescriptionDtoList(visitPrescriptions));
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<VisitPrescriptionDto> addVisitPrescription(UUID visitId, VisitPrescriptionFieldsDto visitPrescriptionFieldsDto) {
         VisitPrescription visitPrescription = visitPrescriptionMapper.toVisitPrescription(visitPrescriptionFieldsDto);

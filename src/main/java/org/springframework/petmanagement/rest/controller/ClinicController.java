@@ -32,14 +32,14 @@ public class ClinicController implements ClinicsApi {
         this.clinicMapper = clinicMapper;
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<List<ClinicDto>> listClinics() {
         List<Clinic> clinics = clinicService.listClinics();
         return ResponseEntity.ok(clinicMapper.toClinicDtoList(clinics));
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.OWNER_ADMIN)")
+    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<ClinicDto> getClinic(UUID clinicId) {
         Optional<Clinic> clinicOpt = clinicService.getClinic(clinicId);
