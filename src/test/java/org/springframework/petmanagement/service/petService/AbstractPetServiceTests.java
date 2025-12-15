@@ -5,6 +5,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.petmanagement.model.type.PetType;
 import org.springframework.petmanagement.service.PetService;
 import org.springframework.petmanagement.service.PetTypeService;
@@ -28,6 +29,6 @@ public abstract class AbstractPetServiceTests {
 
     @Test
     void shouldListPetsEvenIfEmpty() {
-        assertThat(petService.listPets(null)).isNotNull();
+        assertThat(petService.listPets(PageRequest.of(0, 10))).isNotNull();
     }
 }

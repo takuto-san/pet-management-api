@@ -28,11 +28,13 @@ class VisitTests {
 
     @Test
     void shouldCreateValidVisit() {
-        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build()).build();
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
+        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(user).build();
         Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
+            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(LocalDate.of(2024, 1, 15))
@@ -55,10 +57,12 @@ class VisitTests {
 
     @Test
     void shouldFailWhenPetIsNull() {
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
         Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
+            .user(user)
             .pet(null)
             .clinic(clinic)
             .visitedOn(LocalDate.now())
@@ -71,10 +75,12 @@ class VisitTests {
 
     @Test
     void shouldFailWhenClinicIsNull() {
-        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build()).build();
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
+        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(user).build();
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
+            .user(user)
             .pet(pet)
             .clinic(null)
             .visitedOn(LocalDate.now())
@@ -87,11 +93,13 @@ class VisitTests {
 
     @Test
     void shouldFailWhenVisitedOnIsNull() {
-        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build()).build();
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
+        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(user).build();
         Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
+            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(null)
@@ -104,10 +112,12 @@ class VisitTests {
 
     @Test
     void shouldAllowNullOptionalFields() {
-        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build()).build();
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
+        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(user).build();
         Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
+            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(LocalDate.now())
@@ -122,10 +132,12 @@ class VisitTests {
 
     @Test
     void shouldSupportBuilderPattern() {
-        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build()).build();
+        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
+        Pet pet = Pet.builder().id(UUID.randomUUID()).name("ポチ").type(PetType.DOG).user(user).build();
         Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
+            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(LocalDate.of(2024, 6, 1))

@@ -130,8 +130,7 @@ class VisitControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdateVisitSuccess() throws Exception {
-        given(this.visitService.getVisit(VISIT_ID)).willReturn(Optional.of(visit));
-        given(this.visitService.updateVisit(VISIT_ID, any(VisitFieldsDto.class))).willReturn(visit);
+        given(this.visitService.updateVisit(eq(VISIT_ID), any(VisitFieldsDto.class))).willReturn(visit);
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 
@@ -146,7 +145,7 @@ class VisitControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testUpdateVisitNotFound() throws Exception {
-        given(this.visitService.getVisit(VISIT_ID_NOT_FOUND)).willReturn(Optional.empty());
+        given(this.visitService.updateVisit(eq(VISIT_ID_NOT_FOUND), any(VisitFieldsDto.class))).willThrow(new IllegalArgumentException("visit not found"));
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 

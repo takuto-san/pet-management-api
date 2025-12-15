@@ -10,5 +10,5 @@ import org.springframework.petmanagement.repository.springdatajpa.override.RoleR
 
 @Profile("spring-data-jpa")
 public interface SpringDataRoleRepository extends RoleRepository, Repository<Role, UUID>, RoleRepositoryOverride {
-
+    
 }
