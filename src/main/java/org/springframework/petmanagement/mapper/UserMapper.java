@@ -6,8 +6,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.petmanagement.model.User;
-import org.springframework.petmanagement.rest.dto.UserDto;
-import org.springframework.petmanagement.rest.dto.UserFieldsDto;
+import org.springframework.petmanagement.rest.dto.UserBaseDto;
+import org.springframework.petmanagement.rest.dto.UserResponseDto;
 
 @Mapper(componentModel = "spring", uses = {DateTimeMapper.class, RoleMapper.class})
 public interface UserMapper {
@@ -18,10 +18,9 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "password", ignore = true)
-    User toUserFromDto(UserDto userDto);
+    User toUserFromDto(UserResponseDto userDto);
 
-    @Mapping(target = "password", ignore = true)
-    UserDto toUserDto(User user);
+    UserResponseDto toUserDto(User user);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "roles", ignore = true)
@@ -29,7 +28,7 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "password", ignore = true)
-    User toUser(UserFieldsDto userFieldsDto);
+    User toUser(UserBaseDto userFieldsDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
@@ -38,5 +37,5 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "password", ignore = true)
-    void updateUserFromFields(UserFieldsDto userFieldsDto, @MappingTarget User currentUser);
+    void updateUserFromFields(UserBaseDto userFieldsDto, @MappingTarget User currentUser);
 }

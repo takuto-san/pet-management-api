@@ -18,6 +18,7 @@ package org.springframework.petmanagement.model;
 import java.time.LocalDate;
 
 import org.springframework.petmanagement.model.base.Time;
+import org.springframework.petmanagement.model.type.Currency;
 import org.springframework.petmanagement.model.type.VisitType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -29,13 +30,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -45,60 +43,52 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "visits")
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Visit extends Time {
-    
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id", nullable = false)
     private Pet pet;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", nullable = false)
     private Clinic clinic;
-    
+
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "visited_on", nullable = false)
     private LocalDate visitedOn;
-    
+
     @Column(name = "weight")
     private Float weight;
-    
+
     @Column(name = "visit_type")
     private VisitType visitType;
-    
+
     @Column(name = "reason")
     private String reason;
-    
+
     @Column(name = "diagnosis")
     private String diagnosis;
-    
+
     @Column(name = "treatment")
     private String treatment;
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "next_due_on")
     private LocalDate nextDueOn;
-    
+
     @Column(name = "total_fee")
     private Integer totalFee;
-    
+
     @lombok.Builder.Default
-    @Pattern(regexp = "^[A-Z]{3}$")
     @Column(name = "currency")
-    private String currency = "JPY";
-    
+    private Currency currency = Currency.JPY;
+
     @Column(name = "note")
     private String note;
 }

@@ -18,6 +18,7 @@ package org.springframework.petmanagement.model;
 import java.time.LocalDate;
 
 import org.springframework.petmanagement.model.base.Time;
+import org.springframework.petmanagement.model.type.PetSex;
 import org.springframework.petmanagement.model.type.PetType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -32,11 +33,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -46,31 +45,27 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "pets")
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pet extends Time {
-    
+
     @NotBlank
     @Size(max = 30)
     @Column(name = "name")
     private String name;
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "birth_date")
     private LocalDate birthDate;
-    
-    @Size(max = 10)
+
     @Column(name = "sex")
-    private String sex;
-    
+    private PetSex sex;
+
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_id", nullable = false)
+    @Column(name = "type", nullable = false)
     private PetType type;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
