@@ -4,7 +4,7 @@ This backend application provides a REST API for managing a veterinary clinic sy
 
 ## Understanding the Pet Management application with a few diagrams
 
-### PetcManagement ER Model
+### PetManagement ER Model
 
 ![ER](pet-management-api_e-r.png)
 
