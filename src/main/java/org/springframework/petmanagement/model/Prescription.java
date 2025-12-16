@@ -15,6 +15,7 @@
  */
 package org.springframework.petmanagement.model;
 
+import org.hibernate.annotations.ColumnTransformer;
 import org.springframework.petmanagement.model.base.Time;
 import org.springframework.petmanagement.model.type.MedicationType;
 
@@ -42,6 +43,7 @@ import lombok.experimental.SuperBuilder;
 public class Prescription extends Time {
     
     @NotNull
+    @ColumnTransformer(write = "?::prescription_category")
     @Column(name = "category", nullable = false)
     private MedicationType category;
     
