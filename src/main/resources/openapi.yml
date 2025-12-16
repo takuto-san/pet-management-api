@@ -921,9 +921,6 @@ components:
       title: Visit Fields
       type: object
       properties:
-        userId:
-          type: string
-          format: uuid
         petId:
           type: string
           format: uuid
@@ -960,7 +957,6 @@ components:
         note:
           type: string
       required:
-        - userId
         - petId
         - clinicId
         - visitedOn
