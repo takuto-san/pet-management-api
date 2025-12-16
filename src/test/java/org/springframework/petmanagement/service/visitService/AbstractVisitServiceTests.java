@@ -1,23 +1,24 @@
 package org.springframework.petmanagement.service.visitService;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.petmanagement.model.Clinic;
-import org.springframework.petmanagement.rest.dto.ClinicFieldsDto;
 import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.model.Visit;
-import org.springframework.petmanagement.model.type.PetType;
+import org.springframework.petmanagement.rest.dto.ClinicFieldsDto;
 import org.springframework.petmanagement.rest.dto.PetFieldsDto;
+import org.springframework.petmanagement.rest.dto.PetTypeDto;
 import org.springframework.petmanagement.rest.dto.UserRegistrationDto;
+import org.springframework.petmanagement.rest.dto.VisitFieldsDto;
 import org.springframework.petmanagement.service.ClinicService;
 import org.springframework.petmanagement.service.PetService;
-import org.springframework.petmanagement.service.PetTypeService;
 import org.springframework.petmanagement.service.UserService;
 import org.springframework.petmanagement.service.VisitService;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,113 +38,88 @@ public abstract class AbstractVisitServiceTests {
     @Autowired
     protected ClinicService clinicService;
 
-    @Autowired
-    protected PetTypeService petTypeService;
-
     @Test
     void shouldListVisitsEvenIfEmpty() {
-        assertThat(visitService.findAll(null)).isNotNull();
+        Page<Visit> page = visitService.listVisits(null, PageRequest.of(0, 10));
+        assertThat(page).isNotNull();
     }
 
     @Test
-    void shouldCreateVisit() throws Exception {
-        // 一意な値を生成
+    void shouldCreateVisit() {
         String uniqueId = UUID.randomUUID().toString();
 
         // Create and save user
-        UserFieldsDto userDto = new UserFieldsDto();
-        setField(userDto, "username", "testuser-" + uniqueId);
-        setField(userDto, "password", "password");
-        setField(userDto, "firstName", "Test");
-        setField(userDto, "lastName", "User");
-        setField(userDto, "firstNameKana", "テスト");
-        setField(userDto, "lastNameKana", "ユーザー");
-        setField(userDto, "email", "test-" + uniqueId + "@example.com");
-        setField(userDto, "telephone", "090-1234-5678");
-        setField(userDto, "enabled", true);
+        UserRegistrationDto userDto = new UserRegistrationDto();
+        userDto.setUsername("testuser-" + uniqueId);
+        userDto.setPassword("password");
+        userDto.setFirstName("Test");
+        userDto.setLastName("User");
+        userDto.setFirstNameKana("テスト");
+        userDto.setLastNameKana("ユーザー");
+        userDto.setEmail("test-" + uniqueId + "@example.com");
+        userDto.setTelephone("090-1234-5678");
         User user = userService.createUser(userDto);
-
-        // Create and save pet type
-        PetTypeFieldsDto petTypeDto = new PetTypeFieldsDto();
-        setField(petTypeDto, "name", "dog-" + uniqueId);
-        PetType petType = petTypeService.create(petTypeDto);
 
         // Create and save pet
         PetFieldsDto petDto = new PetFieldsDto();
-        setField(petDto, "name", "Test Pet");
-        setField(petDto, "userId", user.getId());
-        setField(petDto, "typeId", petType.getId());
-        setField(petDto, "birthDate", LocalDate.now().minusYears(1));
+        petDto.setName("Test Pet");
+        petDto.setUserId(user.getId());
+        petDto.setType(PetTypeDto.DOG);
+        petDto.setBirthDate(LocalDate.now().minusYears(1));
         Pet pet = petService.createPet(petDto);
 
         // Create and save clinic
-        ClinicFieldsDto clinicDto = new ClinicFieldsDto()
-            .name("Test Clinic-" + uniqueId)
-            .telephone("03-1234-5678")
-            .address("Test Address");
+        ClinicFieldsDto clinicDto = new ClinicFieldsDto();
+        clinicDto.setName("Test Clinic-" + uniqueId);
+        clinicDto.setTelephone("03-1234-5678");
         Clinic clinic = clinicService.createClinic(clinicDto);
 
-        Visit visit = new Visit();
-        visit.setVisitedOn(LocalDate.now());
-        visit.setUser(user);
-        visit.setPet(pet);
-        visit.setClinic(clinic);
+        VisitFieldsDto visitDto = new VisitFieldsDto();
+        visitDto.setPetId(pet.getId());
+        visitDto.setClinicId(clinic.getId());
+        visitDto.setVisitedOn(LocalDate.now());
 
-        Visit saved = visitService.save(visit);
+        Visit saved = visitService.createVisit(visitDto);
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getVisitedOn()).isEqualTo(LocalDate.now());
     }
 
     @Test
-    void shouldFindVisitById() throws Exception {
+    void shouldFindVisitById() {
         String uniqueId = UUID.randomUUID().toString();
 
         // Create and save user
-        UserFieldsDto userDto = new UserFieldsDto();
-        setField(userDto, "username", "testuser2-" + uniqueId);
-        setField(userDto, "password", "password");
-        setField(userDto, "firstName", "Test");
-        setField(userDto, "lastName", "User");
-        setField(userDto, "firstNameKana", "テスト");
-        setField(userDto, "lastNameKana", "ユーザー");
-        setField(userDto, "email", "test2-" + uniqueId + "@example.com");
-        setField(userDto, "telephone", "090-1234-5679");
-        setField(userDto, "enabled", true);
+        UserRegistrationDto userDto = new UserRegistrationDto();
+        userDto.setUsername("testuser2-" + uniqueId);
+        userDto.setPassword("password");
+        userDto.setFirstName("Test");
+        userDto.setLastName("User");
+        userDto.setFirstNameKana("テスト");
+        userDto.setLastNameKana("ユーザー");
+        userDto.setEmail("test2-" + uniqueId + "@example.com");
+        userDto.setTelephone("090-1234-5679");
         User user = userService.createUser(userDto);
-
-        // Create and save pet type
-        PetTypeFieldsDto petTypeDto = new PetTypeFieldsDto();
-        setField(petTypeDto, "name", "cat-" + uniqueId);
-        PetType petType = petTypeService.create(petTypeDto);
 
         // Create and save pet
         PetFieldsDto petDto = new PetFieldsDto();
-        setField(petDto, "name", "Test Pet");
-        setField(petDto, "userId", user.getId());
-        setField(petDto, "typeId", petType.getId());
-        setField(petDto, "birthDate", LocalDate.now().minusYears(1));
+        petDto.setName("Test Pet");
+        petDto.setUserId(user.getId());
+        petDto.setType(PetTypeDto.CAT);
+        petDto.setBirthDate(LocalDate.now().minusYears(1));
         Pet pet = petService.createPet(petDto);
 
         // Create and save clinic
-        ClinicFieldsDto clinicDto = new ClinicFieldsDto()
-            .name("Test Clinic-" + uniqueId)
-            .telephone("03-1234-5678")
-            .address("Test Address");
+        ClinicFieldsDto clinicDto = new ClinicFieldsDto();
+        clinicDto.setName("Test Clinic-" + uniqueId);
+        clinicDto.setTelephone("03-1234-5678");
         Clinic clinic = clinicService.createClinic(clinicDto);
 
-        Visit visit = new Visit();
-        visit.setVisitedOn(LocalDate.now());
-        visit.setUser(user);
-        visit.setPet(pet);
-        visit.setClinic(clinic);
+        VisitFieldsDto visitDto = new VisitFieldsDto();
+        visitDto.setPetId(pet.getId());
+        visitDto.setClinicId(clinic.getId());
+        visitDto.setVisitedOn(LocalDate.now());
 
-        Visit saved = visitService.save(visit);
-        assertThat(visitService.findById(saved.getId())).isPresent();
-    }
-
-    private static void setField(Object target, String fieldName, Object value) throws Exception {
-        Field f = target.getClass().getDeclaredField(fieldName);
-        f.setAccessible(true);
-        f.set(target, value);
+        Visit saved = visitService.createVisit(visitDto);
+        assertThat(visitService.getVisit(saved.getId())).isNotNull();
     }
 }

@@ -60,7 +60,7 @@ class PrescriptionControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testListPrescriptionsSuccess() throws Exception {
-        given(this.prescriptionService.findAll()).willReturn(java.util.List.of(prescription));
+        given(this.prescriptionService.listPrescriptions(any())).willReturn(org.springframework.data.domain.Page.empty());
         this.mockMvc.perform(get("/api/prescriptions").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
@@ -71,7 +71,7 @@ class PrescriptionControllerTests {
         Prescription newPrescription = new Prescription();
         newPrescription.setId(UUID.randomUUID());
         newPrescription.setName("New Prescription");
-        given(this.prescriptionService.save(any(Prescription.class))).willReturn(newPrescription);
+        given(this.prescriptionService.createPrescription(any(PrescriptionFieldsDto.class))).willReturn(newPrescription);
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 

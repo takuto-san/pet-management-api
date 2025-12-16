@@ -19,10 +19,6 @@ public interface SpringDataVisitRepository extends VisitRepository, PagingAndSor
     Page<Visit> findAll(Pageable pageable);
 
     @Override
-    @Query("SELECT v FROM Visit v WHERE v.user.id = :userId ORDER BY v.visitedOn DESC")
-    List<Visit> findByUserId(@Param("userId") UUID userId);
-
-    @Override
     @Query("SELECT v FROM Visit v WHERE v.pet.id = :petId ORDER BY v.visitedOn DESC")
     List<Visit> findByPetId(@Param("petId") UUID petId);
 

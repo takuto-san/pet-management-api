@@ -1,7 +1,8 @@
 package org.springframework.petmanagement.rest.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.petmanagement.model.Item;
 import org.springframework.petmanagement.rest.api.ItemsApi;
 import org.springframework.petmanagement.rest.dto.ItemDto;
 import org.springframework.petmanagement.rest.dto.ItemFieldsDto;
+import org.springframework.petmanagement.rest.dto.ItemPageDto;
 import org.springframework.petmanagement.service.ItemService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,9 +34,10 @@ public class ItemController implements ItemsApi {
 
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
-    public ResponseEntity<List<ItemDto>> listItems() {
-        List<Item> items = itemService.listItems();
-        return ResponseEntity.ok(itemMapper.toItemDtoList(items));
+    public ResponseEntity<ItemPageDto> listItems(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Item> items = itemService.listItems(pageable);
+        return ResponseEntity.ok(itemMapper.toItemPageDto(items));
     }
 
     @PreAuthorize("hasRole(@roles.ADMIN)")

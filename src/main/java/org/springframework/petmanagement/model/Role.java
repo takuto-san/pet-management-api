@@ -1,5 +1,6 @@
 package org.springframework.petmanagement.model;
 
+import org.hibernate.annotations.ColumnTransformer;
 import org.springframework.petmanagement.model.base.BaseEntity;
 import org.springframework.petmanagement.model.type.RoleType;
 import org.springframework.petmanagement.model.type.converter.RoleTypeConverter;
@@ -26,6 +27,7 @@ public class Role extends BaseEntity {
 
     @NotNull
     @Convert(converter = RoleTypeConverter.class)
+    @ColumnTransformer(write = "?::role_type")
     @Column(name = "name", nullable = false, unique = true)
     private RoleType name;
 }

@@ -1,4 +1,4 @@
-package org.springframework.petmanagement.mapper;
+package org.springframework.petmanagement.mapper.type;
 
 import org.mapstruct.Mapper;
 import org.springframework.petmanagement.model.type.VisitType;

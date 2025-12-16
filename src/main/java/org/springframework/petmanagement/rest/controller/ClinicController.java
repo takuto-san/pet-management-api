@@ -1,9 +1,11 @@
 package org.springframework.petmanagement.rest.controller;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.petmanagement.model.Clinic;
 import org.springframework.petmanagement.rest.api.ClinicsApi;
 import org.springframework.petmanagement.rest.dto.ClinicDto;
 import org.springframework.petmanagement.rest.dto.ClinicFieldsDto;
+import org.springframework.petmanagement.rest.dto.ClinicPageDto;
 import org.springframework.petmanagement.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,9 +37,10 @@ public class ClinicController implements ClinicsApi {
 
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
-    public ResponseEntity<List<ClinicDto>> listClinics() {
-        List<Clinic> clinics = clinicService.listClinics();
-        return ResponseEntity.ok(clinicMapper.toClinicDtoList(clinics));
+    public ResponseEntity<ClinicPageDto> listClinics(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Clinic> clinics = clinicService.listClinics(pageable);
+        return ResponseEntity.ok(clinicMapper.toClinicPageDto(clinics));
     }
 
     @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")

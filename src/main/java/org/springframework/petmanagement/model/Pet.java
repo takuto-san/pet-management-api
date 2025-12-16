@@ -17,13 +17,17 @@ package org.springframework.petmanagement.model;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.ColumnTransformer;
 import org.springframework.petmanagement.model.base.Time;
 import org.springframework.petmanagement.model.type.PetSex;
 import org.springframework.petmanagement.model.type.PetType;
+import org.springframework.petmanagement.model.type.converter.PetSexConverter;
+import org.springframework.petmanagement.model.type.converter.PetTypeConverter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -59,10 +63,14 @@ public class Pet extends Time {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
+    @Convert(converter = PetSexConverter.class)
+    @ColumnTransformer(write = "?::pet_sex")
     @Column(name = "sex")
     private PetSex sex;
 
     @NotNull
+    @Convert(converter = PetTypeConverter.class)
+    @ColumnTransformer(write = "?::pet_type")
     @Column(name = "type", nullable = false)
     private PetType type;
 

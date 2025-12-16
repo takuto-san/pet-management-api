@@ -14,38 +14,16 @@ CREATE TYPE visit_type AS ENUM ('vaccine', 'heartworm', 'flea_tick', 'checkup', 
 CREATE TYPE item_category AS ENUM ('food', 'treat', 'supplement', 'pad', 'toy', 'collar', 'hygiene', 'medical', 'other');
 
 -- ロール種別
-CREATE TYPE role_type AS ENUM (
-    'owner', 
-    'vet', 
-    'nurse', 
-    'receptionist', 
-    'clinic_admin', 
-    'admin'
-);
+CREATE TYPE role_type AS ENUM ('owner', 'vet', 'nurse', 'receptionist', 'clinic_admin', 'admin');
 
 -- ペット種別
-CREATE TYPE pet_type AS ENUM (
-    'dog',
-    'cat',
-    'rabbit', 
-    'hamster',
-    'bird',
-    'turtle', 
-    'fish'
-);
+CREATE TYPE pet_type AS ENUM ('dog','cat','rabbit', 'hamster''bird','turtle', 'fish');
 
 -- ペットの性別
-CREATE TYPE pet_sex AS ENUM (
-    'male',
-    'female',
-    'unknown'
-);
+CREATE TYPE pet_sex AS ENUM ('male','female','unknown');
 
 -- 通貨
-CREATE TYPE currency_type AS ENUM (
-    'JPY',
-    'USD'
-);
+CREATE TYPE currency_type AS ENUM ('JPY','USD');
 
 
 -- 3. Method

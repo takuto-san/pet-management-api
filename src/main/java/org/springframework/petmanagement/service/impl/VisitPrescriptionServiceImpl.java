@@ -6,8 +6,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.petmanagement.model.Prescription;
+import org.springframework.petmanagement.model.Visit;
 import org.springframework.petmanagement.model.VisitPrescription;
+import org.springframework.petmanagement.repository.PrescriptionRepository;
 import org.springframework.petmanagement.repository.VisitPrescriptionRepository;
+import org.springframework.petmanagement.repository.VisitRepository;
 import org.springframework.petmanagement.rest.dto.VisitPrescriptionFieldsDto;
 import org.springframework.petmanagement.service.VisitPrescriptionService;
 import org.springframework.stereotype.Service;
@@ -18,9 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class VisitPrescriptionServiceImpl implements VisitPrescriptionService {
 
     private final VisitPrescriptionRepository visitPrescriptionRepository;
+    private final VisitRepository visitRepository;
+    private final PrescriptionRepository prescriptionRepository;
 
-    public VisitPrescriptionServiceImpl(VisitPrescriptionRepository visitPrescriptionRepository) {
+    public VisitPrescriptionServiceImpl(VisitPrescriptionRepository visitPrescriptionRepository, VisitRepository visitRepository, PrescriptionRepository prescriptionRepository) {
         this.visitPrescriptionRepository = visitPrescriptionRepository;
+        this.visitRepository = visitRepository;
+        this.prescriptionRepository = prescriptionRepository;
     }
 
     @Override
@@ -38,8 +46,26 @@ public class VisitPrescriptionServiceImpl implements VisitPrescriptionService {
 
     @Override
     public VisitPrescription createVisitPrescription(VisitPrescriptionFieldsDto fields) {
-        // TODO: implement
-        return null;
+        Visit visit = visitRepository.findById(fields.getVisitId());
+        if (visit == null) {
+            throw new IllegalArgumentException("Visit not found");
+        }
+        Prescription prescription = prescriptionRepository.findById(fields.getPrescriptionId());
+        if (prescription == null) {
+            throw new IllegalArgumentException("Prescription not found");
+        }
+
+        VisitPrescription vp = new VisitPrescription();
+        vp.setVisit(visit);
+        vp.setPrescription(prescription);
+        vp.setQuantity(fields.getQuantity());
+        vp.setUnit(fields.getUnit());
+        vp.setDays(fields.getDays());
+        vp.setDosageInstructions(fields.getDosageInstructions());
+        vp.setPurpose(fields.getPurpose());
+
+        visitPrescriptionRepository.save(vp);
+        return vp;
     }
 
     @Override

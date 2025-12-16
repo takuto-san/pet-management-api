@@ -7,11 +7,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.springframework.data.domain.Page;
 import org.springframework.petmanagement.model.Visit;
 import org.springframework.petmanagement.rest.dto.VisitDto;
 import org.springframework.petmanagement.rest.dto.VisitFieldsDto;
+import org.springframework.petmanagement.rest.dto.VisitPageDto;
 
-@Mapper(componentModel = "spring", uses = {DateTimeMapper.class, VisitTypeMapper.class})
+@Mapper(componentModel = "spring", uses = {DateTimeMapper.class})
 public interface VisitMapper {
 
     @Mapping(target = "id", ignore = true)
@@ -30,6 +32,13 @@ public interface VisitMapper {
     VisitDto toVisitDto(Visit visit);
 
     List<VisitDto> toVisitDtoList(List<Visit> visits);
+
+    @Mapping(target = "content", expression = "java(toVisitDtoList(page.getContent()))")
+    @Mapping(target = "size", source = "size")
+    @Mapping(target = "totalElements", source = "totalElements")
+    @Mapping(target = "totalPages", source = "totalPages")
+    @Mapping(target = "number", source = "number")
+    VisitPageDto toVisitPageDto(Page<Visit> page);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)

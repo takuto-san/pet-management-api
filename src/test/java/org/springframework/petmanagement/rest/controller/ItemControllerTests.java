@@ -56,7 +56,7 @@ class ItemControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testListItemsSuccess() throws Exception {
-        given(this.itemService.findAll()).willReturn(java.util.List.of(item));
+        given(this.itemService.listItems(any())).willReturn(org.springframework.data.domain.Page.empty());
         this.mockMvc.perform(get("/api/items").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
@@ -67,7 +67,7 @@ class ItemControllerTests {
         Item newItem = new Item();
         newItem.setId(UUID.randomUUID());
         newItem.setName("New Item");
-        given(this.itemService.save(any(Item.class))).willReturn(newItem);
+        given(this.itemService.createItem(any(ItemFieldsDto.class))).willReturn(newItem);
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 

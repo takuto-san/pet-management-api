@@ -2,7 +2,6 @@ package org.springframework.petmanagement.mapper;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 
 import org.mapstruct.Mapper;
 
@@ -13,7 +12,7 @@ public class DateTimeMapper {
         if (localDateTime == null) {
             return null;
         }
-        return localDateTime.atOffset(ZoneOffset.UTC);
+        return localDateTime.atOffset(java.time.ZoneOffset.UTC);
     }
 
     public LocalDateTime map(OffsetDateTime offsetDateTime) {

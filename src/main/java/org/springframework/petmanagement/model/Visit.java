@@ -17,13 +17,17 @@ package org.springframework.petmanagement.model;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.ColumnTransformer;
 import org.springframework.petmanagement.model.base.Time;
 import org.springframework.petmanagement.model.type.Currency;
 import org.springframework.petmanagement.model.type.VisitType;
+import org.springframework.petmanagement.model.type.converter.CurrencyConverter;
+import org.springframework.petmanagement.model.type.converter.VisitTypeConverter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -66,6 +70,8 @@ public class Visit extends Time {
     @Column(name = "weight")
     private Float weight;
 
+    @Convert(converter = VisitTypeConverter.class)
+    @ColumnTransformer(write = "?::visit_type")
     @Column(name = "visit_type")
     private VisitType visitType;
 
@@ -86,6 +92,8 @@ public class Visit extends Time {
     private Integer totalFee;
 
     @lombok.Builder.Default
+    @Convert(converter = CurrencyConverter.class)
+    @ColumnTransformer(write = "?::currency_type")
     @Column(name = "currency")
     private Currency currency = Currency.JPY;
 

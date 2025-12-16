@@ -3,6 +3,7 @@ package org.springframework.petmanagement.service.clinicService;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.petmanagement.model.Clinic;
 import org.springframework.petmanagement.rest.dto.ClinicFieldsDto;
 import org.springframework.petmanagement.service.ClinicService;
@@ -16,7 +17,7 @@ public abstract class AbstractClinicServiceTests {
 
     @Test
     void shouldListClinicsEvenIfEmpty() {
-        assertThat(clinicService.listClinics()).isNotNull();
+        assertThat(clinicService.listClinics(PageRequest.of(0, 10))).isNotNull();
     }
 
     @Test

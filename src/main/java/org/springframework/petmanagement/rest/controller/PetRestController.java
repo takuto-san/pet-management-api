@@ -1,9 +1,10 @@
 package org.springframework.petmanagement.rest.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.rest.api.PetsApi;
 import org.springframework.petmanagement.rest.dto.PetDto;
 import org.springframework.petmanagement.rest.dto.PetFieldsDto;
+import org.springframework.petmanagement.rest.dto.PetPageDto;
 import org.springframework.petmanagement.service.PetService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -42,10 +44,10 @@ public class PetRestController implements PetsApi {
 
     @PreAuthorize("hasRole(@roles.CLINIC_ADMIN)")
     @Override
-    public ResponseEntity<List<PetDto>> listPets() {
-        List<Pet> pets = petService.listPets();
-        List<PetDto> petDtos = new ArrayList<>(petMapper.toPetsDto(pets));
-        return new ResponseEntity<>(petDtos, HttpStatus.OK); // 空でも200
+    public ResponseEntity<PetPageDto> listPets(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Pet> pets = petService.listPets(pageable);
+        return ResponseEntity.ok(petMapper.toPetPageDto(pets));
     }
 
     @PreAuthorize("hasRole(@roles.CLINIC_ADMIN)")
