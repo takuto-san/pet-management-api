@@ -8,13 +8,22 @@ This backend application provides a REST API for managing a veterinary clinic sy
 
 ```mermaid
 erDiagram
-    USERS ||--o{ PETS : owns
-    USERS ||--o{ VISITS : manages
-    TYPES ||--o{ PETS : categorizes
-    PETS ||--o{ VISITS : receives
-    CLINICS ||--o{ VISITS : performs
-    VISITS ||--o{ VISIT_PRESCRIPTIONS : includes
-    PRESCRIPTIONS ||--o{ VISIT_PRESCRIPTIONS : defines
+    USERS ||--o{ USER_ROLES : "assigned via"
+    ROLES ||--o{ USER_ROLES : "defines"
+
+    USERS ||--o{ PETS : "owns"
+
+    PETS ||--o{ VISITS : "receives"
+    CLINICS ||--o{ VISITS : "performs"
+
+    VISITS ||--o{ VISIT_PRESCRIPTIONS : "includes"
+    PRESCRIPTIONS ||--o{ VISIT_PRESCRIPTIONS : "referenced by"
+
+    ITEMS {
+        UUID id
+        string name
+        enum category
+    }
 ```
 
 ## Running Petclinic locally
@@ -42,46 +51,37 @@ API documentation (OAS 3.1) is accessible at: [http://localhost:9966/petmanageme
 
 ## 📌 API Endpoints Overview
 
-| **Method** | **Endpoint** | **Description** |
-|-----------|------------|----------------|
-| **Users** |  |  |
-| **GET** | `/api/users` | List users (supports kana search) |
-| **POST** | `/api/users` | Create a new user |
-| **GET** | `/api/users/{userId}` | Get a user by ID |
-| **PUT** | `/api/users/{userId}` | Update user details |
-| **DELETE** | `/api/users/{userId}` | Delete a user |
-| **Pets** |  |  |
-| **GET** | `/api/pets` | Retrieve all pets |
-| **POST** | `/api/pets` | Add a new pet |
-| **GET** | `/api/pets/{petId}` | Get a pet by ID |
-| **PUT** | `/api/pets/{petId}` | Update pet details |
-| **DELETE** | `/api/pets/{petId}` | Delete a pet |
-| **Pet Types** |  |  |
-| **GET** | `/api/pettypes` | Retrieve all pet types |
-| **POST** | `/api/pettypes` | Add a new pet type |
-| **Clinics** |  |  |
-| **GET** | `/api/clinics` | List all clinics |
-| **POST** | `/api/clinics` | Add a new clinic |
-| **GET** | `/api/clinics/{clinicId}` | Get a clinic by ID |
-| **PUT** | `/api/clinics/{clinicId}` | Update clinic details |
-| **DELETE** | `/api/clinics/{clinicId}` | Delete a clinic |
-| **Visits** |  |  |
-| **GET** | `/api/visits` | List visits (filter by petId) |
-| **POST** | `/api/visits` | Record a new visit |
-| **GET** | `/api/visits/{visitId}` | Get a visit by ID |
-| **PUT** | `/api/visits/{visitId}` | Update a visit |
-| **DELETE** | `/api/visits/{visitId}` | Delete a visit |
-| **Visit Prescriptions** |  |  |
-| **GET** | `/api/visits/{visitId}/prescriptions` | List prescriptions for a visit |
-| **POST** | `/api/visits/{visitId}/prescriptions` | Add a prescription to a visit |
-| **DELETE** | `/api/visits/{visitId}/prescriptions/{visitPrescriptionId}` | Remove a prescription from a visit |
-| **Master Data** |  |  |
-| **GET** | `/api/prescriptions` | List prescription master data |
-| **POST** | `/api/prescriptions` | Add new prescription master data |
-| **GET** | `/api/items` | List item master data |
-| **POST** | `/api/items` | Add new item master data |
-| **System** |  |  |
-| **GET** | `/api/oops` | Always fails (for testing errors) |
+| **Tag** | **Method** | **Endpoint** | **Description** |
+| :--- | :--- | :--- | :--- |
+| **Users** | **GET** | `/api/users` | List users (supports kana search) |
+| | **POST** | `/api/users` | Create a new user (Default role 'owner' is assigned) |
+| | **GET** | `/api/users/{userId}` | Get a user by ID |
+| | **PUT** | `/api/users/{userId}` | Update user details |
+| | **DELETE** | `/api/users/{userId}` | Delete a user |
+| **Pets** | **GET** | `/api/pets` | Retrieve all pets (pagination supported) |
+| | **POST** | `/api/pets` | Add a new pet |
+| | **GET** | `/api/pets/{petId}` | Get a pet by ID |
+| | **PUT** | `/api/pets/{petId}` | Update pet details |
+| | **DELETE** | `/api/pets/{petId}` | Delete a pet |
+| **Pet Types** | **GET** | `/api/pettypes` | Retrieve all pet types (Enum values) |
+| **Clinics** | **GET** | `/api/clinics` | List all clinics |
+| | **POST** | `/api/clinics` | Add a new clinic |
+| | **GET** | `/api/clinics/{clinicId}` | Get a clinic by ID |
+| | **PUT** | `/api/clinics/{clinicId}` | Update clinic details |
+| | **DELETE** | `/api/clinics/{clinicId}` | Delete a clinic |
+| **Visits** | **GET** | `/api/visits` | List visits (can filter by petId) |
+| | **POST** | `/api/visits` | Record a new visit |
+| | **GET** | `/api/visits/{visitId}` | Get a visit by ID |
+| | **PUT** | `/api/visits/{visitId}` | Update a visit |
+| | **DELETE** | `/api/visits/{visitId}` | Delete a visit |
+| **Visit Prescriptions** | **GET** | `/api/visits/{visitId}/prescriptions` | List prescriptions for a specific visit |
+| | **POST** | `/api/visits/{visitId}/prescriptions` | Add a prescription to a visit |
+| | **DELETE** | `/api/visits/{visitId}/prescriptions/{visitPrescriptionId}` | Remove a prescription from a visit |
+| **Master Data** | **GET** | `/api/prescriptions` | List prescription master data |
+| | **POST** | `/api/prescriptions` | Add new prescription master data |
+| | **GET** | `/api/items` | List item master data |
+| | **POST** | `/api/items` | Add new item master data |
+| **System** | **GET** | `/api/oops` | Always fails (for testing errors) |
 
 
 ## Database Settings
@@ -134,12 +134,12 @@ mvn clean install
 ```
 
 ## Security configuration
-In its default configuration, Petclinic doesn't have authentication and authorization enabled.
+In its default configuration, PetManagement doesn't have authentication and authorization enabled.
 
 ### Basic Authentication
 In order to use the basic authentication functionality, turn in on from the `application.properties` file
 ```properties
-petclinic.security.enable=true
+petmanagement.security.enable=true
 ```
 
 ## Looking for something in particular?
@@ -148,8 +148,6 @@ petclinic.security.enable=true
 |--|--|
 | REST API controllers | [REST folder](src/main/java/org/springframework/petmanagement/rest) |
 | Service | [ManagementServiceImpl.java](src/main/java/org/springframework/petmanagement/service/ManagementServiceImpl.java) |
-| JDBC | [jdbc folder](src/main/java/org/springframework/petmanagement/repository/jdbc) |
-| JPA | [jpa folder](src/main/java/org/springframework/petmanagement/repository/jpa) |
 | Spring Data JPA | [springdatajpa folder](src/main/java/org/springframework/petmanagement/repository/springdatajpa) |
 | Tests | [AbstractPetManagementServiceTests.java](src/test/java/org/springframework/petmanagement/service/managementService/AbstractPetManagementServiceTests.java) |
 
