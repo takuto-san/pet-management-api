@@ -20,6 +20,7 @@ public interface SpringDataItemRepository extends ItemRepository, PagingAndSorti
     Page<Item> findAll(Pageable pageable);
 
     @Override
-    @Query("SELECT i FROM Item i WHERE i.category = :category ORDER BY i.name")
+    @Query(value = "SELECT * FROM items WHERE category = CAST(:#{#category.name().toLowerCase()} AS item_category) ORDER BY name",
+           nativeQuery = true)
     List<Item> findByCategory(@Param("category") ItemType category);
 }

@@ -2,12 +2,15 @@ package org.springframework.petmanagement.model;
 
 import java.util.Map;
 
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.petmanagement.model.base.Time;
 import org.springframework.petmanagement.model.type.ItemType;
+import org.springframework.petmanagement.model.type.converter.ItemTypeConverter;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -35,6 +38,8 @@ public class Item extends Time {
     private String name;
     
     @NotNull
+    @Convert(converter = ItemTypeConverter.class)
+    @ColumnTransformer(write = "?::item_category")
     @Column(name = "category", nullable = false)
     private ItemType category;
     
