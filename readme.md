@@ -6,25 +6,7 @@ This backend application provides a REST API for managing a veterinary clinic sy
 
 ### PetcManagement ER Model
 
-```mermaid
-erDiagram
-    USERS ||--o{ USER_ROLES : "assigned via"
-    ROLES ||--o{ USER_ROLES : "defines"
-
-    USERS ||--o{ PETS : "owns"
-
-    PETS ||--o{ VISITS : "receives"
-    CLINICS ||--o{ VISITS : "performs"
-
-    VISITS ||--o{ VISIT_PRESCRIPTIONS : "includes"
-    PRESCRIPTIONS ||--o{ VISIT_PRESCRIPTIONS : "referenced by"
-
-    ITEMS {
-        UUID id
-        string name
-        enum category
-    }
-```
+![e-r](image.png)
 
 ## Running Petclinic locally
 
