@@ -6,7 +6,7 @@ This backend application provides a REST API for managing a veterinary clinic sy
 
 ### PetcManagement ER Model
 
-![e-r](image.png)
+![ER](pet-management-api_e-r.png)
 
 ## Running Petclinic locally
 
