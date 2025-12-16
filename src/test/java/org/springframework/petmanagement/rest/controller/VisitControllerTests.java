@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.petmanagement.model.Clinic;
 import org.springframework.petmanagement.model.Pet;
-import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.model.Visit;
 import org.springframework.petmanagement.rest.dto.VisitFieldsDto;
 import org.springframework.petmanagement.rest.dto.VisitTypeDto;
@@ -40,7 +39,6 @@ class VisitControllerTests {
     private static final UUID VISIT_ID = UUID.fromString("10000000-0000-0000-0000-000000000001");
     private static final UUID VISIT_ID_NOT_FOUND = UUID.fromString("99999999-9999-9999-9999-999999999999");
     private static final UUID PET_ID = UUID.fromString("20000000-0000-0000-0000-000000000002");
-    private static final UUID USER_ID = UUID.fromString("30000000-0000-0000-0000-000000000001");
     private static final UUID CLINIC_ID = UUID.fromString("40000000-0000-0000-0000-000000000004");
 
     @Autowired private MockMvc mockMvc;
@@ -48,17 +46,11 @@ class VisitControllerTests {
     @Autowired private ObjectMapper objectMapper;
 
     private Visit visit;
-    private User user;
     private Pet pet;
     private Clinic clinic;
 
     @BeforeEach
     void initVisit() {
-        user = new User();
-        user.setId(USER_ID);
-        user.setFirstName("Test");
-        user.setLastName("User");
-
         pet = new Pet();
         pet.setId(PET_ID);
         pet.setName("Test Pet");
@@ -76,7 +68,6 @@ class VisitControllerTests {
 
     private VisitFieldsDto createValidFieldsDto() {
         return new VisitFieldsDto()
-            .userId(USER_ID)
             .visitedOn(LocalDate.now())
             .petId(PET_ID)
             .clinicId(CLINIC_ID)

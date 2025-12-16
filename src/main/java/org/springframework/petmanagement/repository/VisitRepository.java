@@ -18,8 +18,6 @@ public interface VisitRepository {
 
     Collection<Visit> findAll() throws DataAccessException;
 
-    Collection<Visit> findByUserId(UUID userId) throws DataAccessException;
-
     Collection<Visit> findByPetId(UUID petId) throws DataAccessException;
 
     Page<Visit> findByPetId(UUID petId, Pageable pageable) throws DataAccessException;

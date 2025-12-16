@@ -34,7 +34,6 @@ class VisitTests {
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
-            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(LocalDate.of(2024, 1, 15))
@@ -57,12 +56,10 @@ class VisitTests {
 
     @Test
     void shouldFailWhenPetIsNull() {
-        User user = User.builder().id(UUID.randomUUID()).username("test").email("test@example.com").firstName("Test").lastName("User").build();
         Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
-            .user(user)
             .pet(null)
             .clinic(clinic)
             .visitedOn(LocalDate.now())
@@ -80,7 +77,6 @@ class VisitTests {
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
-            .user(user)
             .pet(pet)
             .clinic(null)
             .visitedOn(LocalDate.now())
@@ -99,7 +95,6 @@ class VisitTests {
 
         Visit visit = Visit.builder()
             .id(UUID.randomUUID())
-            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(null)
@@ -117,7 +112,6 @@ class VisitTests {
         Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
-            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(LocalDate.now())
@@ -137,7 +131,6 @@ class VisitTests {
         Clinic clinic = Clinic.builder().id(UUID.randomUUID()).name("Clinic").build();
 
         Visit visit = Visit.builder()
-            .user(user)
             .pet(pet)
             .clinic(clinic)
             .visitedOn(LocalDate.of(2024, 6, 1))
