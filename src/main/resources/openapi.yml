@@ -116,7 +116,7 @@ paths:
       operationId: refreshToken
       summary: Refresh Access Token
       description: Generates a new access token using a valid refresh token.
-      security: [] # リフレッシュトークンのみで検証するため公開
+      security: []
       requestBody:
         required: true
         content:
