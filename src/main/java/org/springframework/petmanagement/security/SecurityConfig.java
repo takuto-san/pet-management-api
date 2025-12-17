@@ -1,5 +1,6 @@
 package org.springframework.petmanagement.security;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -23,6 +24,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 
 @Configuration
 @EnableWebSecurity
+@EnableConfigurationProperties(RsaKeyProperties.class)
 public class SecurityConfig {
 
     private final RsaKeyProperties rsaKeys;
@@ -35,12 +37,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
-                // OAuth2.0リソースサーバーのサポートを構成
                 .oauth2ResourceServer(oauth2ResourceServer ->
                                         oauth2ResourceServer.jwt(jwt ->
                                                       jwt.decoder(jwtDecoder())))
                 .authorizeHttpRequests(auth ->
-                                        auth.requestMatchers("/token").permitAll()
+                                        auth.requestMatchers("/token", "/api/auth/**").permitAll()
                                             .anyRequest().authenticated())
                 .sessionManagement(session ->
                                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -49,13 +50,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    // 公開鍵を使用して解析する
     JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
     }
 
     @Bean
-    // 秘密鍵を使用して署名する
     JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
