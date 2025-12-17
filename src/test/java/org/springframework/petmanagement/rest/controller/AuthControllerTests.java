@@ -1,4 +1,4 @@
-package org.springframework.petmanagement.rest.controller;
+ package org.springframework.petmanagement.rest.controller;
 
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.petmanagement.rest.dto.JwtResponseDto;
+import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
 import org.springframework.petmanagement.service.AuthService;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -76,7 +77,7 @@ class AuthControllerTests {
 
     @Test
     void testRefreshTokenSuccess() throws Exception {
-        JwtResponseDto refreshResponse = new JwtResponseDto("new-access-token", "Bearer", "new-refresh-token", null, "test@example.com", null);
+        TokenRefreshResponseDto refreshResponse = new TokenRefreshResponseDto("new-access-token", "new-refresh-token", "Bearer");
         given(this.authService.refreshToken(any())).willReturn(refreshResponse);
 
         String jsonBody = """

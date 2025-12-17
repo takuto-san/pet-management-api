@@ -1,26 +1,42 @@
 package org.springframework.petmanagement.rest.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.petmanagement.mapper.UserMapper;
+import org.springframework.petmanagement.model.User;
+import org.springframework.petmanagement.repository.UserRepository;
+import org.springframework.petmanagement.rest.api.AuthApi;
+import org.springframework.petmanagement.rest.dto.JwtResponseDto;
+import org.springframework.petmanagement.rest.dto.LoginRequestDto;
+import org.springframework.petmanagement.rest.dto.MessageResponseDto;
+import org.springframework.petmanagement.rest.dto.SignupRequestDto;
+import org.springframework.petmanagement.rest.dto.TokenRefreshRequestDto;
+import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
+import org.springframework.petmanagement.rest.dto.UserResponseDto;
 import org.springframework.petmanagement.service.AuthService;
 import org.springframework.petmanagement.service.TokenService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("/api/auth")
-public class AuthController {
+@RequestMapping("/api")
+public class AuthController implements AuthApi {
 
     private final AuthService authService;
     private final TokenService tokenService;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public AuthController(AuthService authService, TokenService tokenService) {
+    public AuthController(AuthService authService, TokenService tokenService, UserRepository userRepository, UserMapper userMapper) {
         this.authService = authService;
         this.tokenService = tokenService;
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/token")
@@ -29,28 +45,42 @@ public class AuthController {
         return token;
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        // Since DTO not available, create simple response
-        var response = authService.authenticateUser(null); // Mock, but call to satisfy test
+    @Override
+    public ResponseEntity<JwtResponseDto> authenticateUser(LoginRequestDto loginRequestDto) {
+        JwtResponseDto response = authService.authenticateUser(loginRequestDto);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
-        authService.registerUser(null); // Call to satisfy test
-        return ResponseEntity.ok("{\"message\":\"User registered successfully!\"}");
-    }
-
-    @PostMapping("/refreshtoken")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshRequest refreshRequest) {
-        var response = authService.refreshToken(refreshRequest.refreshToken);
+    @Override
+    public ResponseEntity<MessageResponseDto> registerUser(SignupRequestDto signupRequestDto) {
+        authService.registerUser(signupRequestDto);
+        MessageResponseDto response = new MessageResponseDto();
+        response.setMessage("User registered successfully!");
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/signout")
-    public ResponseEntity<?> logoutUser() {
-        return ResponseEntity.ok("{\"message\":\"User logged out successfully!\"}");
+    @Override
+    public ResponseEntity<TokenRefreshResponseDto> refreshToken(TokenRefreshRequestDto tokenRefreshRequestDto) {
+        TokenRefreshResponseDto response = authService.refreshToken(tokenRefreshRequestDto.getRefreshToken());
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<MessageResponseDto> logoutUser() {
+        // Assume logout is handled by client-side token removal
+        MessageResponseDto response = new MessageResponseDto();
+        response.setMessage("User logged out successfully!");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/auth/me")
+    public ResponseEntity<UserResponseDto> getCurrentUser(Authentication authentication) {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String userName = jwt.getClaimAsString("userName");
+        User user = userRepository.findByUsername(userName)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserResponseDto userResponseDto = userMapper.toUserDto(user);
+        return ResponseEntity.ok(userResponseDto);
     }
 
     // Simple DTO classes

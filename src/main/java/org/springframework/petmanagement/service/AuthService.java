@@ -3,6 +3,7 @@ package org.springframework.petmanagement.service;
 import org.springframework.petmanagement.rest.dto.JwtResponseDto;
 import org.springframework.petmanagement.rest.dto.LoginRequestDto;
 import org.springframework.petmanagement.rest.dto.SignupRequestDto;
+import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
 
 public interface AuthService {
 
@@ -12,5 +13,5 @@ public interface AuthService {
 
     void logoutUser(String username);
 
-    JwtResponseDto refreshToken(String refreshToken);
+    TokenRefreshResponseDto refreshToken(String refreshToken);
 }

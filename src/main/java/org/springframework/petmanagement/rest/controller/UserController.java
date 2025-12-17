@@ -26,12 +26,12 @@ import jakarta.validation.Valid;
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("/api")
-public class UserRestController implements UsersApi {
+public class UserController implements UsersApi {
 
     private final UserService userService;
     private final UserMapper userMapper;
 
-    public UserRestController(UserService userService,
+    public UserController(UserService userService,
                               UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;

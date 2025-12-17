@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.petmanagement.rest.dto.JwtResponseDto;
 import org.springframework.petmanagement.rest.dto.LoginRequestDto;
 import org.springframework.petmanagement.rest.dto.SignupRequestDto;
+import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
 import org.springframework.petmanagement.service.AuthService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,12 +61,12 @@ public abstract class AbstractAuthServiceTests {
         JwtResponseDto loginResponse = authService.authenticateUser(loginRequest);
 
         // Refresh token
-        JwtResponseDto refreshResponse = authService.refreshToken(loginResponse.getRefreshToken());
+        TokenRefreshResponseDto refreshResponse = authService.refreshToken(loginResponse.getRefreshToken());
 
         assertThat(refreshResponse).isNotNull();
-        assertThat(refreshResponse.getToken()).isNotNull();
+        assertThat(refreshResponse.getAccessToken()).isNotNull();
         assertThat(refreshResponse.getRefreshToken()).isNotNull();
-        assertThat(refreshResponse.getToken()).isNotEqualTo(loginResponse.getToken()); // New access token
+        assertThat(refreshResponse.getAccessToken()).isNotEqualTo(loginResponse.getToken()); // New access token
         assertThat(refreshResponse.getRefreshToken()).isNotEqualTo(loginResponse.getRefreshToken()); // New refresh token
     }
 
