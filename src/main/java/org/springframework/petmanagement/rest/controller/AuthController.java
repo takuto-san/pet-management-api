@@ -13,7 +13,6 @@ import org.springframework.petmanagement.rest.dto.TokenRefreshRequestDto;
 import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
 import org.springframework.petmanagement.rest.dto.UserResponseDto;
 import org.springframework.petmanagement.service.AuthService;
-import org.springframework.petmanagement.service.TokenService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
@@ -30,18 +29,14 @@ import jakarta.validation.Valid;
 public class AuthController implements AuthApi {
 
     private final AuthService authService;
-    private final TokenService tokenService;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public AuthController(AuthService authService, TokenService tokenService, UserRepository userRepository, UserMapper userMapper) {
+    public AuthController(AuthService authService, UserRepository userRepository, UserMapper userMapper) {
         this.authService = authService;
-        this.tokenService = tokenService;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
-
-
 
     @Override
     public ResponseEntity<JwtResponseDto> authenticateUser(@Valid LoginRequestDto loginRequestDto) {

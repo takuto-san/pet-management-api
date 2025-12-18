@@ -1,6 +1,5 @@
 package org.springframework.petmanagement.service.impl;
 
-import org.springframework.petmanagement.mapper.UserMapper;
 import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.repository.UserRepository;
 import org.springframework.petmanagement.rest.dto.JwtResponseDto;
@@ -18,13 +17,11 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthServiceImpl(UserRepository userRepository, UserMapper userMapper, TokenService tokenService, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserRepository userRepository, TokenService tokenService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
         this.tokenService = tokenService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -34,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
         // Simple implementation - in real app, use proper authentication
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, null);
+        Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, null); // Todo: Roleを渡す
         String token = tokenService.generateToken(auth);
         return new JwtResponseDto(token, "Bearer", "refresh-token", null, user.getEmail(), null);
     }
