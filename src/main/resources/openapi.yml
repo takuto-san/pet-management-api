@@ -7,10 +7,10 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0
   version: '1.5'
 servers:
-  - url: http://localhost:9966/petclinic/api
+  - url: http://localhost:9966/petmanagement
 tags:
   - name: auth
-    description: Authentication endpoints (Signin, Signup, Refresh Token).
+    description: Authentication endpoints (Signin, Signup, Me,Refresh Token).
   - name: failing
     description: Endpoint which always returns an error.
   - name: owner
