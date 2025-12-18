@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
         // Simple implementation - in real app, use proper authentication
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, null); // Todo: Roleを渡す
+        Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, null);
         String accessToken = tokenService.generateToken(auth);
         String refreshToken = tokenService.generateRefreshToken(auth);
         int expiresIn = tokenService.getTokenExpirationSeconds();
