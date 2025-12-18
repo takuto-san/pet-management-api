@@ -18,8 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,11 +41,7 @@ public class AuthController implements AuthApi {
         this.userMapper = userMapper;
     }
 
-    @PostMapping("/token")
-    public String createToken(Authentication authentication) {
-        String token = tokenService.generateToken(authentication);
-        return token;
-    }
+
 
     @Override
     public ResponseEntity<JwtResponseDto> authenticateUser(@Valid LoginRequestDto loginRequestDto) {
@@ -56,7 +50,7 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    public ResponseEntity<MessageResponseDto> registerUser(SignupRequestDto signupRequestDto) {
+    public ResponseEntity<MessageResponseDto> registerUser(@Valid SignupRequestDto signupRequestDto) {
         authService.registerUser(signupRequestDto);
         MessageResponseDto response = new MessageResponseDto();
         response.setMessage("User registered successfully!");
@@ -71,13 +65,11 @@ public class AuthController implements AuthApi {
 
     @Override
     public ResponseEntity<MessageResponseDto> logoutUser() {
-        // Assume logout is handled by client-side token removal
         MessageResponseDto response = new MessageResponseDto();
         response.setMessage("User logged out successfully!");
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/auth/me")
     public ResponseEntity<UserResponseDto> getCurrentUser(Authentication authentication) {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userName = jwt.getClaimAsString("userName");
@@ -85,21 +77,5 @@ public class AuthController implements AuthApi {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         UserResponseDto userResponseDto = userMapper.toUserDto(user);
         return ResponseEntity.ok(userResponseDto);
-    }
-
-    // Simple DTO classes
-    public static class LoginRequest {
-        public String email;
-        public String password;
-    }
-
-    public static class SignupRequest {
-        public String username;
-        public String email;
-        public String password;
-    }
-
-    public static class RefreshRequest {
-        public String refreshToken;
     }
 }
