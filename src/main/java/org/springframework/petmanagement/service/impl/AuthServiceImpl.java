@@ -9,6 +9,8 @@ import org.springframework.petmanagement.rest.dto.SignupRequestDto;
 import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
 import org.springframework.petmanagement.service.AuthService;
 import org.springframework.petmanagement.service.TokenService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +32,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponseDto authenticateUser(LoginRequestDto loginRequest) {
         // Simple implementation - in real app, use proper authentication
-        User user = userRepository.findByUsername(loginRequest.getEmail())
+        User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        String token = tokenService.generateToken(null); // Mock authentication
+        Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, null);
+        String token = tokenService.generateToken(auth);
         return new JwtResponseDto(token, "Bearer", "refresh-token", null, user.getEmail(), null);
     }
 
@@ -43,7 +46,6 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setEnabled(true);
-        // Set default role if needed
         userRepository.save(user);
     }
 
@@ -55,7 +57,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenRefreshResponseDto refreshToken(String refreshToken) {
         // Simple implementation - in real app, validate refresh token
-        String newAccessToken = tokenService.generateToken(null); // Mock
+        Authentication auth = new UsernamePasswordAuthenticationToken("dummy", null, null);
+        String newAccessToken = tokenService.generateToken(auth);
         return new TokenRefreshResponseDto(newAccessToken, "new-refresh-token", "Bearer");
     }
 }

@@ -37,7 +37,7 @@ class UserControllerTests {
         String jsonBody = """
             {
               "username": "newuser",
-              "password": "password123",
+              "password": "Password123",
               "firstName": "太郎",
               "lastName": "山田",
               "firstNameKana": "タロウ",

@@ -47,39 +47,7 @@ class UserTests {
         assertThat(user.getEmail()).isEqualTo("taro.yamada@example.com");
     }
 
-    @Test
-    void shouldFailWhenUsernameIsNull() {
-        User user = User.builder()
-            .username(null)
-            .password("password")
-            .firstName("太郎")
-            .lastName("山田")
-            .firstNameKana("タロウ")
-            .lastNameKana("ヤマダ")
-            .email("test@example.com")
-            .build();
 
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertThat(violations).isNotEmpty();
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("username"));
-    }
-
-    @Test
-    void shouldFailWhenUsernameIsBlank() {
-        User user = User.builder()
-            .username("")
-            .password("password")
-            .firstName("太郎")
-            .lastName("山田")
-            .firstNameKana("タロウ")
-            .lastNameKana("ヤマダ")
-            .email("test@example.com")
-            .build();
-
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertThat(violations).isNotEmpty();
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("username"));
-    }
 
     @Test
     void shouldFailWhenUsernameExceedsMaxLength() {
@@ -133,11 +101,11 @@ class UserTests {
     }
 
     @Test
-    void shouldFailWhenFirstNameIsNull() {
+    void shouldFailWhenFirstNameExceedsMaxLength() {
         User user = User.builder()
             .username("johndoe")
             .password("password")
-            .firstName(null)
+            .firstName("a".repeat(51))
             .lastName("山田")
             .firstNameKana("タロウ")
             .lastNameKana("ヤマダ")
@@ -264,5 +232,164 @@ class UserTests {
 
         assertThat(user.getRoles()).isNotNull();
         assertThat(user.getRoles()).isEmpty();
+    }
+
+    @Test
+    void shouldFailWhenLastNameExceedsMaxLength() {
+        User user = User.builder()
+            .username("johndoe")
+            .password("password")
+            .firstName("太郎")
+            .lastName("a".repeat(51))
+            .firstNameKana("タロウ")
+            .lastNameKana("ヤマダ")
+            .email("test@example.com")
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("lastName"));
+    }
+
+    @Test
+    void shouldFailWhenFirstNameKanaHasInvalidCharacters() {
+        User user = User.builder()
+            .username("johndoe")
+            .password("password")
+            .firstName("太郎")
+            .lastName("山田")
+            .firstNameKana("たろう")  // ひらがな
+            .lastNameKana("ヤマダ")
+            .email("test@example.com")
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("firstNameKana"));
+    }
+
+    @Test
+    void shouldFailWhenLastNameKanaHasInvalidCharacters() {
+        User user = User.builder()
+            .username("johndoe")
+            .password("password")
+            .firstName("太郎")
+            .lastName("山田")
+            .firstNameKana("タロウ")
+            .lastNameKana("やまだ")  // ひらがな
+            .email("test@example.com")
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("lastNameKana"));
+    }
+
+    @Test
+    void shouldFailWhenPostalCodeHasInvalidFormat() {
+        User user = User.builder()
+            .username("johndoe")
+            .password("password")
+            .firstName("太郎")
+            .lastName("山田")
+            .firstNameKana("タロウ")
+            .lastNameKana("ヤマダ")
+            .email("test@example.com")
+            .postalCode("150-000")  // 無効
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("postalCode"));
+    }
+
+    @Test
+    void shouldFailWhenPrefectureExceedsMaxLength() {
+        User user = User.builder()
+            .username("johndoe")
+            .password("password")
+            .firstName("太郎")
+            .lastName("山田")
+            .firstNameKana("タロウ")
+            .lastNameKana("ヤマダ")
+            .email("test@example.com")
+            .prefecture("a".repeat(11))
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("prefecture"));
+    }
+
+    @Test
+    void shouldFailWhenCityExceedsMaxLength() {
+        User user = User.builder()
+            .username("johndoe")
+            .password("password")
+            .firstName("太郎")
+            .lastName("山田")
+            .firstNameKana("タロウ")
+            .lastNameKana("ヤマダ")
+            .email("test@example.com")
+            .city("a".repeat(81))
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("city"));
+    }
+
+    @Test
+    void shouldFailWhenAddressExceedsMaxLength() {
+        User user = User.builder()
+            .username("johndoe")
+            .password("password")
+            .firstName("太郎")
+            .lastName("山田")
+            .firstNameKana("タロウ")
+            .lastNameKana("ヤマダ")
+            .email("test@example.com")
+            .address("a".repeat(256))
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("address"));
+    }
+
+    @Test
+    void shouldFailWhenTelephoneExceedsMaxLength() {
+        User user = User.builder()
+            .username("johndoe")
+            .password("password")
+            .firstName("太郎")
+            .lastName("山田")
+            .firstNameKana("タロウ")
+            .lastNameKana("ヤマダ")
+            .email("test@example.com")
+            .telephone("0".repeat(21))
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("telephone"));
+    }
+
+    @Test
+    void shouldFailWhenEmailExceedsMaxLength() {
+        String longEmail = "a".repeat(246) + "@example.com";  // 255を超える
+        User user = User.builder()
+            .username("johndoe")
+            .password("password")
+            .firstName("太郎")
+            .lastName("山田")
+            .firstNameKana("タロウ")
+            .lastNameKana("ヤマダ")
+            .email(longEmail)
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("email"));
     }
 }

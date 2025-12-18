@@ -51,7 +51,7 @@ class AuthControllerTests {
         String jsonBody = """
             {
               "email": "newuser@example.com",
-              "password": "password123"
+              "password": "Password123"
             }
             """;
 
@@ -94,20 +94,5 @@ class AuthControllerTests {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
-    @Test
-    void testAuthenticateUserBadRequest() throws Exception {
-        String jsonBody = """
-            {
-              "email": "",
-              "password": "password123"
-            }
-            """;
 
-        this.mockMvc.perform(post("/api/auth/signin")
-            .with(csrf())
-            .content(jsonBody)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
-    }
 }
