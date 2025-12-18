@@ -55,7 +55,7 @@ CREATE TABLE users (
     prefecture      TEXT,
     city            TEXT,
     address         TEXT,
-    telephone       TEXT UNIQUE,
+    telephone       TEXT,
     created_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
@@ -139,8 +139,8 @@ CREATE INDEX idx_prescriptions_created_at ON prescriptions (created_at);
 -- 診察記録テーブル
 CREATE TABLE visits (
     id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    pet_id      UUID NOT NULL REFERENCES pets (id),
-    clinic_id   UUID NOT NULL REFERENCES clinics (id),
+    pet_id      UUID NOT NULL REFERENCES pets (id) ON DELETE CASCADE,
+    clinic_id   UUID NOT NULL REFERENCES clinics (id) ON DELETE CASCADE,
     visited_on  DATE NOT NULL,
     weight      NUMERIC(5,2),
     visit_type  visit_type,
