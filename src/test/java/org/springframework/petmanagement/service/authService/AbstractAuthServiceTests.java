@@ -20,7 +20,7 @@ public abstract class AbstractAuthServiceTests {
 
     @Test
     void shouldRegisterUser() throws Exception {
-        SignupRequestDto signupRequest = new SignupRequestDto("testuser", "test@example.com", "password123");
+        SignupRequestDto signupRequest = new SignupRequestDto("test@example.com", "password123");
 
         authService.registerUser(signupRequest);
 
@@ -38,7 +38,7 @@ public abstract class AbstractAuthServiceTests {
     @Test
     void shouldAuthenticateUser() throws Exception {
         // First register a user
-        SignupRequestDto signupRequest = new SignupRequestDto("authuser", "auth@example.com", "password123");
+        SignupRequestDto signupRequest = new SignupRequestDto("auth@example.com", "password123");
         authService.registerUser(signupRequest);
 
         // Then authenticate
@@ -54,7 +54,7 @@ public abstract class AbstractAuthServiceTests {
     @Test
     void shouldRefreshToken() throws Exception {
         // Register and authenticate
-        SignupRequestDto signupRequest = new SignupRequestDto("refreshuser", "refresh@example.com", "password123");
+        SignupRequestDto signupRequest = new SignupRequestDto("refresh@example.com", "password123");
         authService.registerUser(signupRequest);
 
         LoginRequestDto loginRequest = new LoginRequestDto("refresh@example.com", "password123");
@@ -73,7 +73,7 @@ public abstract class AbstractAuthServiceTests {
     @Test
     void shouldLogoutUser() throws Exception {
         // Register and authenticate
-        SignupRequestDto signupRequest = new SignupRequestDto("logoutuser", "logout@example.com", "password123");
+        SignupRequestDto signupRequest = new SignupRequestDto("logout@example.com", "password123");
         authService.registerUser(signupRequest);
 
         LoginRequestDto loginRequest = new LoginRequestDto("logout@example.com", "password123");

@@ -36,7 +36,6 @@ security:
   - bearerAuth: []
 
 paths:
-  # --- Auth Endpoints ---
   /auth/signin:
     post:
       tags: [auth]
@@ -163,14 +162,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
 
-  # --- Users Endpoints ---
   /users:
     post:
       tags: [user]
       operationId: addUser
       summary: Create a user (Admin Only)
       description: Creates a new user. This endpoint is protected and intended for admins. Use /auth/signup for public registration.
-      # security: [] を削除し、認証必須に変更
       requestBody:
         required: true
         content:
@@ -285,7 +282,6 @@ paths:
         403:
           description: Forbidden
 
-  # --- Pet Types Endpoints ---
   /pettypes:
     get:
       tags: [pettypes]
@@ -301,7 +297,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/PetType'
 
-  # --- Pets Endpoints ---
   /pets:
     get:
       tags: [pet]
@@ -396,7 +391,6 @@ paths:
         204:
           description: No Content
 
-  # --- Clinics Endpoints ---
   /clinics:
     get:
       tags: [clinic]
@@ -491,7 +485,6 @@ paths:
         204:
           description: No Content
 
-  # --- Visits Endpoints ---
   /visits:
     get:
       tags: [visit]
@@ -593,7 +586,6 @@ paths:
         204:
           description: No Content
 
-  # --- Visit Prescriptions Endpoints ---
   /visits/{visitId}/prescriptions:
     get:
       tags: [visit-prescription]
@@ -662,7 +654,6 @@ paths:
         204:
           description: No Content
 
-  # --- Prescriptions Master Endpoints ---
   /prescriptions:
     get:
       tags: [prescription]
@@ -696,7 +687,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Prescription'
 
-  # --- Items Master Endpoints ---
   /items:
     get:
       tags: [item]
@@ -758,45 +748,35 @@ components:
         minimum: 1
 
   schemas:
-    # --- Auth Schemas ---
     LoginRequest:
-      type: object
-      description: Request for signing in.
-      properties:
-        email:
-          type: string
-          format: email
-          example: owner@example.com
-        password:
-          type: string
-          format: password
-          example: password123
-      required:
-        - email
-        - password
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+              maxLength: 255
+              example: owner@example.com
+            password:
+              type: string
+              format: password
+              example: password123
+          required:
+            - email
+            - password
 
     SignupRequest:
       type: object
-      description: Request for registering a new user.
       properties:
-        username:
-          type: string
-          minLength: 3
-          maxLength: 20
         email:
           type: string
           format: email
-        role:
-          type: array
-          items:
-            type: string
-          example: ["owner"]
+          maxLength: 255
         password:
           type: string
-          minLength: 6
-          maxLength: 40
+          minLength: 8
+          maxLength: 128
+          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$'
       required:
-        - username
         - email
         - password
 
@@ -859,7 +839,6 @@ components:
       required:
         - message
 
-    # --- Pagination Metadata ---
     PageMetadata:
       type: object
       properties:
@@ -881,7 +860,6 @@ components:
         - totalPages
         - number
 
-    # --- Paged Responses ---
     UserPage:
       allOf:
         - $ref: '#/components/schemas/PageMetadata'
@@ -954,7 +932,6 @@ components:
           required:
             - content
 
-    # --- Standard Schemas ---
     ProblemDetail:
       title: Problem Detail
       type: object
@@ -1313,46 +1290,50 @@ components:
             - updatedAt
 
     UserBase:
-      type: object
-      properties:
-        username:
-          type: string
-          minLength: 1
-          maxLength: 20
-          example: john.doe
-        firstName:
-          type: string
-        lastName:
-          type: string
-        firstNameKana:
-          type: string
-        lastNameKana:
-          type: string
-        email:
-          type: string
-          format: email
-        postalCode:
-          type: string
-          maxLength: 8
-        prefecture:
-          type: string
-        city:
-          type: string
-          maxLength: 80
-        address:
-          type: string
-          maxLength: 255
-        telephone:
-          type: string
-          maxLength: 20
-          pattern: '^[0-9-]*$'
-      required:
-        - username
-        - firstName
-        - lastName
-        - firstNameKana
-        - lastNameKana
-        - email
+          type: object
+          properties:
+            username:
+              type: string
+              minLength: 1
+              maxLength: 20
+              example: john.doe
+            firstName:
+              type: string
+              maxLength: 50
+            lastName:
+              type: string
+              maxLength: 50
+            firstNameKana:
+              type: string
+              maxLength: 50
+              pattern: '^[ァ-ヶー]*$'
+            lastNameKana:
+              type: string
+              maxLength: 50
+              pattern: '^[ァ-ヶー]*$'
+            email:
+              type: string
+              format: email
+              maxLength: 255
+            postalCode:
+              type: string
+              maxLength: 8
+              pattern: '^\d{3}-?\d{4}$'
+            prefecture:
+              type: string
+              maxLength: 10
+            city:
+              type: string
+              maxLength: 80
+            address:
+              type: string
+              maxLength: 255
+            telephone:
+              type: string
+              maxLength: 20
+              pattern: '^[0-9-]*$'
+          required:
+            - email
 
     UserRegistration:
       allOf:
@@ -1361,7 +1342,9 @@ components:
           properties:
             password:
               type: string
-              maxLength: 255
+              minLength: 8
+              maxLength: 128
+              pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$'
               writeOnly: true
           required:
             - password

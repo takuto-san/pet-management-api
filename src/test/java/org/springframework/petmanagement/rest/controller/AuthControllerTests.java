@@ -1,4 +1,4 @@
- package org.springframework.petmanagement.rest.controller;
+package org.springframework.petmanagement.rest.controller;
 
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,7 +50,6 @@ class AuthControllerTests {
     void testRegisterUserSuccess() throws Exception {
         String jsonBody = """
             {
-              "username": "newuser",
               "email": "newuser@example.com",
               "password": "password123"
             }

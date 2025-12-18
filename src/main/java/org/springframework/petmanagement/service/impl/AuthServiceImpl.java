@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void registerUser(SignupRequestDto signUpRequest) {
         User user = new User();
-        user.setUsername(signUpRequest.getUsername());
+        user.setUsername(signUpRequest.getEmail().split("@")[0]); // Generate username from email
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setEnabled(true);
