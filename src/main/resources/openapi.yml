@@ -48,7 +48,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginRequest'
+              $ref: '#/components/schemas/SigninRequest'
       responses:
         200:
           description: OK
@@ -76,14 +76,20 @@ paths:
             schema:
               $ref: '#/components/schemas/SignupRequest'
       responses:
-        200:
+        201:
           description: Registered successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageResponse'
+                $ref: '#/components/schemas/SignupResponse'
         400:
           description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        409:
+          description: Email already exists
           content:
             application/json:
               schema:
@@ -147,7 +153,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageResponse'
+                $ref: '#/components/schemas/SignoutResponse'
 
   /oops:
     get:
@@ -748,7 +754,8 @@ components:
         minimum: 1
 
   schemas:
-    LoginRequest:
+    # Auth
+    SigninRequest:
           type: object
           properties:
             email:
@@ -764,6 +771,27 @@ components:
             - email
             - password
 
+    JwtResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+          example: Bearer
+        refreshToken:
+          type: string
+        expiresIn:
+          type: integer
+        userId:
+          type: string
+          format: uuid
+      required:
+        - accessToken
+        - tokenType
+        - refreshToken
+        - userId
+    
     SignupRequest:
       type: object
       properties:
@@ -780,33 +808,37 @@ components:
         - email
         - password
 
-    JwtResponse:
+    SignupResponse:
       type: object
       properties:
-        token:
-          type: string
-          description: JWT Access Token
-        type:
-          type: string
-          example: Bearer
-        refreshToken:
-          type: string
-          description: Refresh Token to get a new Access Token
         id:
-          type: integer
+          type: string
+          format: uuid
+        username:
+          type: string
         email:
           type: string
-        roles:
-          type: array
-          items:
-            type: string
+          format: email
       required:
-        - token
-        - type
-        - refreshToken
         - id
+        - username
         - email
-        - roles
+
+    SignoutResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+      required:
+        - id
+        - username
+        - email
 
     TokenRefreshRequest:
       type: object
@@ -831,14 +863,7 @@ components:
         - refreshToken
         - tokenType
 
-    MessageResponse:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-        - message
-
+    # Page
     PageMetadata:
       type: object
       properties:

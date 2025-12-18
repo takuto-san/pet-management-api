@@ -6,9 +6,10 @@ import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.repository.UserRepository;
 import org.springframework.petmanagement.rest.api.AuthApi;
 import org.springframework.petmanagement.rest.dto.JwtResponseDto;
-import org.springframework.petmanagement.rest.dto.LoginRequestDto;
-import org.springframework.petmanagement.rest.dto.MessageResponseDto;
+import org.springframework.petmanagement.rest.dto.SigninRequestDto;
+import org.springframework.petmanagement.rest.dto.SignoutResponseDto;
 import org.springframework.petmanagement.rest.dto.SignupRequestDto;
+import org.springframework.petmanagement.rest.dto.SignupResponseDto;
 import org.springframework.petmanagement.rest.dto.TokenRefreshRequestDto;
 import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
 import org.springframework.petmanagement.rest.dto.UserResponseDto;
@@ -39,17 +40,16 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    public ResponseEntity<JwtResponseDto> authenticateUser(@Valid LoginRequestDto loginRequestDto) {
+    public ResponseEntity<JwtResponseDto> authenticateUser(@Valid SigninRequestDto loginRequestDto) {
         JwtResponseDto response = authService.authenticateUser(loginRequestDto);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    public ResponseEntity<MessageResponseDto> registerUser(@Valid SignupRequestDto signupRequestDto) {
-        authService.registerUser(signupRequestDto);
-        MessageResponseDto response = new MessageResponseDto();
-        response.setMessage("User registered successfully!");
-        return ResponseEntity.ok(response);
+    public ResponseEntity<SignupResponseDto> registerUser(@Valid SignupRequestDto signupRequestDto) {
+        User user = authService.registerUser(signupRequestDto);
+        SignupResponseDto response = userMapper.toSignupResponseDto(user);
+        return ResponseEntity.status(201).body(response);
     }
 
     @Override
@@ -59,9 +59,11 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    public ResponseEntity<MessageResponseDto> logoutUser() {
-        MessageResponseDto response = new MessageResponseDto();
-        response.setMessage("User logged out successfully!");
+    public ResponseEntity<SignoutResponseDto> logoutUser() {
+        SignoutResponseDto response = new SignoutResponseDto();
+        response.setId(null); // or appropriate value
+        response.setUsername(null);
+        response.setEmail(null);
         return ResponseEntity.ok(response);
     }
 

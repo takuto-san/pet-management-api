@@ -1,15 +1,16 @@
 package org.springframework.petmanagement.service;
 
+import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.rest.dto.JwtResponseDto;
-import org.springframework.petmanagement.rest.dto.LoginRequestDto;
+import org.springframework.petmanagement.rest.dto.SigninRequestDto;
 import org.springframework.petmanagement.rest.dto.SignupRequestDto;
 import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
 
 public interface AuthService {
 
-    JwtResponseDto authenticateUser(LoginRequestDto loginRequest);
+    JwtResponseDto authenticateUser(SigninRequestDto loginRequest);
 
-    void registerUser(SignupRequestDto signUpRequest);
+    User registerUser(SignupRequestDto signUpRequest);
 
     void logoutUser(String username);
 

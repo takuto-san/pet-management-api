@@ -9,7 +9,7 @@ import org.springframework.petmanagement.model.User;
 
 public interface UserRepository {
 
-    void save(User user) throws DataAccessException;
+    User save(User user) throws DataAccessException;
 
     void delete(User user) throws DataAccessException;
 

@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.petmanagement.rest.dto.JwtResponseDto;
-import org.springframework.petmanagement.rest.dto.LoginRequestDto;
+import org.springframework.petmanagement.rest.dto.SigninRequestDto;
 import org.springframework.petmanagement.rest.dto.SignupRequestDto;
 import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
 import org.springframework.petmanagement.service.AuthService;
@@ -25,14 +25,14 @@ public abstract class AbstractAuthServiceTests {
         authService.registerUser(signupRequest);
 
         // Verify user can login
-        LoginRequestDto loginRequest = new LoginRequestDto("test@example.com", "Password123");
+        SigninRequestDto loginRequest = new SigninRequestDto("test@example.com", "Password123");
         JwtResponseDto response = authService.authenticateUser(loginRequest);
 
         assertThat(response).isNotNull();
-        assertThat(response.getEmail()).isEqualTo("test@example.com");
-        assertThat(response.getToken()).isNotNull();
+        assertThat(response.getUserId()).isNotNull();
+        assertThat(response.getAccessToken()).isNotNull();
         assertThat(response.getRefreshToken()).isNotNull();
-        assertThat(response.getType()).isEqualTo("Bearer");
+        assertThat(response.getTokenType()).isEqualTo("Bearer");
     }
 
     @Test
@@ -42,13 +42,13 @@ public abstract class AbstractAuthServiceTests {
         authService.registerUser(signupRequest);
 
         // Then authenticate
-        LoginRequestDto loginRequest = new LoginRequestDto("auth@example.com", "Password123");
+        SigninRequestDto loginRequest = new SigninRequestDto("auth@example.com", "Password123");
         JwtResponseDto response = authService.authenticateUser(loginRequest);
 
         assertThat(response).isNotNull();
-        assertThat(response.getToken()).isNotNull();
+        assertThat(response.getAccessToken()).isNotNull();
         assertThat(response.getRefreshToken()).isNotNull();
-        assertThat(response.getType()).isEqualTo("Bearer");
+        assertThat(response.getTokenType()).isEqualTo("Bearer");
     }
 
     @Test
@@ -57,7 +57,7 @@ public abstract class AbstractAuthServiceTests {
         SignupRequestDto signupRequest = new SignupRequestDto("refresh@example.com", "Password123");
         authService.registerUser(signupRequest);
 
-        LoginRequestDto loginRequest = new LoginRequestDto("refresh@example.com", "Password123");
+        SigninRequestDto loginRequest = new SigninRequestDto("refresh@example.com", "Password123");
         JwtResponseDto loginResponse = authService.authenticateUser(loginRequest);
 
         // Refresh token
@@ -66,7 +66,7 @@ public abstract class AbstractAuthServiceTests {
         assertThat(refreshResponse).isNotNull();
         assertThat(refreshResponse.getAccessToken()).isNotNull();
         assertThat(refreshResponse.getRefreshToken()).isNotNull();
-        assertThat(refreshResponse.getAccessToken()).isNotEqualTo(loginResponse.getToken()); // New access token
+        assertThat(refreshResponse.getAccessToken()).isNotEqualTo(loginResponse.getAccessToken()); // New access token
         assertThat(refreshResponse.getRefreshToken()).isNotEqualTo(loginResponse.getRefreshToken()); // New refresh token
     }
 
@@ -76,7 +76,7 @@ public abstract class AbstractAuthServiceTests {
         SignupRequestDto signupRequest = new SignupRequestDto("logout@example.com", "Password123");
         authService.registerUser(signupRequest);
 
-        LoginRequestDto loginRequest = new LoginRequestDto("logout@example.com", "Password123");
+        SigninRequestDto loginRequest = new SigninRequestDto("logout@example.com", "Password123");
         authService.authenticateUser(loginRequest);
 
         // Logout - should not throw exception
