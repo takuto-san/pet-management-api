@@ -16,8 +16,8 @@ CREATE TYPE item_category AS ENUM ('food', 'treat', 'supplement', 'pad', 'toy', 
 -- ロール種別
 CREATE TYPE role_type AS ENUM ('owner', 'vet', 'nurse', 'receptionist', 'clinic_admin', 'admin');
 
--- ペット種別
-CREATE TYPE pet_type AS ENUM ('dog','cat','rabbit', 'hamster''bird','turtle', 'fish');
+-- ペット種別 (修正: hamsterとbirdの間のカンマ漏れを修正)
+CREATE TYPE pet_type AS ENUM ('dog','cat','rabbit', 'hamster', 'bird', 'turtle', 'fish');
 
 -- ペットの性別
 CREATE TYPE pet_sex AS ENUM ('male','female','unknown');
@@ -43,14 +43,14 @@ $$ LANGUAGE plpgsql;
 -- ユーザーテーブル
 CREATE TABLE users (
     id              UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    username        VARCHAR(20)  NOT NULL,
+    email           VARCHAR(255) NOT NULL UNIQUE,
     password        VARCHAR(255) NOT NULL,
+    username        VARCHAR(20), 
     enabled         BOOLEAN      NOT NULL DEFAULT true,
-    first_name      TEXT         NOT NULL,
-    last_name       TEXT         NOT NULL,
-    first_name_kana TEXT         NOT NULL,
-    last_name_kana  TEXT         NOT NULL,
-    email           TEXT         NOT NULL UNIQUE,
+    first_name      TEXT,
+    last_name       TEXT,
+    first_name_kana TEXT,
+    last_name_kana  TEXT,
     postal_code     VARCHAR(8),
     prefecture      TEXT,
     city            TEXT,
@@ -77,6 +77,17 @@ CREATE TABLE user_roles (
     CONSTRAINT fk_user_roles_user FOREIGN KEY (user_id) REFERENCES users (id),
     CONSTRAINT fk_user_roles_role FOREIGN KEY (role_id) REFERENCES roles (id)
 );
+
+-- リフレッシュトークン管理テーブル
+CREATE TABLE refresh_tokens (
+    id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id     UUID NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    token       TEXT NOT NULL UNIQUE,
+    expiry_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at  TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_refresh_tokens_token ON refresh_tokens (token);
+CREATE INDEX idx_refresh_tokens_user_id ON refresh_tokens (user_id);
 
 -- ペットテーブル
 CREATE TABLE pets (

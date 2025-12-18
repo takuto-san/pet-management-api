@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
 @RequestMapping("/api")
-public class PetTypeRestController implements PettypesApi {
+public class PetTypeController implements PettypesApi {
 
     @Override
     public ResponseEntity<List<PetTypeDto>> listPetTypes() {

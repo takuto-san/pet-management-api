@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserRestControllerTests {
+class UserControllerTests {
 
     @Autowired private MockMvc mockMvc;
     @MockitoBean private UserService userService;
@@ -37,7 +37,7 @@ class UserRestControllerTests {
         String jsonBody = """
             {
               "username": "newuser",
-              "password": "password123",
+              "password": "Password123",
               "firstName": "太郎",
               "lastName": "山田",
               "firstNameKana": "タロウ",

@@ -37,15 +37,14 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class User extends Person {
     
-    @NotBlank
     @Size(max = 20)
-    @Column(name = "username", unique = true)
+    @Column(name = "username", length = 20, unique = true)
     private String username;
 
     @NotBlank
     @Size(max = 255)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(name = "password")
+    @Column(name = "password", length = 255)
     private String password;
 
     @lombok.Builder.Default

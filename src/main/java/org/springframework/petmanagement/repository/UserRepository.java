@@ -17,6 +17,8 @@ public interface UserRepository {
 
     Optional<User> findByUsername(String username);
 
+    Optional<User> findByEmail(String email);
+
     Collection<User> findAll() throws DataAccessException;
     
 }

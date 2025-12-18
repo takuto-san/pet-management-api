@@ -1,14 +1,16 @@
 openapi: 3.0.1
 info:
   title: Pet Management API
-  description: Pet Management API with health logs, prescriptions, and item master.
+  description: Pet Management API with health logs, prescriptions, item master, and JWT authentication.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
-  version: '1.4'
+  version: '1.5'
 servers:
   - url: http://localhost:9966/petclinic/api
 tags:
+  - name: auth
+    description: Authentication endpoints (Signin, Signup, Refresh Token).
   - name: failing
     description: Endpoint which always returns an error.
   - name: owner
@@ -30,13 +32,128 @@ tags:
   - name: item
     description: Endpoints related to item master data.
 
+security:
+  - bearerAuth: []
+
 paths:
+  /auth/signin:
+    post:
+      tags: [auth]
+      operationId: authenticateUser
+      summary: Sign in with Email and Password
+      description: Returns JWT access token and refresh token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
+  /auth/signup:
+    post:
+      tags: [auth]
+      operationId: registerUser
+      summary: Register a new user (Public)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        200:
+          description: Registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
+  /auth/me:
+    get:
+      tags: [auth]
+      operationId: getCurrentUser
+      summary: Get current authenticated user details
+      description: Used to check if the current token is valid (Login Check).
+      responses:
+        200:
+          description: OK (Token is valid)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        401:
+          description: Unauthorized (Token is invalid or expired)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
+  /auth/refreshtoken:
+    post:
+      tags: [auth]
+      operationId: refreshToken
+      summary: Refresh Access Token
+      description: Generates a new access token using a valid refresh token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+      responses:
+        200:
+          description: Token Refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefreshResponse'
+        403:
+          description: Refresh token is invalid or expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
+  /auth/signout:
+    post:
+      tags: [auth]
+      operationId: logoutUser
+      summary: Log out user
+      responses:
+        200:
+          description: Logged out successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
   /oops:
     get:
       tags: [failing]
       operationId: failingRequest
       summary: Always fails
-      description: Produces sample error response.
       responses:
         400:
           description: Bad request.
@@ -45,13 +162,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
 
-  # --- Users Endpoints ---
   /users:
     post:
       tags: [user]
       operationId: addUser
-      summary: Create a user (Registration)
-      description: Creates a new user. Default role 'owner' is assigned.
+      summary: Create a user (Admin Only)
+      description: Creates a new user. This endpoint is protected and intended for admins. Use /auth/signup for public registration.
       requestBody:
         required: true
         content:
@@ -166,13 +282,11 @@ paths:
         403:
           description: Forbidden
 
-  # --- Pet Types Endpoints ---
   /pettypes:
     get:
       tags: [pettypes]
       operationId: listPetTypes
       summary: Get allowed pet types
-      description: Returns the list of enum values. (No pagination required for static enums)
       responses:
         200:
           description: OK
@@ -183,7 +297,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/PetType'
 
-  # --- Pets Endpoints ---
   /pets:
     get:
       tags: [pet]
@@ -278,7 +391,6 @@ paths:
         204:
           description: No Content
 
-  # --- Clinics Endpoints ---
   /clinics:
     get:
       tags: [clinic]
@@ -370,10 +482,9 @@ paths:
             type: string
             format: uuid
       responses:
-        24:
+        204:
           description: No Content
 
-  # --- Visits Endpoints ---
   /visits:
     get:
       tags: [visit]
@@ -475,13 +586,11 @@ paths:
         204:
           description: No Content
 
-  # --- Visit Prescriptions Endpoints ---
   /visits/{visitId}/prescriptions:
     get:
       tags: [visit-prescription]
       operationId: listVisitPrescriptions
       summary: List prescriptions for a specific visit
-      description: Returns list directly as pagination within a single visit is rare.
       parameters:
         - name: visitId
           in: path
@@ -545,7 +654,6 @@ paths:
         204:
           description: No Content
 
-  # --- Prescriptions Master Endpoints ---
   /prescriptions:
     get:
       tags: [prescription]
@@ -579,7 +687,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Prescription'
 
-  # --- Items Master Endpoints ---
   /items:
     get:
       tags: [item]
@@ -614,6 +721,12 @@ paths:
                 $ref: '#/components/schemas/Item'
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   parameters:
     PageParam:
       name: page
@@ -635,7 +748,97 @@ components:
         minimum: 1
 
   schemas:
-    # --- Pagination Metadata ---
+    LoginRequest:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+              maxLength: 255
+              example: owner@example.com
+            password:
+              type: string
+              format: password
+              example: password123
+          required:
+            - email
+            - password
+
+    SignupRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        password:
+          type: string
+          minLength: 8
+          maxLength: 128
+          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$'
+      required:
+        - email
+        - password
+
+    JwtResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT Access Token
+        type:
+          type: string
+          example: Bearer
+        refreshToken:
+          type: string
+          description: Refresh Token to get a new Access Token
+        id:
+          type: integer
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+      required:
+        - token
+        - type
+        - refreshToken
+        - id
+        - email
+        - roles
+
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+      required:
+        - refreshToken
+
+    TokenRefreshResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        tokenType:
+          type: string
+          example: Bearer
+      required:
+        - accessToken
+        - refreshToken
+        - tokenType
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
     PageMetadata:
       type: object
       properties:
@@ -657,7 +860,6 @@ components:
         - totalPages
         - number
 
-    # --- Paged Responses ---
     UserPage:
       allOf:
         - $ref: '#/components/schemas/PageMetadata'
@@ -730,7 +932,6 @@ components:
           required:
             - content
 
-    # --- Standard Schemas ---
     ProblemDetail:
       title: Problem Detail
       type: object
@@ -1089,46 +1290,50 @@ components:
             - updatedAt
 
     UserBase:
-      type: object
-      properties:
-        username:
-          type: string
-          minLength: 1
-          maxLength: 20
-          example: john.doe
-        firstName:
-          type: string
-        lastName:
-          type: string
-        firstNameKana:
-          type: string
-        lastNameKana:
-          type: string
-        email:
-          type: string
-          format: email
-        postalCode:
-          type: string
-          maxLength: 8
-        prefecture:
-          type: string
-        city:
-          type: string
-          maxLength: 80
-        address:
-          type: string
-          maxLength: 255
-        telephone:
-          type: string
-          maxLength: 20
-          pattern: '^[0-9-]*$'
-      required:
-        - username
-        - firstName
-        - lastName
-        - firstNameKana
-        - lastNameKana
-        - email
+          type: object
+          properties:
+            username:
+              type: string
+              minLength: 1
+              maxLength: 20
+              example: john.doe
+            firstName:
+              type: string
+              maxLength: 50
+            lastName:
+              type: string
+              maxLength: 50
+            firstNameKana:
+              type: string
+              maxLength: 50
+              pattern: '^[ァ-ヶー]*$'
+            lastNameKana:
+              type: string
+              maxLength: 50
+              pattern: '^[ァ-ヶー]*$'
+            email:
+              type: string
+              format: email
+              maxLength: 255
+            postalCode:
+              type: string
+              maxLength: 8
+              pattern: '^\d{3}-?\d{4}$'
+            prefecture:
+              type: string
+              maxLength: 10
+            city:
+              type: string
+              maxLength: 80
+            address:
+              type: string
+              maxLength: 255
+            telephone:
+              type: string
+              maxLength: 20
+              pattern: '^[0-9-]*$'
+          required:
+            - email
 
     UserRegistration:
       allOf:
@@ -1137,7 +1342,9 @@ components:
           properties:
             password:
               type: string
-              maxLength: 255
+              minLength: 8
+              maxLength: 128
+              pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$'
               writeOnly: true
           required:
             - password

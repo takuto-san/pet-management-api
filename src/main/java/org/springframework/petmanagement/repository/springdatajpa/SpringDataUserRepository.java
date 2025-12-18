@@ -1,5 +1,6 @@
 package org.springframework.petmanagement.repository.springdatajpa;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.context.annotation.Profile;
@@ -14,5 +15,7 @@ import org.springframework.petmanagement.repository.springdatajpa.override.UserR
 public interface SpringDataUserRepository extends UserRepository, PagingAndSortingRepository<User, UUID>, UserRepositoryOverride {
 
     Page<User> findAll(Pageable pageable);
+
+    Optional<User> findByEmail(String email);
 
 }
