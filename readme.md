@@ -35,40 +35,49 @@ API documentation (OAS 3.1) is accessible at: [http://localhost:9966/petmanageme
 
 | **Tag** | **Method** | **Endpoint** | **Description** |
 | :--- | :--- | :--- | :--- |
-| **Authentication** | **POST** | `/api/auth/signin` | Sign in with email and password (returns JWT & refresh token) |
-| | **POST** | `/api/auth/signup** | Register a new user (**Public**) |
+| **Authentication** |
+| |**POST** | `/api/auth/signin` | Sign in with email and password (returns JWT & refresh token) |
+| | **POST** | `/api/auth/signup` | Register a new user (**Public**) |
 | | **GET** | `/api/auth/me` | Get current user details (Token validation / Login check) |
 | | **POST** | `/api/auth/refreshtoken` | Generate a new access token using a refresh token |
 | | **POST** | `/api/auth/signout` | Log out user |
-| **Users** | **GET** | `/api/users` | List users (supports pagination and kana search) |
+| **Users** |
+| | **GET** | `/api/users` | List users (supports pagination and kana search) |
 | | **POST** | `/api/users` | Create a new user (**Admin Only**) |
 | | **GET** | `/api/users/{userId}` | Get a user by ID (UUID) |
 | | **PUT** | `/api/users/{userId}` | Update user profile |
 | | **DELETE** | `/api/users/{userId}` | Delete a user |
-| **Pets** | **GET** | `/api/pets` | Retrieve all pets (pagination supported) |
+| **Pets** | 
+| | **GET** | `/api/pets` | Retrieve all pets (pagination supported) |
 | | **POST** | `/api/pets` | Add a new pet |
 | | **GET** | `/api/pets/{petId}` | Get a pet by ID |
 | | **PUT** | `/api/pets/{petId}` | Update pet details |
 | | **DELETE** | `/api/pets/{petId}` | Delete a pet |
-| **Pet Types** | **GET** | `/api/pettypes` | Retrieve all allowed pet types (Enum values) |
-| **Clinics** | **GET** | `/api/clinics` | List all clinics (pagination supported) |
+| **Pet Types** | 
+| | **GET** | `/api/pettypes` | Retrieve all allowed pet types (Enum values) |
+| **Clinics** |
+| | **GET** | `/api/clinics` | List all clinics (pagination supported) |
 | | **POST** | `/api/clinics` | Add a new clinic |
 | | **GET** | `/api/clinics/{clinicId}` | Get a clinic by ID |
 | | **PUT** | `/api/clinics/{clinicId}` | Update clinic details |
 | | **DELETE** | `/api/clinics/{clinicId}` | Delete a clinic |
-| **Visits** | **GET** | `/api/visits` | List visits (can filter by `petId` / pagination supported) |
+| **Visits** |
+| | **GET** | `/api/visits` | List visits (can filter by `petId` / pagination supported) |
 | | **POST** | `/api/visits` | Record a new visit |
 | | **GET** | `/api/visits/{visitId}` | Get a visit by ID |
 | | **PUT** | `/api/visits/{visitId}` | Update a visit |
 | | **DELETE** | `/api/visits/{visitId}` | Delete a visit |
-| **Visit Prescriptions** | **GET** | `/api/visits/{visitId}/prescriptions` | List prescriptions for a specific visit |
+| **Visit Prescriptions** |
+| | **GET** | `/api/visits/{visitId}/prescriptions` | List prescriptions for a specific visit |
 | | **POST** | `/api/visits/{visitId}/prescriptions` | Add a prescription to a visit |
 | | **DELETE** | `/api/visits/{visitId}/prescriptions/{visitPrescriptionId}` | Remove a prescription from a visit |
-| **Master Data** | **GET** | `/api/prescriptions` | List prescription master data (pagination supported) |
+| **Master Data** | 
+| | **GET** | `/api/prescriptions` | List prescription master data (pagination supported) |
 | | **POST** | `/api/prescriptions` | Add new prescription master data |
 | | **GET** | `/api/items` | List item master data (pagination supported) |
 | | **POST** | `/api/items` | Add new item master data |
-| **System** | **GET** | `/api/oops` | Always fails (for testing error handling) |
+| **System** | 
+| | **GET** | `/api/oops` | Always fails (for testing error handling) |
 
 
 ## Database Settings
