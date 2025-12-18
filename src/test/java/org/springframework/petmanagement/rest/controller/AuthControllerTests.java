@@ -1,5 +1,7 @@
 package org.springframework.petmanagement.rest.controller;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -27,7 +29,8 @@ class AuthControllerTests {
 
     @Test
     void testAuthenticateUserSuccess() throws Exception {
-        JwtResponseDto response = new JwtResponseDto("access-token", "Bearer", "refresh-token", null, "test@example.com", null);
+        JwtResponseDto response = new JwtResponseDto("access-token", "Bearer", "refresh-token", UUID.randomUUID());
+        response.setExpiresIn(3600);
         given(this.authService.authenticateUser(any())).willReturn(response);
 
         String jsonBody = """
@@ -60,8 +63,7 @@ class AuthControllerTests {
             .content(jsonBody)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+            .andExpect(status().isCreated());
     }
 
     @Test

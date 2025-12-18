@@ -31,4 +31,22 @@ public class TokenService {
 
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
+
+    public String generateRefreshToken(Authentication authentication) {
+        Instant now = Instant.now();
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("petmanagement")
+                .issuedAt(now)
+                .expiresAt(now.plus(7, ChronoUnit.DAYS)) // Refresh token expires in 7 days
+                .subject("refresh-token")
+                .claim("userName", authentication.getName())
+                .build();
+
+        return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+
+    public int getTokenExpirationSeconds() {
+        return 3600; // 1 hour
+    }
 }

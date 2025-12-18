@@ -7,6 +7,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.rest.dto.AdminUserUpdateDto;
+import org.springframework.petmanagement.rest.dto.SignupResponseDto;
 import org.springframework.petmanagement.rest.dto.UserBaseDto;
 import org.springframework.petmanagement.rest.dto.UserRegistrationDto;
 import org.springframework.petmanagement.rest.dto.UserResponseDto;
@@ -51,4 +52,9 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "enabled", ignore = true)
     void updateUserFromBase(UserBaseDto userBaseDto, @MappingTarget User currentUser);
+
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "username", source = "username")
+    @Mapping(target = "email", source = "email")
+    SignupResponseDto toSignupResponseDto(User user);
 }
