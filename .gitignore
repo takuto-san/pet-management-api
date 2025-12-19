@@ -27,5 +27,4 @@ springboot-petclinic-server/
 
 ./vscode/
 
-./docker-compose.yml
-./memo.txt
+memo.txt
