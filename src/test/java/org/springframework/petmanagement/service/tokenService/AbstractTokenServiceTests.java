@@ -3,11 +3,14 @@ package org.springframework.petmanagement.service.tokenService;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.petmanagement.model.User;
+import org.springframework.petmanagement.repository.UserRepository;
 import org.springframework.petmanagement.service.TokenService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,8 +27,14 @@ public abstract class AbstractTokenServiceTests {
     @Autowired
     protected JwtDecoder jwtDecoder;
 
+    @Autowired
+    protected UserRepository userRepository;
+
     @Test
     void shouldGenerateToken() {
+        String uniqueId = UUID.randomUUID().toString().substring(0, 8);
+        User user = User.builder().username("test" + uniqueId).email("test" + System.currentTimeMillis() + "@example.com").password("password").enabled(true).build();
+        final User savedUser = userRepository.save(user);
         // Create a simple Authentication implementation
         Authentication authentication = new Authentication() {
             @Override
@@ -45,7 +54,7 @@ public abstract class AbstractTokenServiceTests {
 
             @Override
             public Object getPrincipal() {
-                return null;
+                return savedUser;
             }
 
             @Override
@@ -60,7 +69,7 @@ public abstract class AbstractTokenServiceTests {
 
             @Override
             public String getName() {
-                return "testuser";
+                return savedUser.getEmail();
             }
         };
 
@@ -71,7 +80,63 @@ public abstract class AbstractTokenServiceTests {
 
         // Decode the token to verify claims
         Jwt decoded = jwtDecoder.decode(token);
-        Assertions.assertThat(decoded.getSubject()).isEqualTo("testuser");
+        Assertions.assertThat(decoded.getSubject()).isEqualTo(savedUser.getEmail());
+        Assertions.assertThat(decoded.getExpiresAt()).isNotNull();
+        boolean isAfter = decoded.getExpiresAt().isAfter(Instant.now());
+        assertTrue(isAfter);
+    }
+
+    @Test
+    void shouldGenerateRefreshToken() {
+        String uniqueId = UUID.randomUUID().toString().substring(0, 8);
+        User user = User.builder().username("test" + uniqueId).email("test" + System.currentTimeMillis() + "@example.com").password("password").enabled(true).build();
+        final User savedUser = userRepository.save(user);
+        // Create a simple Authentication implementation
+        Authentication authentication = new Authentication() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return Collections.emptyList();
+            }
+
+            @Override
+            public Object getCredentials() {
+                return null;
+            }
+
+            @Override
+            public Object getDetails() {
+                return null;
+            }
+
+            @Override
+            public Object getPrincipal() {
+                return savedUser;
+            }
+
+            @Override
+            public boolean isAuthenticated() {
+                return true;
+            }
+
+            @Override
+            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+                // No-op
+            }
+
+            @Override
+            public String getName() {
+                return savedUser.getEmail();
+            }
+        };
+
+        String refreshToken = tokenService.generateRefreshToken(authentication);
+
+        Assertions.assertThat(refreshToken).isNotNull();
+        Assertions.assertThat(refreshToken).isNotEmpty();
+
+        // Decode the token to verify claims
+        Jwt decoded = jwtDecoder.decode(refreshToken);
+        Assertions.assertThat(decoded.getSubject()).isEqualTo(savedUser.getEmail());
         Assertions.assertThat(decoded.getExpiresAt()).isNotNull();
         boolean isAfter = decoded.getExpiresAt().isAfter(Instant.now());
         assertTrue(isAfter);

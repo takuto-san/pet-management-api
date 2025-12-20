@@ -1,0 +1,1184 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------< org.springframework.petmanagement:pet-management-api >--------
+[INFO] Building pet-management-api 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ pet-management-api ---
+[INFO] Deleting /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-java) @ pet-management-api ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-maven) @ pet-management-api ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] 
+[INFO] --- jacoco:0.8.14:prepare-agent (prepare-agent) @ pet-management-api ---
+[INFO] argLine set to -javaagent:/Users/OCUST013/.m2/repository/org/jacoco/org.jacoco.agent/0.8.14/org.jacoco.agent-0.8.14-runtime.jar=destfile=/Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/jacoco.exec,excludes=**/org/springframework/samples/petclinic/rest/dto/**:**/org/springframework/samples/petclinic/rest/api/**
+[INFO] 
+[INFO] --- openapi-generator:7.17.0:generate (default) @ pet-management-api ---
+[INFO] Skipping sorting of path operations, order matters, let the developer decide via their specification file.
+[INFO] Skipping sorting of path operations, order matters, let the developer decide via their specification file.
+[INFO] Generating with dryRun=false
+[INFO] Output directory (/Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi) does not exist, or is inaccessible. No file (.openapi-generator-ignore) will be evaluated.
+[INFO] OpenAPI Generator: spring (server)
+[INFO] Generator 'spring' is considered stable.
+[INFO] ----------------------------------
+[INFO] Environment variable JAVA_POST_PROCESS_FILE not defined so the Java code may not be properly formatted. To define it, try 'export JAVA_POST_PROCESS_FILE="/usr/local/bin/clang-format -i"' (Linux/Mac)
+[INFO] NOTE: To enable file post-processing, 'enablePostProcessFile' must be set to `true` (--enable-post-process-file for CLI).
+[INFO] Invoker Package Name, originally not set, is now derived from api package name: org.springframework.petmanagement.rest
+[INFO] Processing operation authenticateUser
+[INFO] Processing operation registerUser
+[INFO] Processing operation getCurrentUser
+[INFO] Processing operation refreshToken
+[INFO] Processing operation logoutUser
+[INFO] Processing operation failingRequest
+[INFO] Processing operation listUsers
+[INFO] Processing operation addUser
+[INFO] Processing operation getUser
+[INFO] Processing operation updateUser
+[INFO] Processing operation deleteUser
+[INFO] Processing operation listPetTypes
+[INFO] Processing operation listPets
+[INFO] Processing operation addPet
+[INFO] Processing operation getPet
+[INFO] Processing operation updatePet
+[INFO] Processing operation deletePet
+[INFO] Processing operation listClinics
+[INFO] Processing operation addClinic
+[INFO] Processing operation getClinic
+[INFO] Processing operation updateClinic
+[INFO] Processing operation deleteClinic
+[INFO] Processing operation listVisits
+[INFO] Processing operation addVisit
+[INFO] Processing operation getVisit
+[INFO] Processing operation updateVisit
+[INFO] Processing operation deleteVisit
+[INFO] Processing operation listVisitPrescriptions
+[INFO] Processing operation addVisitPrescription
+[INFO] Processing operation deleteVisitPrescription
+[INFO] Processing operation listPrescriptions
+[INFO] Processing operation addPrescription
+[INFO] Processing operation listItems
+[INFO] Processing operation addItem
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/AdminUserUpdateDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/ClinicDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/ClinicFieldsDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/ClinicPageDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/CurrencyDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/ItemCategoryDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/ItemDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/ItemFieldsDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/ItemPageDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/JwtResponseDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/PageMetadataDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/PetDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/PetFieldsDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/PetPageDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/PetSexDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/PetTypeDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/PrescriptionCategoryDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/PrescriptionDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/PrescriptionFieldsDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/PrescriptionPageDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/ProblemDetailDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/RoleDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/RoleNameDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/SigninRequestDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/SignoutResponseDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/SignupRequestDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/SignupResponseDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/TokenRefreshRequestDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/TokenRefreshResponseDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/UserBaseDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/UserPageDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/UserRegistrationDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/UserResponseDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/VisitDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/VisitFieldsDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/VisitPageDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/VisitPrescriptionDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/VisitPrescriptionFieldsDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/dto/VisitTypeDto.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/api/AuthApi.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/api/ClinicsApi.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/api/ItemsApi.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/api/OopsApi.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/api/PetsApi.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/api/PettypesApi.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/api/PrescriptionsApi.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/api/UsersApi.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/api/VisitsApi.java
+[INFO] Skipping generation of Webhooks.
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/pom.xml
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/README.md
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/springframework/petmanagement/rest/api/ApiUtil.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java/org/openapitools/configuration/EnumConverterConfiguration.java
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/.openapi-generator-ignore
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/.openapi-generator/VERSION
+[INFO] writing file /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/.openapi-generator/FILES
+############################################################################################
+# Thanks for using OpenAPI Generator.                                                      #
+# We appreciate your support! Please consider donation to help us maintain this project.   #
+# https://opencollective.com/openapi_generator/donate                                      #
+############################################################################################
+[INFO] 
+[INFO] --- build-helper:3.6.1:add-source (add-source) @ pet-management-api ---
+[INFO] Source directory: /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/generated-sources/openapi/src/main/java added.
+[INFO] 
+[INFO] --- spring-boot:3.5.7:build-info (default) @ pet-management-api ---
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ pet-management-api ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] Copying 11 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ pet-management-api ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 169 source files with javac [debug parameters release 17] to target/classes
+[WARNING] /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/src/main/java/org/springframework/petmanagement/mapper/UserMapper.java:[35,10] Unmapped target property: "enabled".
+[WARNING] /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/src/main/java/org/springframework/petmanagement/mapper/UserMapper.java:[44,10] Unmapped target property: "authorities".
+[WARNING] /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/src/main/java/org/springframework/petmanagement/mapper/UserMapper.java:[54,10] Unmapped target property: "authorities".
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ pet-management-api ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ pet-management-api ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 41 source files with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ pet-management-api ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.springframework.petmanagement.security.SecurityConfigTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.security.SecurityConfigTests]: SecurityConfigTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.security.SecurityConfigTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.7)
+
+INFO  Version - HV000001: Hibernate Validator 8.0.3.Final
+INFO  SecurityConfigTests - Starting SecurityConfigTests using Java 25.0.1 with PID 60627 (started by OCUST013 in /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api)
+DEBUG SecurityConfigTests - Running with Spring Boot v3.5.7, Spring v6.2.12
+INFO  SecurityConfigTests - The following 2 profiles are active: "spring-data-jpa", "postgres"
+INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 177 ms. Found 9 JPA repository interfaces.
+INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  Version - HHH000412: Hibernate ORM core version 6.6.33.Final
+INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+INFO  HikariDataSource - HikariPool-1 - Starting...
+INFO  HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3ea10f3
+INFO  HikariDataSource - HikariPool-1 - Start completed.
+INFO  pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+INFO  QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+INFO  EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+INFO  SecurityConfigTests - Started SecurityConfigTests in 11.672 seconds (process running for 14.075)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.05 s -- in org.springframework.petmanagement.security.SecurityConfigTests
+[INFO] Running org.springframework.petmanagement.model.RefreshTokenTests
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in org.springframework.petmanagement.model.RefreshTokenTests
+[INFO] Running org.springframework.petmanagement.model.VisitTests
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.097 s -- in org.springframework.petmanagement.model.VisitTests
+[INFO] Running org.springframework.petmanagement.model.RoleTests
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in org.springframework.petmanagement.model.RoleTests
+[INFO] Running org.springframework.petmanagement.model.VisitPrescriptionTests
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.077 s -- in org.springframework.petmanagement.model.VisitPrescriptionTests
+[INFO] Running org.springframework.petmanagement.model.UserTests
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.221 s -- in org.springframework.petmanagement.model.UserTests
+[INFO] Running org.springframework.petmanagement.model.ClinicTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in org.springframework.petmanagement.model.ClinicTests
+[INFO] Running org.springframework.petmanagement.model.ItemTests
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in org.springframework.petmanagement.model.ItemTests
+[INFO] Running org.springframework.petmanagement.model.PetTests
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in org.springframework.petmanagement.model.PetTests
+[INFO] Running org.springframework.petmanagement.model.PrescriptionTests
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in org.springframework.petmanagement.model.PrescriptionTests
+[INFO] Running org.springframework.petmanagement.model.PetTypeTests
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in org.springframework.petmanagement.model.PetTypeTests
+[INFO] Running org.springframework.petmanagement.SpringConfigTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in org.springframework.petmanagement.SpringConfigTests
+[INFO] Running org.springframework.petmanagement.service.petTypeService.PetTypeServiceSpringDataJpaTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.service.petTypeService.PetTypeServiceSpringDataJpaTests]: PetTypeServiceSpringDataJpaTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.service.petTypeService.PetTypeServiceSpringDataJpaTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.7)
+
+INFO  PetTypeServiceSpringDataJpaTests - Starting PetTypeServiceSpringDataJpaTests using Java 25.0.1 with PID 60627 (started by OCUST013 in /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api)
+DEBUG PetTypeServiceSpringDataJpaTests - Running with Spring Boot v3.5.7, Spring v6.2.12
+INFO  PetTypeServiceSpringDataJpaTests - The following 2 profiles are active: "spring-data-jpa", "postgres"
+INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 44 ms. Found 9 JPA repository interfaces.
+INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+INFO  HikariDataSource - HikariPool-2 - Starting...
+INFO  HikariPool - HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@188aecbf
+INFO  HikariDataSource - HikariPool-2 - Start completed.
+INFO  pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+INFO  EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+INFO  PetTypeServiceSpringDataJpaTests - Started PetTypeServiceSpringDataJpaTests in 1.849 seconds (process running for 17.056)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.884 s -- in org.springframework.petmanagement.service.petTypeService.PetTypeServiceSpringDataJpaTests
+[INFO] Running org.springframework.petmanagement.service.authService.AuthServiceSpringDataJpaTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.service.authService.AuthServiceSpringDataJpaTests]: AuthServiceSpringDataJpaTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.service.authService.AuthServiceSpringDataJpaTests
+WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 22001
+ERROR SqlExceptionHelper - ERROR: value too long for type character varying(255)
+WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 22001
+ERROR SqlExceptionHelper - ERROR: value too long for type character varying(255)
+[ERROR] Tests run: 7, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 2.161 s <<< FAILURE! -- in org.springframework.petmanagement.service.authService.AuthServiceSpringDataJpaTests
+[ERROR] org.springframework.petmanagement.service.authService.AuthServiceSpringDataJpaTests.shouldLogoutUser -- Time elapsed: 0.364 s <<< ERROR!
+org.springframework.dao.DataIntegrityViolationException: could not execute statement [ERROR: value too long for type character varying(255)] [insert into refresh_tokens (created_at,expiry_date,token,user_id,id) values (?,?,?,?,?)]; SQL [insert into refresh_tokens (created_at,expiry_date,token,user_id,id) values (?,?,?,?,?)]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:297)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:256)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:560)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:343)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:136)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy208.deleteByUser(Unknown Source)
+	at org.springframework.petmanagement.service.impl.AuthServiceImpl.logoutUser(AuthServiceImpl.java:70)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at org.springframework.petmanagement.service.impl.AuthServiceImpl$$SpringCGLIB$$0.logoutUser(<generated>)
+	at org.springframework.petmanagement.service.authService.AbstractAuthServiceTests.shouldLogoutUser(AbstractAuthServiceTests.java:91)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: org.hibernate.exception.DataException: could not execute statement [ERROR: value too long for type character varying(255)] [insert into refresh_tokens (created_at,expiry_date,token,user_id,id) values (?,?,?,?,?)]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:103)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.performNonBatchedMutation(AbstractMutationExecutor.java:134)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:55)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:55)
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.doStaticInserts(InsertCoordinatorStandard.java:194)
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.coordinateInsert(InsertCoordinatorStandard.java:132)
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.insert(InsertCoordinatorStandard.java:104)
+	at org.hibernate.action.internal.EntityInsertAction.execute(EntityInsertAction.java:110)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:644)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:511)
+	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:414)
+	at org.hibernate.event.internal.DefaultAutoFlushEventListener.onAutoFlush(DefaultAutoFlushEventListener.java:67)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.autoFlushIfRequired(SessionImpl.java:1379)
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.lambda$new$1(ConcreteSqmSelectQueryPlan.java:142)
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.withCacheableSqmInterpretation(ConcreteSqmSelectQueryPlan.java:439)
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.performList(ConcreteSqmSelectQueryPlan.java:359)
+	at org.hibernate.query.sqm.internal.QuerySqmImpl.doList(QuerySqmImpl.java:380)
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:143)
+	at org.hibernate.query.Query.getResultList(Query.java:120)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$DeleteExecution.doExecute(JpaQueryExecution.java:298)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:95)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:160)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:148)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:170)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 19 more
+Caused by: org.postgresql.util.PSQLException: ERROR: value too long for type character varying(255)
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2736)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:525)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:196)
+	at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:157)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194)
+	... 51 more
+
+[ERROR] org.springframework.petmanagement.service.authService.AuthServiceSpringDataJpaTests.shouldRefreshToken -- Time elapsed: 0.268 s <<< ERROR!
+org.springframework.security.oauth2.jwt.JwtException: Invalid refresh token
+	at org.springframework.petmanagement.service.impl.TokenServiceImpl.validateRefreshToken(TokenServiceImpl.java:99)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at org.springframework.petmanagement.service.impl.TokenServiceImpl$$SpringCGLIB$$0.validateRefreshToken(<generated>)
+	at org.springframework.petmanagement.service.impl.AuthServiceImpl.refreshToken(AuthServiceImpl.java:76)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at org.springframework.petmanagement.service.impl.AuthServiceImpl$$SpringCGLIB$$0.refreshToken(<generated>)
+	at org.springframework.petmanagement.service.authService.AbstractAuthServiceTests.shouldRefreshToken(AbstractAuthServiceTests.java:68)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[INFO] Running org.springframework.petmanagement.service.clinicService.ClinicServiceSpringDataJpaTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.service.clinicService.ClinicServiceSpringDataJpaTests]: ClinicServiceSpringDataJpaTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.service.clinicService.ClinicServiceSpringDataJpaTests
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s -- in org.springframework.petmanagement.service.clinicService.ClinicServiceSpringDataJpaTests
+[INFO] Running org.springframework.petmanagement.service.visitService.VisitServiceSpringDataJpaTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.service.visitService.VisitServiceSpringDataJpaTests]: VisitServiceSpringDataJpaTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.service.visitService.VisitServiceSpringDataJpaTests
+WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42704
+ERROR SqlExceptionHelper - ERROR: type "role_type" does not exist
+  位置: 45
+WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42704
+ERROR SqlExceptionHelper - ERROR: type "role_type" does not exist
+  位置: 45
+[ERROR] Tests run: 3, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.362 s <<< FAILURE! -- in org.springframework.petmanagement.service.visitService.VisitServiceSpringDataJpaTests
+[ERROR] org.springframework.petmanagement.service.visitService.VisitServiceSpringDataJpaTests.shouldCreateVisit -- Time elapsed: 0.200 s <<< ERROR!
+org.springframework.dao.InvalidDataAccessResourceUsageException: 
+JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]; SQL [n/a]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:281)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:256)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:560)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:343)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:136)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy216.findByName(Unknown Source)
+	at org.springframework.petmanagement.service.impl.UserServiceImpl.createUser(UserServiceImpl.java:59)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at org.springframework.petmanagement.service.impl.UserServiceImpl$$SpringCGLIB$$0.createUser(<generated>)
+	at org.springframework.petmanagement.service.visitService.AbstractVisitServiceTests.shouldCreateVisit(AbstractVisitServiceTests.java:61)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: org.hibernate.exception.SQLGrammarException: JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:269)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.getResultSet(DeferredResultSetAccess.java:172)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getMetaData(AbstractResultSetAccess.java:36)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getColumnCount(AbstractResultSetAccess.java:52)
+	at org.hibernate.query.results.ResultSetMappingImpl.resolve(ResultSetMappingImpl.java:194)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValuesSource(JdbcSelectExecutorStandardImpl.java:340)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.doExecuteQuery(JdbcSelectExecutorStandardImpl.java:137)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.executeQuery(JdbcSelectExecutorStandardImpl.java:102)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.executeQuery(JdbcSelectExecutor.java:91)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:165)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:142)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:132)
+	at org.hibernate.query.sql.internal.NativeSelectQueryPlanImpl.performList(NativeSelectQueryPlanImpl.java:135)
+	at org.hibernate.query.sql.internal.NativeQueryImpl.doList(NativeQueryImpl.java:697)
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:143)
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:275)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:226)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:95)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:160)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:148)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:170)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 19 more
+Caused by: org.postgresql.util.PSQLException: ERROR: type "role_type" does not exist
+  位置: 45
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2736)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:525)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:196)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:139)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeQuery(ProxyPreparedStatement.java:52)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:251)
+	... 47 more
+
+[ERROR] org.springframework.petmanagement.service.visitService.VisitServiceSpringDataJpaTests.shouldFindVisitById -- Time elapsed: 0.132 s <<< ERROR!
+org.springframework.dao.InvalidDataAccessResourceUsageException: 
+JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]; SQL [n/a]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:281)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:256)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:560)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:343)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:136)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy216.findByName(Unknown Source)
+	at org.springframework.petmanagement.service.impl.UserServiceImpl.createUser(UserServiceImpl.java:59)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at org.springframework.petmanagement.service.impl.UserServiceImpl$$SpringCGLIB$$0.createUser(<generated>)
+	at org.springframework.petmanagement.service.visitService.AbstractVisitServiceTests.shouldFindVisitById(AbstractVisitServiceTests.java:101)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: org.hibernate.exception.SQLGrammarException: JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:269)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.getResultSet(DeferredResultSetAccess.java:172)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getMetaData(AbstractResultSetAccess.java:36)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getColumnCount(AbstractResultSetAccess.java:52)
+	at org.hibernate.query.results.ResultSetMappingImpl.resolve(ResultSetMappingImpl.java:194)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValuesSource(JdbcSelectExecutorStandardImpl.java:340)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.doExecuteQuery(JdbcSelectExecutorStandardImpl.java:137)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.executeQuery(JdbcSelectExecutorStandardImpl.java:102)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.executeQuery(JdbcSelectExecutor.java:91)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:165)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:142)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:132)
+	at org.hibernate.query.sql.internal.NativeSelectQueryPlanImpl.performList(NativeSelectQueryPlanImpl.java:135)
+	at org.hibernate.query.sql.internal.NativeQueryImpl.doList(NativeQueryImpl.java:697)
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:143)
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:275)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:226)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:95)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:160)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:148)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:170)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 19 more
+Caused by: org.postgresql.util.PSQLException: ERROR: type "role_type" does not exist
+  位置: 45
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2736)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:525)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:196)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:139)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeQuery(ProxyPreparedStatement.java:52)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:251)
+	... 47 more
+
+[INFO] Running org.springframework.petmanagement.service.userService.UserServiceSpringDataJpaTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.service.userService.UserServiceSpringDataJpaTests]: UserServiceSpringDataJpaTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.service.userService.UserServiceSpringDataJpaTests
+WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42704
+ERROR SqlExceptionHelper - ERROR: type "role_type" does not exist
+  位置: 45
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.144 s <<< FAILURE! -- in org.springframework.petmanagement.service.userService.UserServiceSpringDataJpaTests
+[ERROR] org.springframework.petmanagement.service.userService.UserServiceSpringDataJpaTests.shouldAddUser -- Time elapsed: 0.132 s <<< ERROR!
+org.springframework.dao.InvalidDataAccessResourceUsageException: 
+JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]; SQL [n/a]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:281)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:256)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:560)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:343)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:136)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy216.findByName(Unknown Source)
+	at org.springframework.petmanagement.service.impl.UserServiceImpl.createUser(UserServiceImpl.java:59)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at org.springframework.petmanagement.service.impl.UserServiceImpl$$SpringCGLIB$$0.createUser(<generated>)
+	at org.springframework.petmanagement.service.userService.AbstractUserServiceTests.shouldAddUser(AbstractUserServiceTests.java:37)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: org.hibernate.exception.SQLGrammarException: JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:269)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.getResultSet(DeferredResultSetAccess.java:172)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getMetaData(AbstractResultSetAccess.java:36)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getColumnCount(AbstractResultSetAccess.java:52)
+	at org.hibernate.query.results.ResultSetMappingImpl.resolve(ResultSetMappingImpl.java:194)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValuesSource(JdbcSelectExecutorStandardImpl.java:340)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.doExecuteQuery(JdbcSelectExecutorStandardImpl.java:137)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.executeQuery(JdbcSelectExecutorStandardImpl.java:102)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.executeQuery(JdbcSelectExecutor.java:91)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:165)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:142)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:132)
+	at org.hibernate.query.sql.internal.NativeSelectQueryPlanImpl.performList(NativeSelectQueryPlanImpl.java:135)
+	at org.hibernate.query.sql.internal.NativeQueryImpl.doList(NativeQueryImpl.java:697)
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:143)
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:275)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:226)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:95)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:160)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:148)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:170)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 19 more
+Caused by: org.postgresql.util.PSQLException: ERROR: type "role_type" does not exist
+  位置: 45
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2736)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:525)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:196)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:139)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeQuery(ProxyPreparedStatement.java:52)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:251)
+	... 47 more
+
+[INFO] Running org.springframework.petmanagement.service.tokenService.TokenServiceSpringDataJpaTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.service.tokenService.TokenServiceSpringDataJpaTests]: TokenServiceSpringDataJpaTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.service.tokenService.TokenServiceSpringDataJpaTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 s -- in org.springframework.petmanagement.service.tokenService.TokenServiceSpringDataJpaTests
+[INFO] Running org.springframework.petmanagement.service.itemService.ItemServiceSpringDataJpaTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.service.itemService.ItemServiceSpringDataJpaTests]: ItemServiceSpringDataJpaTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.service.itemService.ItemServiceSpringDataJpaTests
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 s -- in org.springframework.petmanagement.service.itemService.ItemServiceSpringDataJpaTests
+[INFO] Running org.springframework.petmanagement.service.visitPrescriptionService.VisitPrescriptionServiceSpringDataJpaTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.service.visitPrescriptionService.VisitPrescriptionServiceSpringDataJpaTests]: VisitPrescriptionServiceSpringDataJpaTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.service.visitPrescriptionService.VisitPrescriptionServiceSpringDataJpaTests
+WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42704
+ERROR SqlExceptionHelper - ERROR: type "prescription_category" does not exist
+  位置: 99
+WARN  SqlExceptionHelper - SQL Error: 0, SQLState: 42704
+ERROR SqlExceptionHelper - ERROR: type "role_type" does not exist
+  位置: 45
+[ERROR] Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.281 s <<< FAILURE! -- in org.springframework.petmanagement.service.visitPrescriptionService.VisitPrescriptionServiceSpringDataJpaTests
+[ERROR] org.springframework.petmanagement.service.visitPrescriptionService.VisitPrescriptionServiceSpringDataJpaTests.shouldCreateVisitPrescription -- Time elapsed: 0.136 s <<< ERROR!
+org.springframework.dao.InvalidDataAccessResourceUsageException: 
+could not execute statement [ERROR: type "prescription_category" does not exist
+  位置: 99] [insert into prescriptions (category,created_at,form,name,note,strength,updated_at,id) values (?::prescription_category,?,?,?,?,?,?,?)]; SQL [insert into prescriptions (category,created_at,form,name,note,strength,updated_at,id) values (?::prescription_category,?,?,?,?,?,?,?)]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:281)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:256)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:560)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:343)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:136)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy216.findByName(Unknown Source)
+	at org.springframework.petmanagement.service.impl.UserServiceImpl.createUser(UserServiceImpl.java:59)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at org.springframework.petmanagement.service.impl.UserServiceImpl$$SpringCGLIB$$0.createUser(<generated>)
+	at org.springframework.petmanagement.service.visitPrescriptionService.AbstractVisitPrescriptionServiceTests.shouldCreateVisitPrescription(AbstractVisitPrescriptionServiceTests.java:114)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: org.hibernate.exception.SQLGrammarException: could not execute statement [ERROR: type "prescription_category" does not exist
+  位置: 99] [insert into prescriptions (category,created_at,form,name,note,strength,updated_at,id) values (?::prescription_category,?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.performNonBatchedMutation(AbstractMutationExecutor.java:134)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:55)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:55)
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.doStaticInserts(InsertCoordinatorStandard.java:194)
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.coordinateInsert(InsertCoordinatorStandard.java:132)
+	at org.hibernate.persister.entity.mutation.InsertCoordinatorStandard.insert(InsertCoordinatorStandard.java:104)
+	at org.hibernate.action.internal.EntityInsertAction.execute(EntityInsertAction.java:110)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:644)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:511)
+	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:414)
+	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:41)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1429)
+	at org.hibernate.internal.SessionImpl.flush(SessionImpl.java:1415)
+	at org.hibernate.query.sql.internal.NativeQueryImpl.prepareForExecution(NativeQueryImpl.java:670)
+	at org.hibernate.query.spi.AbstractSelectionQuery.beforeQuery(AbstractSelectionQuery.java:172)
+	at org.hibernate.query.spi.AbstractSelectionQuery.beforeQueryHandlingFetchProfiles(AbstractSelectionQuery.java:159)
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:140)
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:275)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:226)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:95)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:160)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:148)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:170)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 19 more
+Caused by: org.postgresql.util.PSQLException: ERROR: type "prescription_category" does not exist
+  位置: 99
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2736)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:525)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:196)
+	at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:157)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:194)
+	... 51 more
+
+[ERROR] org.springframework.petmanagement.service.visitPrescriptionService.VisitPrescriptionServiceSpringDataJpaTests.shouldFindVisitPrescriptionsByVisitId -- Time elapsed: 0.131 s <<< ERROR!
+org.springframework.dao.InvalidDataAccessResourceUsageException: 
+JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]; SQL [n/a]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:281)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:256)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:560)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:343)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:136)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy216.findByName(Unknown Source)
+	at org.springframework.petmanagement.service.impl.UserServiceImpl.createUser(UserServiceImpl.java:59)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at org.springframework.petmanagement.service.impl.UserServiceImpl$$SpringCGLIB$$0.createUser(<generated>)
+	at org.springframework.petmanagement.service.visitPrescriptionService.AbstractVisitPrescriptionServiceTests.shouldFindVisitPrescriptionsByVisitId(AbstractVisitPrescriptionServiceTests.java:67)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: org.hibernate.exception.SQLGrammarException: JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:91)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:269)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.getResultSet(DeferredResultSetAccess.java:172)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getMetaData(AbstractResultSetAccess.java:36)
+	at org.hibernate.sql.results.jdbc.internal.AbstractResultSetAccess.getColumnCount(AbstractResultSetAccess.java:52)
+	at org.hibernate.query.results.ResultSetMappingImpl.resolve(ResultSetMappingImpl.java:194)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValuesSource(JdbcSelectExecutorStandardImpl.java:340)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.doExecuteQuery(JdbcSelectExecutorStandardImpl.java:137)
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.executeQuery(JdbcSelectExecutorStandardImpl.java:102)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.executeQuery(JdbcSelectExecutor.java:91)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:165)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:142)
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:132)
+	at org.hibernate.query.sql.internal.NativeSelectQueryPlanImpl.performList(NativeSelectQueryPlanImpl.java:135)
+	at org.hibernate.query.sql.internal.NativeQueryImpl.doList(NativeQueryImpl.java:697)
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:143)
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:275)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:226)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:95)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:160)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:148)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:170)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 19 more
+Caused by: org.postgresql.util.PSQLException: ERROR: type "role_type" does not exist
+  位置: 45
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2736)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:525)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:196)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:139)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeQuery(ProxyPreparedStatement.java:52)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java)
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:251)
+	... 47 more
+
+[INFO] Running org.springframework.petmanagement.service.prescriptionService.PrescriptionServiceSpringDataJpaTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.service.prescriptionService.PrescriptionServiceSpringDataJpaTests]: PrescriptionServiceSpringDataJpaTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.service.prescriptionService.PrescriptionServiceSpringDataJpaTests
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in org.springframework.petmanagement.service.prescriptionService.PrescriptionServiceSpringDataJpaTests
+[INFO] Running org.springframework.petmanagement.service.petService.PetServiceSpringDataJpaTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.service.petService.PetServiceSpringDataJpaTests]: PetServiceSpringDataJpaTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.service.petService.PetServiceSpringDataJpaTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in org.springframework.petmanagement.service.petService.PetServiceSpringDataJpaTests
+[INFO] Running org.springframework.petmanagement.rest.controller.FailingControllerTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.rest.controller.FailingControllerTests]: FailingControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.rest.controller.FailingControllerTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.7)
+
+INFO  FailingControllerTests - Starting FailingControllerTests using Java 25.0.1 with PID 60627 (started by OCUST013 in /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api)
+DEBUG FailingControllerTests - Running with Spring Boot v3.5.7, Spring v6.2.12
+INFO  FailingControllerTests - The following 2 profiles are active: "spring-data-jpa", "postgres"
+INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 31 ms. Found 9 JPA repository interfaces.
+INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+INFO  HikariDataSource - HikariPool-3 - Starting...
+INFO  HikariPool - HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@5dc7bbe8
+INFO  HikariDataSource - HikariPool-3 - Start completed.
+INFO  pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+INFO  EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+INFO  SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+INFO  TestDispatcherServlet - Initializing Servlet ''
+INFO  TestDispatcherServlet - Completed initialization in 0 ms
+INFO  FailingControllerTests - Started FailingControllerTests in 1.165 seconds (process running for 21.43)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.305 s -- in org.springframework.petmanagement.rest.controller.FailingControllerTests
+[INFO] Running org.springframework.petmanagement.rest.controller.PetRestControllerTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.rest.controller.PetRestControllerTests]: PetRestControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.rest.controller.PetRestControllerTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.7)
+
+INFO  PetRestControllerTests - Starting PetRestControllerTests using Java 25.0.1 with PID 60627 (started by OCUST013 in /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api)
+DEBUG PetRestControllerTests - Running with Spring Boot v3.5.7, Spring v6.2.12
+INFO  PetRestControllerTests - The following 2 profiles are active: "spring-data-jpa", "postgres"
+INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 39 ms. Found 9 JPA repository interfaces.
+INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+INFO  HikariDataSource - HikariPool-4 - Starting...
+INFO  HikariPool - HikariPool-4 - Added connection org.postgresql.jdbc.PgConnection@1192986a
+INFO  HikariDataSource - HikariPool-4 - Start completed.
+INFO  pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-4)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+INFO  EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+INFO  SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+INFO  TestDispatcherServlet - Initializing Servlet ''
+INFO  TestDispatcherServlet - Completed initialization in 1 ms
+INFO  PetRestControllerTests - Started PetRestControllerTests in 1.212 seconds (process running for 22.779)
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.701 s -- in org.springframework.petmanagement.rest.controller.PetRestControllerTests
+[INFO] Running org.springframework.petmanagement.rest.controller.UserControllerTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.rest.controller.UserControllerTests]: UserControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.rest.controller.UserControllerTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.7)
+
+INFO  UserControllerTests - Starting UserControllerTests using Java 25.0.1 with PID 60627 (started by OCUST013 in /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api)
+DEBUG UserControllerTests - Running with Spring Boot v3.5.7, Spring v6.2.12
+INFO  UserControllerTests - The following 2 profiles are active: "spring-data-jpa", "postgres"
+INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 43 ms. Found 9 JPA repository interfaces.
+INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+INFO  HikariDataSource - HikariPool-5 - Starting...
+INFO  HikariPool - HikariPool-5 - Added connection org.postgresql.jdbc.PgConnection@4cc80f73
+INFO  HikariDataSource - HikariPool-5 - Start completed.
+INFO  pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-5)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+INFO  EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+INFO  SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+INFO  TestDispatcherServlet - Initializing Servlet ''
+INFO  TestDispatcherServlet - Completed initialization in 1 ms
+INFO  UserControllerTests - Started UserControllerTests in 1.276 seconds (process running for 24.543)
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.323 s -- in org.springframework.petmanagement.rest.controller.UserControllerTests
+[INFO] Running org.springframework.petmanagement.rest.controller.PrescriptionControllerTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.rest.controller.PrescriptionControllerTests]: PrescriptionControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.rest.controller.PrescriptionControllerTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.7)
+
+INFO  PrescriptionControllerTests - Starting PrescriptionControllerTests using Java 25.0.1 with PID 60627 (started by OCUST013 in /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api)
+DEBUG PrescriptionControllerTests - Running with Spring Boot v3.5.7, Spring v6.2.12
+INFO  PrescriptionControllerTests - The following 2 profiles are active: "spring-data-jpa", "postgres"
+INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 34 ms. Found 9 JPA repository interfaces.
+INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+INFO  HikariDataSource - HikariPool-6 - Starting...
+INFO  HikariPool - HikariPool-6 - Added connection org.postgresql.jdbc.PgConnection@531e02c3
+INFO  HikariDataSource - HikariPool-6 - Start completed.
+INFO  pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-6)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+INFO  EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+INFO  SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+INFO  TestDispatcherServlet - Initializing Servlet ''
+INFO  TestDispatcherServlet - Completed initialization in 1 ms
+INFO  PrescriptionControllerTests - Started PrescriptionControllerTests in 1.597 seconds (process running for 26.191)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.669 s -- in org.springframework.petmanagement.rest.controller.PrescriptionControllerTests
+[INFO] Running org.springframework.petmanagement.rest.controller.VisitControllerTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.rest.controller.VisitControllerTests]: VisitControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.rest.controller.VisitControllerTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.7)
+
+INFO  VisitControllerTests - Starting VisitControllerTests using Java 25.0.1 with PID 60627 (started by OCUST013 in /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api)
+DEBUG VisitControllerTests - Running with Spring Boot v3.5.7, Spring v6.2.12
+INFO  VisitControllerTests - The following 2 profiles are active: "spring-data-jpa", "postgres"
+INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 33 ms. Found 9 JPA repository interfaces.
+INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+INFO  HikariDataSource - HikariPool-7 - Starting...
+INFO  HikariPool - HikariPool-7 - Added connection org.postgresql.jdbc.PgConnection@521318ba
+INFO  HikariDataSource - HikariPool-7 - Start completed.
+INFO  pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-7)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+INFO  EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+INFO  SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+INFO  TestDispatcherServlet - Initializing Servlet ''
+INFO  TestDispatcherServlet - Completed initialization in 1 ms
+INFO  VisitControllerTests - Started VisitControllerTests in 1.119 seconds (process running for 27.38)
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.302 s -- in org.springframework.petmanagement.rest.controller.VisitControllerTests
+[INFO] Running org.springframework.petmanagement.rest.controller.AuthControllerTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.rest.controller.AuthControllerTests]: AuthControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.rest.controller.AuthControllerTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.7)
+
+INFO  AuthControllerTests - Starting AuthControllerTests using Java 25.0.1 with PID 60627 (started by OCUST013 in /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api)
+DEBUG AuthControllerTests - Running with Spring Boot v3.5.7, Spring v6.2.12
+INFO  AuthControllerTests - The following 2 profiles are active: "spring-data-jpa", "postgres"
+INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 39 ms. Found 9 JPA repository interfaces.
+INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+INFO  HikariDataSource - HikariPool-8 - Starting...
+INFO  HikariPool - HikariPool-8 - Added connection org.postgresql.jdbc.PgConnection@374fb0bd
+INFO  HikariDataSource - HikariPool-8 - Start completed.
+INFO  pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-8)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+INFO  EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+INFO  SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+INFO  TestDispatcherServlet - Initializing Servlet ''
+INFO  TestDispatcherServlet - Completed initialization in 1 ms
+INFO  AuthControllerTests - Started AuthControllerTests in 1.865 seconds (process running for 29.487)
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.983 s -- in org.springframework.petmanagement.rest.controller.AuthControllerTests
+[INFO] Running org.springframework.petmanagement.rest.controller.ItemControllerTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.rest.controller.ItemControllerTests]: ItemControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.rest.controller.ItemControllerTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.7)
+
+INFO  ItemControllerTests - Starting ItemControllerTests using Java 25.0.1 with PID 60627 (started by OCUST013 in /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api)
+DEBUG ItemControllerTests - Running with Spring Boot v3.5.7, Spring v6.2.12
+INFO  ItemControllerTests - The following 2 profiles are active: "spring-data-jpa", "postgres"
+INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 25 ms. Found 9 JPA repository interfaces.
+INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+INFO  HikariDataSource - HikariPool-9 - Starting...
+INFO  HikariPool - HikariPool-9 - Added connection org.postgresql.jdbc.PgConnection@1688a544
+INFO  HikariDataSource - HikariPool-9 - Start completed.
+INFO  pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-9)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+INFO  EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+INFO  SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+INFO  TestDispatcherServlet - Initializing Servlet ''
+INFO  TestDispatcherServlet - Completed initialization in 1 ms
+INFO  ItemControllerTests - Started ItemControllerTests in 1.063 seconds (process running for 30.619)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.147 s -- in org.springframework.petmanagement.rest.controller.ItemControllerTests
+[INFO] Running org.springframework.petmanagement.rest.controller.ClinicControllerTests
+INFO  AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [org.springframework.petmanagement.rest.controller.ClinicControllerTests]: ClinicControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+INFO  SpringBootTestContextBootstrapper - Found @SpringBootConfiguration org.springframework.petmanagement.PetManagementApplication for test class org.springframework.petmanagement.rest.controller.ClinicControllerTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.7)
+
+INFO  ClinicControllerTests - Starting ClinicControllerTests using Java 25.0.1 with PID 60627 (started by OCUST013 in /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api)
+DEBUG ClinicControllerTests - Running with Spring Boot v3.5.7, Spring v6.2.12
+INFO  ClinicControllerTests - The following 2 profiles are active: "spring-data-jpa", "postgres"
+INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 32 ms. Found 9 JPA repository interfaces.
+INFO  LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+INFO  RegionFactoryInitiator - HHH000026: Second-level cache disabled
+INFO  SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+INFO  HikariDataSource - HikariPool-10 - Starting...
+INFO  HikariPool - HikariPool-10 - Added connection org.postgresql.jdbc.PgConnection@b396f07
+INFO  HikariDataSource - HikariPool-10 - Start completed.
+INFO  pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-10)']
+	Database driver: undefined/unknown
+	Database version: 17.7
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+INFO  JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+INFO  LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+WARN  JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+INFO  EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+INFO  SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+INFO  TestDispatcherServlet - Initializing Servlet ''
+INFO  TestDispatcherServlet - Completed initialization in 0 ms
+INFO  ClinicControllerTests - Started ClinicControllerTests in 1.022 seconds (process running for 31.727)
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.100 s -- in org.springframework.petmanagement.rest.controller.ClinicControllerTests
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Errors: 
+[ERROR]   AuthServiceSpringDataJpaTests>AbstractAuthServiceTests.shouldLogoutUser:91 » DataIntegrityViolation could not execute statement [ERROR: value too long for type character varying(255)] [insert into refresh_tokens (created_at,expiry_date,token,user_id,id) values (?,?,?,?,?)]; SQL [insert into refresh_tokens (created_at,expiry_date,token,user_id,id) values (?,?,?,?,?)]
+[ERROR]   AuthServiceSpringDataJpaTests>AbstractAuthServiceTests.shouldRefreshToken:68 » Jwt Invalid refresh token
+[ERROR]   UserServiceSpringDataJpaTests>AbstractUserServiceTests.shouldAddUser:37 » InvalidDataAccessResourceUsage JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]; SQL [n/a]
+[ERROR]   VisitPrescriptionServiceSpringDataJpaTests>AbstractVisitPrescriptionServiceTests.shouldCreateVisitPrescription:114 » InvalidDataAccessResourceUsage could not execute statement [ERROR: type "prescription_category" does not exist
+  位置: 99] [insert into prescriptions (category,created_at,form,name,note,strength,updated_at,id) values (?::prescription_category,?,?,?,?,?,?,?)]; SQL [insert into prescriptions (category,created_at,form,name,note,strength,updated_at,id) values (?::prescription_category,?,?,?,?,?,?,?)]
+[ERROR]   VisitPrescriptionServiceSpringDataJpaTests>AbstractVisitPrescriptionServiceTests.shouldFindVisitPrescriptionsByVisitId:67 » InvalidDataAccessResourceUsage JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]; SQL [n/a]
+[ERROR]   VisitServiceSpringDataJpaTests>AbstractVisitServiceTests.shouldCreateVisit:61 » InvalidDataAccessResourceUsage JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]; SQL [n/a]
+[ERROR]   VisitServiceSpringDataJpaTests>AbstractVisitServiceTests.shouldFindVisitById:101 » InvalidDataAccessResourceUsage JDBC exception executing SQL [SELECT * FROM roles WHERE name = CAST(? AS role_type)] [ERROR: type "role_type" does not exist
+  位置: 45] [n/a]; SQL [n/a]
+[INFO] 
+[ERROR] Tests run: 152, Failures: 0, Errors: 7, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  53.608 s
+[INFO] Finished at: 2025-12-20T23:45:10+09:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test (default-test) on project pet-management-api: 
+[ERROR] 
+[ERROR] See /Users/OCUST013/Develop/Personal/Projects/PetManagement/pet-management-api/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
