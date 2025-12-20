@@ -42,7 +42,7 @@ public class SecurityConfig {
                                         oauth2ResourceServer.jwt(jwt ->
                                                       jwt.decoder(jwtDecoder())))
                 .authorizeHttpRequests(auth ->
-                                        auth.requestMatchers("/token", "/api/auth/**").permitAll()
+                                        auth.requestMatchers("/token", "/api/auth/**", "/error").permitAll()
                                             .anyRequest().authenticated())
                 .sessionManagement(session ->
                                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

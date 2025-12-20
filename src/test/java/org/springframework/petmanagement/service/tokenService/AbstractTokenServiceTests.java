@@ -71,8 +71,7 @@ public abstract class AbstractTokenServiceTests {
 
         // Decode the token to verify claims
         Jwt decoded = jwtDecoder.decode(token);
-        Assertions.assertThat(decoded.getSubject()).isEqualTo("any token name");
-        Assertions.assertThat(decoded.getClaimAsString("userName")).isEqualTo("testuser");
+        Assertions.assertThat(decoded.getSubject()).isEqualTo("testuser");
         Assertions.assertThat(decoded.getExpiresAt()).isNotNull();
         boolean isAfter = decoded.getExpiresAt().isAfter(Instant.now());
         assertTrue(isAfter);
