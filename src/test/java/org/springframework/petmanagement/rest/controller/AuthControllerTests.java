@@ -9,13 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.rest.dto.JwtResponseDto;
 import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
 import org.springframework.petmanagement.service.AuthService;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -91,6 +94,24 @@ class AuthControllerTests {
             .with(csrf())
             .content(jsonBody)
             .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    void testGetCurrentUserSuccess() throws Exception {
+        java.util.UUID userId = java.util.UUID.randomUUID();
+        User user = new User();
+        user.setId(userId);
+        user.setUsername("test@example.com");
+        user.setEmail("test@example.com");
+        user.setEnabled(true);
+
+        given(this.authService.getCurrentUser("test@example.com")).willReturn(user);
+
+        this.mockMvc.perform(get("/api/auth/me")
+            .with(jwt().jwt(jwt -> jwt.subject("test@example.com")))
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));

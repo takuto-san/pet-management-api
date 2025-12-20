@@ -15,6 +15,7 @@ import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
 import org.springframework.petmanagement.rest.dto.UserResponseDto;
 import org.springframework.petmanagement.service.AuthService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -67,11 +68,12 @@ public class AuthController implements AuthApi {
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<UserResponseDto> getCurrentUser(Authentication authentication) {
+    @Override
+    public ResponseEntity<UserResponseDto> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Jwt jwt = (Jwt) authentication.getPrincipal();
-        String userName = jwt.getClaimAsString("userName");
-        User user = userRepository.findByUsername(userName)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        String userName = jwt.getSubject();
+        User user = authService.getCurrentUser(userName);
         UserResponseDto userResponseDto = userMapper.toUserDto(user);
         return ResponseEntity.ok(userResponseDto);
     }

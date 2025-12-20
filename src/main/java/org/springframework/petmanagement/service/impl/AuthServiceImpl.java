@@ -79,4 +79,10 @@ public class AuthServiceImpl implements AuthService {
         String newRefreshToken = tokenService.generateRefreshToken(auth);
         return new TokenRefreshResponseDto(newAccessToken, newRefreshToken, "Bearer");
     }
+
+    @Override
+    public User getCurrentUser(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }

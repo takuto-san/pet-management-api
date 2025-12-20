@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                                        auth.requestMatchers("/api/token", "/api/auth/**", "/error").permitAll()
+                                        auth.requestMatchers("/api/token", "/api/auth/signin", "/api/auth/signup", "/api/auth/refreshtoken", "/error").permitAll()
                                             .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> 
                                         oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())))
