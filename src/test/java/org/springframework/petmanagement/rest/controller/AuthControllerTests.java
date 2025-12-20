@@ -38,8 +38,8 @@ class AuthControllerTests {
 
         String jsonBody = """
             {
-              "email": "test@example.com",
-              "password": "password123"
+              "email": "test101@example.com",
+              "password": "test101"
             }
             """;
 
@@ -56,8 +56,8 @@ class AuthControllerTests {
     void testRegisterUserSuccess() throws Exception {
         String jsonBody = """
             {
-              "email": "newuser@example.com",
-              "password": "Password123"
+              "email": "test106@example.com",
+              "password": "Test1068"
             }
             """;
 
@@ -115,6 +115,13 @@ class AuthControllerTests {
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    void testGetCurrentUserUnauthorized() throws Exception {
+        this.mockMvc.perform(get("/api/auth/me")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized());
     }
 
 

@@ -21,12 +21,12 @@ public abstract class AbstractAuthServiceTests {
 
     @Test
     void shouldRegisterUser() throws Exception {
-        SignupRequestDto signupRequest = new SignupRequestDto("test@example.com", "Password123");
+        SignupRequestDto signupRequest = new SignupRequestDto("test103@example.com", "Test103");
 
         authService.registerUser(signupRequest);
 
         // Verify user can login
-        SigninRequestDto loginRequest = new SigninRequestDto("test@example.com", "Password123");
+        SigninRequestDto loginRequest = new SigninRequestDto("test103@example.com", "Test103");
         JwtResponseDto response = authService.authenticateUser(loginRequest);
 
         assertThat(response).isNotNull();
@@ -39,11 +39,11 @@ public abstract class AbstractAuthServiceTests {
     @Test
     void shouldAuthenticateUser() throws Exception {
         // First register a user
-        SignupRequestDto signupRequest = new SignupRequestDto("auth@example.com", "Password123");
+        SignupRequestDto signupRequest = new SignupRequestDto("test104@example.com", "Test104");
         authService.registerUser(signupRequest);
 
         // Then authenticate
-        SigninRequestDto loginRequest = new SigninRequestDto("auth@example.com", "Password123");
+        SigninRequestDto loginRequest = new SigninRequestDto("test104@example.com", "Test104");
         JwtResponseDto response = authService.authenticateUser(loginRequest);
 
         assertThat(response).isNotNull();
@@ -55,10 +55,10 @@ public abstract class AbstractAuthServiceTests {
     @Test
     void shouldRefreshToken() throws Exception {
         // Register and authenticate
-        SignupRequestDto signupRequest = new SignupRequestDto("refresh@example.com", "Password123");
+        SignupRequestDto signupRequest = new SignupRequestDto("test105@example.com", "Test105");
         authService.registerUser(signupRequest);
 
-        SigninRequestDto loginRequest = new SigninRequestDto("refresh@example.com", "Password123");
+        SigninRequestDto loginRequest = new SigninRequestDto("test105@example.com", "Test105");
         JwtResponseDto loginResponse = authService.authenticateUser(loginRequest);
 
         String oldRefreshToken = loginResponse.getRefreshToken();
@@ -80,24 +80,23 @@ public abstract class AbstractAuthServiceTests {
     @Test
     void shouldLogoutUser() throws Exception {
         // Register and authenticate
-        SignupRequestDto signupRequest = new SignupRequestDto("logout@example.com", "Password123");
+        SignupRequestDto signupRequest = new SignupRequestDto("test106@example.com", "Test106");
         authService.registerUser(signupRequest);
 
-        SigninRequestDto loginRequest = new SigninRequestDto("logout@example.com", "Password123");
+        SigninRequestDto loginRequest = new SigninRequestDto("test106@example.com", "Test106");
         authService.authenticateUser(loginRequest);
 
         // Logout - should not throw exception
-        authService.logoutUser("logout@example.com");
+        authService.logoutUser("test106@example.com");
     }
 
     @Test
     void shouldThrowExceptionWhenRegisteringDuplicateEmail() throws Exception {
-        SignupRequestDto signupRequest = new SignupRequestDto("dup@example.com", "Password123");
+        SignupRequestDto signupRequest = new SignupRequestDto("test106@example.com", "Test106");
         authService.registerUser(signupRequest);
 
         // Try to register again with same email
-        SignupRequestDto duplicateRequest = new SignupRequestDto("dup@example.com", "Password456");
-
+        SignupRequestDto duplicateRequest = new SignupRequestDto("test106@example.com", "Test107");
         assertThatThrownBy(() -> authService.registerUser(duplicateRequest))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Email already in use");
