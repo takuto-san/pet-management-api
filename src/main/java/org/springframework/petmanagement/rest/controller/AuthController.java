@@ -71,8 +71,8 @@ public class AuthController implements AuthApi {
     @Override
     public ResponseEntity<UserResponseDto> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken) {
-            throw new RuntimeException("User is not authenticated");
+        if (authentication == null || !authentication.isAuthenticated() || !(authentication.getPrincipal() instanceof Jwt)) {
+            return ResponseEntity.status(401).build();
         }
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userName = jwt.getSubject();
