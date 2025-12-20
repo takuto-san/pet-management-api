@@ -31,6 +31,9 @@ public class AuthServiceImpl implements AuthService {
         // Simple implementation - in real app, use proper authentication
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            throw new org.springframework.security.authentication.BadCredentialsException("Invalid password");
+        }
         Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, null);
         String accessToken = tokenService.generateToken(auth);
         String refreshToken = tokenService.generateRefreshToken(auth);
