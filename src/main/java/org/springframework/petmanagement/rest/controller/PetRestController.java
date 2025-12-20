@@ -23,7 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("api")
+@RequestMapping("/api")
 public class PetRestController implements PetsApi {
 
     private final PetService petService;

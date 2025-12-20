@@ -17,13 +17,14 @@
 package org.springframework.petmanagement.rest.advice;
 
 import java.net.URI;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.petmanagement.model.ProblemDetail;
 import org.springframework.petmanagement.rest.controller.BindingErrorsResponse;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -52,12 +53,13 @@ public class ExceptionControllerAdvice {
      * @param url URL request.
      */
     private ProblemDetail detailBuild(Exception ex, HttpStatus status, StringBuffer url) {
-        ProblemDetail detail = ProblemDetail.forStatus(status);
-        detail.setType(URI.create(url.toString()));
-        detail.setTitle(ex.getClass().getSimpleName());
-        detail.setDetail(ex.getLocalizedMessage());
-        detail.setProperty("timestamp", Instant.now());
-        return detail;
+        return ProblemDetail.builder()
+                .type(URI.create(url.toString()).toString())
+                .title(ex.getClass().getSimpleName())
+                .status(status.value())
+                .detail(ex.getLocalizedMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
     }
 
     /**
@@ -125,6 +127,21 @@ public class ExceptionControllerAdvice {
             return ResponseEntity.status(status).body(detail);
         }
         return ResponseEntity.status(status).build();
+    }
+
+    /**
+     * Handles {@link BadCredentialsException} which indicates invalid credentials during authentication.
+     *
+     * @param ex The {@link BadCredentialsException} to be handled
+     * @param request {@link HttpServletRequest} object referring to the current request.
+     * @return A {@link ResponseEntity} containing the error information and a 401 Unauthorized status
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseBody
+    public ResponseEntity<ProblemDetail> handleBadCredentialsException(BadCredentialsException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        ProblemDetail detail = this.detailBuild(ex, status, request.getRequestURL());
+        return ResponseEntity.status(status).body(detail);
     }
 
 }

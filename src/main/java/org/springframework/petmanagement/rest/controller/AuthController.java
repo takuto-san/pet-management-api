@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @Validated
 public class AuthController implements AuthApi {
 
