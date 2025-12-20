@@ -20,5 +20,6 @@ public interface UserRepository {
     Optional<User> findByEmail(String email);
 
     Collection<User> findAll() throws DataAccessException;
-    
+
+    boolean existsByEmail(String email);    
 }

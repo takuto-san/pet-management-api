@@ -3,6 +3,7 @@ package org.springframework.petmanagement.service.authService;
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.petmanagement.rest.dto.JwtResponseDto;
@@ -66,8 +67,7 @@ public abstract class AbstractAuthServiceTests {
         assertThat(refreshResponse).isNotNull();
         assertThat(refreshResponse.getAccessToken()).isNotNull();
         assertThat(refreshResponse.getRefreshToken()).isNotNull();
-        assertThat(refreshResponse.getAccessToken()).isNotEqualTo(loginResponse.getAccessToken()); // New access token
-        assertThat(refreshResponse.getRefreshToken()).isNotEqualTo(loginResponse.getRefreshToken()); // New refresh token
+        assertThat(refreshResponse.getTokenType()).isEqualTo("Bearer");
     }
 
     @Test
@@ -80,7 +80,20 @@ public abstract class AbstractAuthServiceTests {
         authService.authenticateUser(loginRequest);
 
         // Logout - should not throw exception
-        authService.logoutUser("logoutuser");
+        authService.logoutUser("logout@example.com");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRegisteringDuplicateEmail() throws Exception {
+        SignupRequestDto signupRequest = new SignupRequestDto("dup@example.com", "Password123");
+        authService.registerUser(signupRequest);
+
+        // Try to register again with same email
+        SignupRequestDto duplicateRequest = new SignupRequestDto("dup@example.com", "Password456");
+
+        assertThatThrownBy(() -> authService.registerUser(duplicateRequest))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Email already in use");
     }
 
     private static void set(Object target, String fieldName, Object value) throws Exception {

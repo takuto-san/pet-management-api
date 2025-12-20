@@ -8,6 +8,7 @@ import org.springframework.petmanagement.rest.dto.SignupRequestDto;
 import org.springframework.petmanagement.rest.dto.TokenRefreshResponseDto;
 import org.springframework.petmanagement.service.AuthService;
 import org.springframework.petmanagement.service.TokenService;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,13 +29,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponseDto authenticateUser(SigninRequestDto loginRequest) {
-        // Simple implementation - in real app, use proper authentication
         User user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new org.springframework.security.authentication.BadCredentialsException("Invalid password");
+            throw new BadCredentialsException("Invalid credentials");
         }
-        Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, null);
+        Authentication auth = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
         String accessToken = tokenService.generateToken(auth);
         String refreshToken = tokenService.generateRefreshToken(auth);
         int expiresIn = tokenService.getTokenExpirationSeconds();
@@ -45,8 +45,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User registerUser(SignupRequestDto signUpRequest) {
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+            throw new IllegalArgumentException("Email already in use");
+        }
         User user = new User();
-        user.setUsername(signUpRequest.getEmail().split("@")[0]); // Generate username from email
+        user.setUsername(signUpRequest.getEmail()); // Use full email as username
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setEnabled(true);
@@ -60,9 +63,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenRefreshResponseDto refreshToken(String refreshToken) {
-        // Simple implementation - in real app, validate refresh token
-        Authentication auth = new UsernamePasswordAuthenticationToken("dummy", null, null);
+        Authentication auth = tokenService.validateRefreshToken(refreshToken);
         String newAccessToken = tokenService.generateToken(auth);
-        return new TokenRefreshResponseDto(newAccessToken, "new-refresh-token", "Bearer");
+        String newRefreshToken = tokenService.generateRefreshToken(auth);
+        return new TokenRefreshResponseDto(newAccessToken, newRefreshToken, "Bearer");
     }
 }

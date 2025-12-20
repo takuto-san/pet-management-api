@@ -18,4 +18,6 @@ public interface SpringDataUserRepository extends UserRepository, PagingAndSorti
 
     Optional<User> findByEmail(String email);
 
+    boolean existsByEmail(String email);
+
 }
