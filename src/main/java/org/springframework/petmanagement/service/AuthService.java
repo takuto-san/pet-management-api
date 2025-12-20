@@ -12,7 +12,7 @@ public interface AuthService {
 
     User registerUser(SignupRequestDto signUpRequest);
 
-    void logoutUser(String username);
+    void logoutUser(String email);
 
     TokenRefreshResponseDto refreshToken(String refreshToken);
 }

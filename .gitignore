@@ -28,3 +28,6 @@ springboot-petclinic-server/
 ./vscode/
 
 memo.txt
+
+./src/main/resources/application.properties
+./src/main/resources/application-postgres.properties

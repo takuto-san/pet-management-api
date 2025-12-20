@@ -38,15 +38,13 @@ public class SecurityConfig {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-                .oauth2ResourceServer(oauth2ResourceServer ->
-                                        oauth2ResourceServer.jwt(jwt ->
-                                                      jwt.decoder(jwtDecoder())))
+                .sessionManagement(session ->
+                                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                                         auth.requestMatchers("/token", "/api/auth/**", "/error").permitAll()
                                             .anyRequest().authenticated())
-                .sessionManagement(session ->
-                                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(Customizer.withDefaults())
+                .oauth2ResourceServer(oauth2 -> 
+                                        oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())))
                 .build();
     }
 

@@ -61,13 +61,20 @@ public abstract class AbstractAuthServiceTests {
         SigninRequestDto loginRequest = new SigninRequestDto("refresh@example.com", "Password123");
         JwtResponseDto loginResponse = authService.authenticateUser(loginRequest);
 
+        String oldRefreshToken = loginResponse.getRefreshToken();
+
         // Refresh token
-        TokenRefreshResponseDto refreshResponse = authService.refreshToken(loginResponse.getRefreshToken());
+        TokenRefreshResponseDto refreshResponse = authService.refreshToken(oldRefreshToken);
 
         assertThat(refreshResponse).isNotNull();
         assertThat(refreshResponse.getAccessToken()).isNotNull();
         assertThat(refreshResponse.getRefreshToken()).isNotNull();
         assertThat(refreshResponse.getTokenType()).isEqualTo("Bearer");
+
+        // Old refresh token should be invalidated
+        assertThatThrownBy(() -> authService.refreshToken(oldRefreshToken))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Invalid refresh token");
     }
 
     @Test

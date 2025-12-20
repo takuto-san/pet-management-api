@@ -85,6 +85,10 @@ public class User extends Person {
     @lombok.Builder.Default
     private List<Pet> pets = new ArrayList<>();
 
+    public String getName() {
+        return username;
+    }
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
             .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().name()))

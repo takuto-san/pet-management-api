@@ -1,6 +1,7 @@
 package org.springframework.petmanagement.service.impl;
 
 import org.springframework.petmanagement.model.User;
+import org.springframework.petmanagement.repository.RefreshTokenRepository;
 import org.springframework.petmanagement.repository.UserRepository;
 import org.springframework.petmanagement.rest.dto.JwtResponseDto;
 import org.springframework.petmanagement.rest.dto.SigninRequestDto;
@@ -13,28 +14,32 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthServiceImpl(UserRepository userRepository, TokenService tokenService, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserRepository userRepository, RefreshTokenRepository refreshTokenRepository, TokenService tokenService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
         this.tokenService = tokenService;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
+    @Transactional
     public JwtResponseDto authenticateUser(SigninRequestDto loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Invalid credentials");
         }
-        Authentication auth = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
+        Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         String accessToken = tokenService.generateToken(auth);
         String refreshToken = tokenService.generateRefreshToken(auth);
         int expiresIn = tokenService.getTokenExpirationSeconds();
@@ -44,6 +49,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public User registerUser(SignupRequestDto signUpRequest) {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new IllegalArgumentException("Email already in use");
@@ -57,13 +63,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void logoutUser(String username) {
-        // Simple implementation
+    @Transactional
+    public void logoutUser(String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        refreshTokenRepository.deleteByUser(user);
     }
 
     @Override
+    @Transactional
     public TokenRefreshResponseDto refreshToken(String refreshToken) {
         Authentication auth = tokenService.validateRefreshToken(refreshToken);
+        tokenService.deleteRefreshToken(refreshToken);
         String newAccessToken = tokenService.generateToken(auth);
         String newRefreshToken = tokenService.generateRefreshToken(auth);
         return new TokenRefreshResponseDto(newAccessToken, newRefreshToken, "Bearer");
