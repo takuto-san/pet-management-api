@@ -21,7 +21,6 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "password", ignore = true)
-    @Mapping(target = "enabled", source = "enabled")
     User toUserFromDto(UserResponseDto userDto);
 
     UserResponseDto toUserDto(User user);

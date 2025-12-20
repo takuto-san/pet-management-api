@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.rest.dto.JwtResponseDto;
 import org.springframework.petmanagement.rest.dto.SigninRequestDto;
 import org.springframework.petmanagement.rest.dto.SignupRequestDto;
@@ -100,6 +101,26 @@ public abstract class AbstractAuthServiceTests {
         assertThatThrownBy(() -> authService.registerUser(duplicateRequest))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Email already in use");
+    }
+
+    @Test
+    void shouldGetCurrentUser() throws Exception {
+        // First register a user
+        SignupRequestDto signupRequest = new SignupRequestDto("test107@example.com", "Test107");
+        authService.registerUser(signupRequest);
+
+        // Then get current user
+        User user = authService.getCurrentUser("test107@example.com");
+
+        assertThat(user).isNotNull();
+        assertThat(user.getEmail()).isEqualTo("test107@example.com");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenGettingCurrentUserWithInvalidEmail() throws Exception {
+        assertThatThrownBy(() -> authService.getCurrentUser("nonexistent@example.com"))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessage("User not found: nonexistent@example.com");
     }
 
     private static void set(Object target, String fieldName, Object value) throws Exception {

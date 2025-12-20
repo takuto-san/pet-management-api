@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Invalid credentials");
         }
-        Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, user.getAuthorities());
         String accessToken = tokenService.generateToken(auth);
         String refreshToken = tokenService.generateRefreshToken(auth);
         int expiresIn = tokenService.getTokenExpirationSeconds();
@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User getCurrentUser(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
     }
 }
