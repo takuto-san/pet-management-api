@@ -1343,7 +1343,7 @@ components:
             postalCode:
               type: string
               maxLength: 8
-              pattern: '^\d{3}-?\d{4}$'
+              pattern: '^$|^\d{3}-?\d{4}$'
             prefecture:
               type: string
               maxLength: 10
@@ -1356,9 +1356,10 @@ components:
             telephone:
               type: string
               maxLength: 20
-              pattern: '^[0-9-]*$'
+              pattern: '^$|^[0-9-]*$'
           required:
             - email
+            - username
 
     UserRegistration:
       allOf:

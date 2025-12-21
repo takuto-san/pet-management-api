@@ -41,8 +41,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class User extends Person {
     
+    @NotBlank
     @Size(max = 20)
-    @Column(name = "username", length = 20, unique = true)
+    @Column(name = "username", nullable = false, length = 20, unique = true)
     private String username;
 
     @NotBlank
@@ -66,7 +67,7 @@ public class User extends Person {
 
     @Override
     @Size(max = 20)
-    @Pattern(regexp = "^[0-9-]*$")
+    @Pattern(regexp = "^$|^[0-9-]*$")
     @Column(name = "telephone", unique = true)
     public String getTelephone() { return super.getTelephone(); }
     @Override

@@ -67,6 +67,40 @@ class UserTests {
     }
 
     @Test
+    void shouldFailWhenUsernameIsNull() {
+        User user = User.builder()
+            .username(null)
+            .password("password")
+            .firstName("太郎")
+            .lastName("山田")
+            .firstNameKana("タロウ")
+            .lastNameKana("ヤマダ")
+            .email("test@example.com")
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("username"));
+    }
+
+    @Test
+    void shouldFailWhenUsernameIsEmpty() {
+        User user = User.builder()
+            .username("")
+            .password("password")
+            .firstName("太郎")
+            .lastName("山田")
+            .firstNameKana("タロウ")
+            .lastNameKana("ヤマダ")
+            .email("test@example.com")
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("username"));
+    }
+
+    @Test
     void shouldFailWhenPasswordIsNull() {
         User user = User.builder()
             .username("johndoe")
@@ -185,6 +219,26 @@ class UserTests {
         assertThat(user.getCity()).isNull();
         assertThat(user.getAddress()).isNull();
         assertThat(user.getTelephone()).isNull();
+    }
+
+    @Test
+    void shouldAllowEmptyOptionalFields() {
+        User user = User.builder()
+            .username("simpleuser")
+            .password("password")
+            .firstName("太郎")
+            .lastName("山田")
+            .firstNameKana("タロウ")
+            .lastNameKana("ヤマダ")
+            .email("simple@example.com")
+            .postalCode("")
+            .telephone("")
+            .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertThat(violations).isEmpty();
+        assertThat(user.getPostalCode()).isEmpty();
+        assertThat(user.getTelephone()).isEmpty();
     }
 
     @Test
