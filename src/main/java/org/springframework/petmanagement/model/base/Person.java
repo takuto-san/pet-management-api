@@ -50,7 +50,7 @@ public class Person extends Time {
     protected String email;
 
     @Column(name = "postal_code", length = 8)
-    @Pattern(regexp = "^\\d{3}-?\\d{4}$")
+    @Pattern(regexp = "^$|^\\d{3}-?\\d{4}$")
     protected String postalCode;
 
     @Column(name = "prefecture")
@@ -67,6 +67,6 @@ public class Person extends Time {
 
     @Column(name = "telephone")
     @Size(max = 20)
-    @Pattern(regexp = "^[0-9-]*$", message = "Telephone number must contain only digits and hyphens")
+    @Pattern(regexp = "^$|^[0-9-]*$", message = "Telephone number must contain only digits and hyphens")
     protected String telephone;
 }
