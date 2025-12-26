@@ -129,7 +129,7 @@ CREATE TABLE prescriptions (
     note       TEXT,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    
+
     CONSTRAINT unique_prescription UNIQUE (category, name, form, strength)
 );
 CREATE INDEX idx_prescriptions_category ON prescriptions (category);
@@ -171,7 +171,7 @@ CREATE TABLE visit_prescriptions (
     purpose             TEXT,
     created_at          TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at          TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    
+
     CONSTRAINT check_quantity_positive CHECK (quantity > 0),
     CONSTRAINT check_days_positive CHECK (days IS NULL OR days > 0)
 );
@@ -194,6 +194,57 @@ CREATE INDEX idx_items_name ON items (name);
 CREATE INDEX idx_items_metadata_source ON items ((metadata->>'source'));
 CREATE INDEX idx_items_metadata_external_id ON items ((metadata->>'external_id'));
 CREATE INDEX idx_items_created_at ON items (created_at);
+
+-- Spaces table
+CREATE TABLE spaces (
+    id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id    UUID NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    name       TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_spaces_user_id ON spaces (user_id);
+CREATE INDEX idx_spaces_created_at ON spaces (created_at);
+
+-- Documents table
+CREATE TABLE documents (
+    id            UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    space_id      UUID NOT NULL REFERENCES spaces (id) ON DELETE CASCADE,
+    parent_doc_id UUID REFERENCES documents (id) ON DELETE CASCADE,
+    title         TEXT NOT NULL,
+    body          JSONB,
+    created_at    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_documents_space_id ON documents (space_id);
+CREATE INDEX idx_documents_parent_doc_id ON documents (parent_doc_id);
+CREATE INDEX idx_documents_created_at ON documents (created_at);
+
+-- Add user_id column to items table
+ALTER TABLE items ADD COLUMN user_id UUID;
+ALTER TABLE items ADD CONSTRAINT fk_items_user_id FOREIGN KEY (user_id) REFERENCES users (id);
+
+-- Modify items table and add user_items table
+
+-- Remove user_id column from items table
+ALTER TABLE items DROP CONSTRAINT fk_items_user_id;
+ALTER TABLE items DROP COLUMN user_id;
+
+-- Create user_items table
+CREATE TABLE user_items (
+    id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id     UUID NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    item_id     UUID NOT NULL REFERENCES items (id) ON DELETE CASCADE,
+    note        TEXT,
+    recorded_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    created_at  TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at  TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+-- Create indexes
+CREATE INDEX idx_user_items_user_id ON user_items (user_id);
+CREATE INDEX idx_user_items_item_id ON user_items (item_id);
+CREATE INDEX idx_user_items_recorded_at ON user_items (recorded_at);
 
 
 -- 5. Trigger
@@ -224,4 +275,18 @@ FOR EACH ROW EXECUTE FUNCTION update_timestamp();
 
 CREATE OR REPLACE TRIGGER set_update_at_on_visit_prescriptions
 BEFORE UPDATE ON visit_prescriptions
+FOR EACH ROW EXECUTE FUNCTION update_timestamp();
+
+-- Triggers
+CREATE OR REPLACE TRIGGER set_update_at_on_spaces
+BEFORE UPDATE ON spaces
+FOR EACH ROW EXECUTE FUNCTION update_timestamp();
+
+CREATE OR REPLACE TRIGGER set_update_at_on_documents
+BEFORE UPDATE ON documents
+FOR EACH ROW EXECUTE FUNCTION update_timestamp();
+
+-- Create trigger for updated_at
+CREATE OR REPLACE TRIGGER set_update_at_on_user_items
+BEFORE UPDATE ON user_items
 FOR EACH ROW EXECUTE FUNCTION update_timestamp();

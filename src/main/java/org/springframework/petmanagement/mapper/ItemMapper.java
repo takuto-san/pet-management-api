@@ -23,7 +23,6 @@ public interface ItemMapper {
 
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    @Mapping(target = "userId", expression = "java(item.getUser() != null ? item.getUser().getId() : null)")
     ItemDto toItemDto(Item item);
 
     List<ItemDto> toItemDtoList(List<Item> items);

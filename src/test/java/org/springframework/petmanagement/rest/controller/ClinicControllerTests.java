@@ -12,6 +12,7 @@ import static org.mockito.Mockito.doThrow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.http.MediaType;
 import org.springframework.petmanagement.model.Clinic;
 import org.springframework.petmanagement.rest.dto.ClinicFieldsDto;
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("postgres")
 class ClinicControllerTests {
 
     private static final UUID CLINIC_ID = UUID.fromString("10000000-0000-0000-0000-000000000001");

@@ -1,4 +1,4 @@
-INSERT INTO roles (name) VALUES 
+INSERT INTO roles (name) VALUES
     ('owner'), ('vet'), ('nurse'), ('receptionist'), ('clinic_admin'), ('admin')
 ON CONFLICT (name) DO NOTHING;
 
@@ -30,7 +30,7 @@ SELECT u.id, r.id FROM users u, roles r
 WHERE r.name = 'admin' AND u.username = 'admin'
 ON CONFLICT DO NOTHING;
 
-INSERT INTO pets (name, birth_date, sex, type, user_id) VALUES 
+INSERT INTO pets (name, birth_date, sex, type, user_id) VALUES
 ('ポチ', '2020-01-15', 'male', 'dog',
  (SELECT id FROM users WHERE email = 'taro.yamada@example.com')),
 ('ミケ', '2021-05-05', 'female', 'cat',
