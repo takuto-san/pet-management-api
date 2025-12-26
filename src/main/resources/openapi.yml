@@ -31,6 +31,10 @@ tags:
     description: Endpoints related to prescriptions assigned to a visit.
   - name: item
     description: Endpoints related to item master data.
+  - name: space
+    description: Endpoints related to spaces.
+  - name: document
+    description: Endpoints related to documents.
 
 security:
   - bearerAuth: []
@@ -726,6 +730,166 @@ paths:
               schema:
                 $ref: '#/components/schemas/Item'
 
+  /spaces:
+    get:
+      tags: [space]
+      operationId: listSpaces
+      summary: Get authenticated user's spaces
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Space'
+    post:
+      tags: [space]
+      operationId: addSpace
+      summary: Create a new space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpaceFields'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Space'
+
+  /spaces/{spaceId}/documents:
+    get:
+      tags: [document]
+      operationId: listDocuments
+      summary: List documents in a space
+      parameters:
+        - name: spaceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Document'
+    post:
+      tags: [document]
+      operationId: addDocument
+      summary: Create a new document
+      parameters:
+        - name: spaceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentFields'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+
+  /spaces/{spaceId}/documents/{documentId}:
+    get:
+      tags: [document]
+      operationId: getDocument
+      summary: Get a document
+      parameters:
+        - name: spaceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+    patch:
+      tags: [document]
+      operationId: updateDocument
+      summary: Update a document partially
+      parameters:
+        - name: spaceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentUpdateFields'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+    delete:
+      tags: [document]
+      operationId: deleteDocument
+      summary: Delete a document
+      parameters:
+        - name: spaceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: No Content
+
 components:
   securitySchemes:
     bearerAuth:
@@ -1416,3 +1580,93 @@ components:
                 $ref: '#/components/schemas/RoleName'
             enabled:
               type: boolean
+
+    SpaceFields:
+      title: Space Fields
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'My Space'
+      required:
+        - name
+    Space:
+      allOf:
+        - $ref: '#/components/schemas/SpaceFields'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              readOnly: true
+            userId:
+              type: string
+              format: uuid
+              readOnly: true
+            createdAt:
+              type: string
+              format: date-time
+              readOnly: true
+            updatedAt:
+              type: string
+              format: date-time
+              readOnly: true
+          required:
+            - id
+            - userId
+            - createdAt
+            - updatedAt
+
+    DocumentFields:
+      title: Document Fields
+      type: object
+      properties:
+        parentDocId:
+          type: string
+          format: uuid
+        title:
+          type: string
+          example: 'My Document'
+        body:
+          type: object
+          additionalProperties: true
+          description: JSONB body for block-based structure
+      required:
+        - title
+    DocumentUpdateFields:
+      title: Document Update Fields
+      type: object
+      properties:
+        title:
+          type: string
+          example: 'Updated Document'
+        body:
+          type: object
+          additionalProperties: true
+          description: JSONB body for block-based structure
+    Document:
+      allOf:
+        - $ref: '#/components/schemas/DocumentFields'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              readOnly: true
+            spaceId:
+              type: string
+              format: uuid
+              readOnly: true
+            createdAt:
+              type: string
+              format: date-time
+              readOnly: true
+            updatedAt:
+              type: string
+              format: date-time
+              readOnly: true
+          required:
+            - id
+            - spaceId
+            - createdAt
+            - updatedAt
