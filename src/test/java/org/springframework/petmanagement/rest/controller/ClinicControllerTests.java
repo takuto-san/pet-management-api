@@ -18,6 +18,7 @@ import org.springframework.petmanagement.rest.dto.ClinicFieldsDto;
 import org.springframework.petmanagement.service.ClinicService;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles({"spring-data-jpa", "postgres"})
 class ClinicControllerTests {
 
     private static final UUID CLINIC_ID = UUID.fromString("10000000-0000-0000-0000-000000000001");

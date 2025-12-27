@@ -7,11 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.petmanagement.mapper.ItemMapper;
 import org.springframework.petmanagement.model.Item;
-import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.repository.ItemRepository;
 import org.springframework.petmanagement.rest.dto.ItemFieldsDto;
 import org.springframework.petmanagement.service.ItemService;
-import org.springframework.petmanagement.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +19,10 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
-    private final UserService userService;
 
-    public ItemServiceImpl(ItemRepository itemRepository, ItemMapper itemMapper, UserService userService) {
+    public ItemServiceImpl(ItemRepository itemRepository, ItemMapper itemMapper) {
         this.itemRepository = itemRepository;
         this.itemMapper = itemMapper;
-        this.userService = userService;
     }
 
     @Override
@@ -44,10 +40,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item createItem(ItemFieldsDto fields) {
         Item item = itemMapper.toItem(fields);
-        if (fields.getUserId() != null) {
-            User user = userService.getUser(fields.getUserId());
-            item.setUser(user);
-        }
         itemRepository.save(item);
         return item;
     }
@@ -59,10 +51,6 @@ public class ItemServiceImpl implements ItemService {
             throw new IllegalArgumentException("Item not found: " + id);
         }
         itemMapper.updateItemFromFields(fields, item);
-        if (fields.getUserId() != null) {
-            User user = userService.getUser(fields.getUserId());
-            item.setUser(user);
-        }
         itemRepository.save(item);
         return item;
     }

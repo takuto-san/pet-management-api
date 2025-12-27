@@ -45,40 +45,7 @@ class ItemTests {
         assertThat(item.getCategory()).isEqualTo(ItemType.FOOD);
     }
 
-    @Test
-    void shouldAllowNullUser() {
-        Item item = Item.builder()
-            .id(UUID.randomUUID())
-            .name("ユーザー未設定商品")
-            .category(ItemType.TOY)
-            .user(null)
-            .build();
 
-        Set<ConstraintViolation<Item>> violations = validator.validate(item);
-        assertThat(violations).isEmpty();
-        assertThat(item.getUser()).isNull();
-    }
-
-    @Test
-    void shouldSupportUserAssociation() {
-        User user = User.builder()
-            .id(UUID.randomUUID())
-            .username("testuser")
-            .email("test@example.com")
-            .build();
-
-        Item item = Item.builder()
-            .id(UUID.randomUUID())
-            .name("ユーザー設定商品")
-            .category(ItemType.COLLAR)
-            .user(user)
-            .build();
-
-        Set<ConstraintViolation<Item>> violations = validator.validate(item);
-        assertThat(violations).isEmpty();
-        assertThat(item.getUser()).isNotNull();
-        assertThat(item.getUser().getUsername()).isEqualTo("testuser");
-    }
 
     @Test
     void shouldFailWhenNameIsNull() {
