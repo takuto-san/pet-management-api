@@ -3,6 +3,7 @@ package org.springframework.petmanagement.service.impl;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.petmanagement.model.RefreshToken;
@@ -50,6 +51,7 @@ public class TokenServiceImpl implements TokenService {
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .subject(authentication.getName())
                 .claim("scope", scope)
+                .claim("jti", UUID.randomUUID().toString())
                 .build();
 
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -70,6 +72,7 @@ public class TokenServiceImpl implements TokenService {
                 .expiresAt(now.plus(7, ChronoUnit.DAYS)) // Refresh token expires in 7 days
                 .subject(authentication.getName())
                 .claim("scope", scope)
+                .claim("jti", UUID.randomUUID().toString())
                 .build();
 
         String tokenValue = this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
