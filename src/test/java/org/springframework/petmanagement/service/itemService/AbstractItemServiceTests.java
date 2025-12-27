@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.petmanagement.model.Item;
+import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.rest.dto.ItemCategoryDto;
 import org.springframework.petmanagement.rest.dto.ItemFieldsDto;
 import org.springframework.petmanagement.service.ItemService;
+import org.springframework.petmanagement.service.UserService;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -15,6 +17,9 @@ public abstract class AbstractItemServiceTests {
 
     @Autowired
     protected ItemService itemService;
+
+    @Autowired
+    protected UserService userService;
 
     @Test
     void shouldFindAll() {
@@ -40,5 +45,20 @@ public abstract class AbstractItemServiceTests {
 
         Item saved = itemService.createItem(fields);
         assertThat(itemService.getItem(saved.getId())).isPresent();
+    }
+
+    @Test
+    void shouldCreateItemWithUser() {
+        User user = userService.createUser(null); // Assume a test user creation method or mock
+        ItemFieldsDto fields = new ItemFieldsDto()
+            .name("User Item")
+            .category(ItemCategoryDto.TOY)
+            .userId(user.getId());
+
+        Item saved = itemService.createItem(fields);
+        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getName()).isEqualTo("User Item");
+        assertThat(saved.getUser()).isNotNull();
+        assertThat(saved.getUser().getId()).isEqualTo(user.getId());
     }
 }

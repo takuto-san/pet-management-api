@@ -12,6 +12,8 @@ import org.springframework.petmanagement.model.type.converter.ItemTypeConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -42,7 +44,11 @@ public class Item extends Time {
     @ColumnTransformer(write = "?::item_category")
     @Column(name = "category", nullable = false)
     private ItemType category;
-    
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(name = "note")
     private String note;
     

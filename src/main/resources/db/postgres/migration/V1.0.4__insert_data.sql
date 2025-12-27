@@ -73,3 +73,13 @@ VALUES
 ((SELECT id FROM visits WHERE pet_id = (SELECT id FROM pets WHERE name = 'ミケ')),
  (SELECT id FROM prescriptions WHERE name = '猫3種混合ワクチン'),
  1, '本', NULL, '予防接種');
+
+INSERT INTO spaces (user_id, name) VALUES
+((SELECT id FROM users WHERE email = 'taro.yamada@example.com'), 'ポチの記録'),
+((SELECT id FROM users WHERE email = 'hanako.suzuki@example.com'), 'ミケの記録');
+
+INSERT INTO documents (space_id, title, body) VALUES
+((SELECT id FROM spaces WHERE name = 'ポチの記録'), 'ポチの健康ノート',
+ '{"content": "ポチの日常の健康記録"}'::jsonb),
+((SELECT id FROM spaces WHERE name = 'ミケの記録'), 'ミケのワクチン記録',
+ '{"content": "ミケのワクチン接種履歴"}'::jsonb);

@@ -1276,6 +1276,10 @@ components:
           example: 'Premium Dog Food'
         category:
           $ref: '#/components/schemas/ItemCategory'
+        userId:
+          type: string
+          format: uuid
+          description: The owner ID
         note:
           type: string
         metadata:
