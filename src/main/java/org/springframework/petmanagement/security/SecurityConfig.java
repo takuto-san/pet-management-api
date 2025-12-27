@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                                        auth.requestMatchers("/api/token", "/api/auth/signin", "/api/auth/signup", "/api/auth/refreshtoken", "/error").permitAll()
+                                        auth.requestMatchers("/auth/signin", "/auth/signup", "/auth/refreshtoken", "/error").permitAll()
                                             .anyRequest().authenticated())
                 .anonymous(anonymous -> anonymous.disable())
                 .oauth2ResourceServer(oauth2 ->
