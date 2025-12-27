@@ -17,10 +17,11 @@
 package org.springframework.petmanagement.config;
 
 
+import java.util.Collections;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Collections;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -36,13 +37,16 @@ import io.swagger.v3.oas.models.info.License;
 @Configuration
 public class SwaggerConfig {
 
+    @Value("${api.version}")
+    private String apiVersion;
+
     @Bean
     OpenAPI customOpenAPI() {
         return new OpenAPI()
             .components(new Components())
             .info(new Info()
                 .title("REST Petclinic backend API documentation")
-                .version("1.0")
+                .version(apiVersion)
                 .termsOfService("https://github.com/spring-petclinic/spring-petclinic-rest/blob/master/terms.txt")
                 .description(
                     "This is the REST API documentation of the Spring Petclinic backend. " +

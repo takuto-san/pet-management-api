@@ -17,18 +17,18 @@ cd pet-management-api
 ./mvnw spring-boot:run
 ```
 
-You can then access petclinic here: [http://localhost:9966/petmanagement/api](http://localhost:9966/petmanagement/api)
+You can then access petclinic here: [http://localhost:9966/petmanagement/api/v2](http://localhost:9966/petmanagement/api/v2)
 
 There is an actuator health check route as well:
-* [http://localhost:9966/petmanagement/api/actuator/health](http://localhost:9966/petmanagement/api/actuator/health)
+* [http://localhost:9966/petmanagement/api/v2/actuator/health](http://localhost:9966/petmanagement/api/v2/actuator/health)
 
 ## 📖 OpenAPI REST API Documentation
 managing a veterinary clinic's users, pets, clinics, visits, prescriptions, and inventory items.
 
 ### **Access Swagger UI**
-Swagger UI is available at: [http://localhost:9966/petmanagement/api/swagger-ui/index.html](http://localhost:9966/petmanagement/api/swagger-ui/index.html).
+Swagger UI is available at: [http://localhost:9966/petmanagement/api/v2/swagger-ui/index.html](http://localhost:9966/petmanagement/api/v2/swagger-ui/index.html).
 
-API documentation (OAS 3.1) is accessible at: [http://localhost:9966/petmanagement/api/v3/api-docs](http://localhost:9966/petmanagement/api/v3/api-docs).
+API documentation (OAS 3.1) is accessible at: [http://localhost:9966/petmanagement/api/v2/docs](http://localhost:9966/petmanagement/api/v2/docs).
 
 
 ## 📌 API Endpoints Overview

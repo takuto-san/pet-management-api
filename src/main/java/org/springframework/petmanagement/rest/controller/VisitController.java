@@ -26,13 +26,11 @@ import org.springframework.petmanagement.service.VisitPrescriptionService;
 import org.springframework.petmanagement.service.VisitService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("/api")
 public class VisitController implements VisitsApi {
 
     private final VisitService visitService;
@@ -78,7 +76,7 @@ public class VisitController implements VisitsApi {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(
                 UriComponentsBuilder.newInstance()
-                    .path("/api/visits/{id}")
+                    .path("/visits/{id}")
                     .buildAndExpand(saved.getId())
                     .toUri()
             );
@@ -126,7 +124,7 @@ public class VisitController implements VisitsApi {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(
                 UriComponentsBuilder.newInstance()
-                    .path("/api/visits/{visitId}/prescriptions/{id}")
+                    .path("/visits/{visitId}/prescriptions/{id}")
                     .buildAndExpand(visitId, saved.getId())
                     .toUri()
             );

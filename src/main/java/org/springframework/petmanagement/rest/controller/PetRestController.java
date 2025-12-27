@@ -17,13 +17,11 @@ import org.springframework.petmanagement.rest.dto.PetPageDto;
 import org.springframework.petmanagement.service.PetService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("/api")
 public class PetRestController implements PetsApi {
 
     private final PetService petService;
@@ -58,7 +56,7 @@ public class PetRestController implements PetsApi {
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(
                 UriComponentsBuilder.newInstance()
-                    .path("/api/pets/{id}")
+                    .path("/pets/{id}")
                     .buildAndExpand(created.getId())
                     .toUri()
             );

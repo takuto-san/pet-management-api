@@ -18,13 +18,11 @@ import org.springframework.petmanagement.rest.dto.ClinicPageDto;
 import org.springframework.petmanagement.service.ClinicService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("/api")
 public class ClinicController implements ClinicsApi {
 
     private final ClinicService clinicService;
@@ -60,7 +58,7 @@ public class ClinicController implements ClinicsApi {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
             UriComponentsBuilder.newInstance()
-                .path("/api/clinics/{id}")
+                .path("/clinics/{id}")
                 .buildAndExpand(saved.getId())
                 .toUri()
         );

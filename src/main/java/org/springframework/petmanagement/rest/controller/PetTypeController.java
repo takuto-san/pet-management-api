@@ -8,12 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.petmanagement.rest.api.PettypesApi;
 import org.springframework.petmanagement.rest.dto.PetTypeDto;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("/api")
 public class PetTypeController implements PettypesApi {
 
     @Override

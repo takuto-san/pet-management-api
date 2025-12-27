@@ -58,7 +58,7 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/api/owners",
+              "raw": "{{baseUrl}}/owners",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -90,7 +90,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners",
+                  "raw": "{{baseUrl}}/owners",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -132,7 +132,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners",
+                  "raw": "{{baseUrl}}/owners",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -174,7 +174,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners",
+                  "raw": "{{baseUrl}}/owners",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -246,7 +246,7 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/api/owners/{{ownerId}}/pets",
+              "raw": "{{baseUrl}}/owners/{{ownerId}}/pets",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -280,7 +280,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId/pets",
+                  "raw": "{{baseUrl}}/owners/:ownerId/pets",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -331,7 +331,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId/pets",
+                  "raw": "{{baseUrl}}/owners/:ownerId/pets",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -382,7 +382,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId/pets",
+                  "raw": "{{baseUrl}}/owners/:ownerId/pets",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -433,7 +433,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId/pets",
+                  "raw": "{{baseUrl}}/owners/:ownerId/pets",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -512,7 +512,7 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/api/owners/{{ownerId}}/pets/{{petId}}/visits",
+              "raw": "{{baseUrl}}/owners/{{ownerId}}/pets/{{petId}}/visits",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -555,7 +555,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/visits",
+                  "raw": "{{baseUrl}}/visits",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -597,7 +597,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/visits",
+                  "raw": "{{baseUrl}}/visits",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -639,7 +639,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/visits",
+                  "raw": "{{baseUrl}}/visits",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -681,7 +681,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/visits",
+                  "raw": "{{baseUrl}}/visits",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -723,7 +723,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/visits",
+                  "raw": "{{baseUrl}}/visits",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -813,7 +813,7 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/api/owners/{{ownerId}}",
+              "raw": "{{baseUrl}}/owners/{{ownerId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -846,7 +846,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId",
+                  "raw": "{{baseUrl}}/owners/:ownerId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -896,7 +896,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId",
+                  "raw": "{{baseUrl}}/owners/:ownerId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -946,7 +946,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId",
+                  "raw": "{{baseUrl}}/owners/:ownerId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -996,7 +996,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId",
+                  "raw": "{{baseUrl}}/owners/:ownerId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1060,7 +1060,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/owners/{{ownerId}}",
+              "raw": "{{baseUrl}}/owners/{{ownerId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1084,7 +1084,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId",
+                  "raw": "{{baseUrl}}/owners/:ownerId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1125,7 +1125,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId",
+                  "raw": "{{baseUrl}}/owners/:ownerId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1166,7 +1166,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId",
+                  "raw": "{{baseUrl}}/owners/:ownerId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1207,7 +1207,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId",
+                  "raw": "{{baseUrl}}/owners/:ownerId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1248,7 +1248,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId",
+                  "raw": "{{baseUrl}}/owners/:ownerId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1318,7 +1318,7 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/api/owners/{{ownerId}}/pets/{{petId}}",
+              "raw": "{{baseUrl}}/owners/{{ownerId}}/pets/{{petId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1348,7 +1348,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId/pets/:petId",
+                  "raw": "{{baseUrl}}/owners/:ownerId/pets/:petId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1405,7 +1405,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId/pets/:petId",
+                  "raw": "{{baseUrl}}/owners/:ownerId/pets/:petId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1462,7 +1462,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId/pets/:petId",
+                  "raw": "{{baseUrl}}/owners/:ownerId/pets/:petId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1519,7 +1519,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/owners/:ownerId/pets/:petId",
+                  "raw": "{{baseUrl}}/owners/:ownerId/pets/:petId",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1604,7 +1604,7 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/api/owners/{{ownerId}}/pets/{{petId}}/visits",
+              "raw": "{{baseUrl}}/owners/{{ownerId}}/pets/{{petId}}/visits",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1647,7 +1647,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/visits",
+                  "raw": "{{baseUrl}}/visits",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1689,7 +1689,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/visits",
+                  "raw": "{{baseUrl}}/visits",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1731,7 +1731,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/visits",
+                  "raw": "{{baseUrl}}/visits",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1773,7 +1773,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/visits",
+                  "raw": "{{baseUrl}}/visits",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1815,7 +1815,7 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/visits",
+                  "raw": "{{baseUrl}}/visits",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -1888,7 +1888,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:9966/petclinic"
+      "value": "http://localhost:9966/petmanagement/api/v2"
     },
     {
       "key": "ownerId",

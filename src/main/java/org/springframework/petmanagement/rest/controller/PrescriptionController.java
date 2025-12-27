@@ -15,13 +15,11 @@ import org.springframework.petmanagement.rest.dto.PrescriptionPageDto;
 import org.springframework.petmanagement.service.PrescriptionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("/api")
 public class PrescriptionController implements PrescriptionsApi {
 
     private final PrescriptionService prescriptionService;
@@ -48,7 +46,7 @@ public class PrescriptionController implements PrescriptionsApi {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
             UriComponentsBuilder.newInstance()
-                .path("/api/prescriptions/{id}")
+                .path("/prescriptions/{id}")
                 .buildAndExpand(saved.getId())
                 .toUri()
         );

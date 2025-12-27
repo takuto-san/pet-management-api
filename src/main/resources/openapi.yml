@@ -5,9 +5,9 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
-  version: '1.5'
+  version: '2'
 servers:
-  - url: http://localhost:9966/petmanagement
+  - url: http://localhost:9966/petmanagement/api/v2
 tags:
   - name: auth
     description: Authentication endpoints (Signin, Signup, Me,Refresh Token).

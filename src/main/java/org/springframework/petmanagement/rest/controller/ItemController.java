@@ -15,13 +15,11 @@ import org.springframework.petmanagement.rest.dto.ItemPageDto;
 import org.springframework.petmanagement.service.ItemService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-@RequestMapping("/api")
 public class ItemController implements ItemsApi {
 
     private final ItemService itemService;
@@ -48,7 +46,7 @@ public class ItemController implements ItemsApi {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
             UriComponentsBuilder.newInstance()
-                .path("/api/items/{id}")
+                .path("/items/{id}")
                 .buildAndExpand(saved.getId())
                 .toUri()
         );
