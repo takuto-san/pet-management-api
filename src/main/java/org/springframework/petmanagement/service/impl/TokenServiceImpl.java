@@ -45,6 +45,8 @@ public class TokenServiceImpl implements TokenService {
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.joining(" "));
 
+        User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("petmanagement")
                 .issuedAt(now)
@@ -52,6 +54,7 @@ public class TokenServiceImpl implements TokenService {
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .claim("jti", UUID.randomUUID().toString())
+                .claim("userId", user.getId().toString())
                 .build();
 
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -66,6 +69,8 @@ public class TokenServiceImpl implements TokenService {
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.joining(" "));
 
+        User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("petmanagement")
                 .issuedAt(now)
@@ -73,11 +78,11 @@ public class TokenServiceImpl implements TokenService {
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .claim("jti", UUID.randomUUID().toString())
+                .claim("userId", user.getId().toString())
                 .build();
 
         String tokenValue = this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
         RefreshToken refreshToken = new RefreshToken(user, tokenValue, LocalDateTime.now().plusDays(7));
         refreshTokenRepository.save(refreshToken);
 
