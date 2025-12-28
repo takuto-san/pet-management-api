@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/spaces")
+@RequestMapping("/api")
 @CrossOrigin(exposedHeaders = "errors, content-type")
 public class SpacesController implements SpacesApi {
 
@@ -49,7 +49,7 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
-    @GetMapping("")
+    @GetMapping("/spaces")
     public ResponseEntity<List<SpaceDto>> listSpaces() {
         UUID userId = getCurrentUserId();
         List<Space> spaces = spaceService.findAllByUserId(userId);
@@ -60,7 +60,7 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
-    @PostMapping("")
+    @PostMapping("/spaces")
     public ResponseEntity<SpaceDto> addSpace(SpaceFieldsDto spaceFieldsDto) {
         UUID userId = getCurrentUserId();
         Space space = Space.builder()
@@ -73,7 +73,7 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
-    @GetMapping("/{spaceId}/documents")
+    @GetMapping("/spaces/{spaceId}/documents")
     public ResponseEntity<List<DocumentDto>> listDocuments(@PathVariable("spaceId") UUID spaceId) {
         List<Document> documents = documentService.findAllBySpaceId(spaceId);
         List<DocumentDto> dtoList = documents.stream()
@@ -83,7 +83,7 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
-    @PostMapping("/{spaceId}/documents")
+    @PostMapping("/spaces/{spaceId}/documents")
     public ResponseEntity<DocumentDto> addDocument(@PathVariable("spaceId") UUID spaceId, DocumentFieldsDto documentFieldsDto) {
         Document document = Document.builder()
             .spaceId(spaceId)
@@ -97,14 +97,14 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
-    @GetMapping("/{spaceId}/documents/{documentId}")
+    @GetMapping("/spaces/{spaceId}/documents/{documentId}")
     public ResponseEntity<DocumentDto> getDocument(@PathVariable("spaceId") UUID spaceId, @PathVariable("documentId") UUID documentId) {
         Document document = documentService.findById(documentId);
         return new ResponseEntity<>(documentMapper.toDocumentDto(document), HttpStatus.OK);
     }
 
     @Override
-    @PatchMapping("/{spaceId}/documents/{documentId}")
+    @PatchMapping("/spaces/{spaceId}/documents/{documentId}")
     public ResponseEntity<DocumentDto> updateDocument(@PathVariable("spaceId") UUID spaceId, @PathVariable("documentId") UUID documentId, DocumentUpdateFieldsDto documentUpdateFieldsDto) {
         Document existing = documentService.findById(documentId);
         if (documentUpdateFieldsDto.getTitle() != null) {
@@ -118,7 +118,7 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
-    @DeleteMapping("/{spaceId}/documents/{documentId}")
+    @DeleteMapping("/spaces/{spaceId}/documents/{documentId}")
     public ResponseEntity<Void> deleteDocument(@PathVariable("spaceId") UUID spaceId, @PathVariable("documentId") UUID documentId) {
         documentService.deleteById(documentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -128,6 +128,9 @@ public class SpacesController implements SpacesApi {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt jwt) {
             String userIdStr = jwt.getClaim("userId");
+            return UUID.fromString(userIdStr);
+        } else if (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User user) {
+            String userIdStr = user.getUsername();
             return UUID.fromString(userIdStr);
         }
         throw new RuntimeException("Unable to get user ID from authentication");
