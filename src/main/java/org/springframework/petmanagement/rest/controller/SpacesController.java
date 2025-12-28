@@ -22,9 +22,16 @@ import org.springframework.petmanagement.service.SpaceService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/spaces")
 @CrossOrigin(exposedHeaders = "errors, content-type")
 public class SpacesController implements SpacesApi {
 
@@ -42,6 +49,7 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
+    @GetMapping("")
     public ResponseEntity<List<SpaceDto>> listSpaces() {
         UUID userId = getCurrentUserId();
         List<Space> spaces = spaceService.findAllByUserId(userId);
@@ -52,6 +60,7 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
+    @PostMapping("")
     public ResponseEntity<SpaceDto> addSpace(SpaceFieldsDto spaceFieldsDto) {
         UUID userId = getCurrentUserId();
         Space space = Space.builder()
@@ -64,7 +73,8 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
-    public ResponseEntity<List<DocumentDto>> listDocuments(UUID spaceId) {
+    @GetMapping("/{spaceId}/documents")
+    public ResponseEntity<List<DocumentDto>> listDocuments(@PathVariable("spaceId") UUID spaceId) {
         List<Document> documents = documentService.findAllBySpaceId(spaceId);
         List<DocumentDto> dtoList = documents.stream()
             .map(documentMapper::toDocumentDto)
@@ -73,7 +83,8 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
-    public ResponseEntity<DocumentDto> addDocument(UUID spaceId, DocumentFieldsDto documentFieldsDto) {
+    @PostMapping("/{spaceId}/documents")
+    public ResponseEntity<DocumentDto> addDocument(@PathVariable("spaceId") UUID spaceId, DocumentFieldsDto documentFieldsDto) {
         Document document = Document.builder()
             .spaceId(spaceId)
             .parentDocId(documentFieldsDto.getParentDocId())
@@ -86,13 +97,15 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
-    public ResponseEntity<DocumentDto> getDocument(UUID spaceId, UUID documentId) {
+    @GetMapping("/{spaceId}/documents/{documentId}")
+    public ResponseEntity<DocumentDto> getDocument(@PathVariable("spaceId") UUID spaceId, @PathVariable("documentId") UUID documentId) {
         Document document = documentService.findById(documentId);
         return new ResponseEntity<>(documentMapper.toDocumentDto(document), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<DocumentDto> updateDocument(UUID spaceId, UUID documentId, DocumentUpdateFieldsDto documentUpdateFieldsDto) {
+    @PatchMapping("/{spaceId}/documents/{documentId}")
+    public ResponseEntity<DocumentDto> updateDocument(@PathVariable("spaceId") UUID spaceId, @PathVariable("documentId") UUID documentId, DocumentUpdateFieldsDto documentUpdateFieldsDto) {
         Document existing = documentService.findById(documentId);
         if (documentUpdateFieldsDto.getTitle() != null) {
             existing.setTitle(documentUpdateFieldsDto.getTitle());
@@ -105,19 +118,18 @@ public class SpacesController implements SpacesApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteDocument(UUID spaceId, UUID documentId) {
+    @DeleteMapping("/{spaceId}/documents/{documentId}")
+    public ResponseEntity<Void> deleteDocument(@PathVariable("spaceId") UUID spaceId, @PathVariable("documentId") UUID documentId) {
         documentService.deleteById(documentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     private UUID getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // Assuming the principal is a UserDetails or similar with getId method
-        // Adjust based on your security setup
-        if (authentication.getPrincipal() instanceof org.springframework.petmanagement.model.User user) {
-            return user.getId();
+        if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt jwt) {
+            String userIdStr = jwt.getClaim("userId");
+            return UUID.fromString(userIdStr);
         }
-        // For testing purposes, return a default UUID
-        return UUID.fromString("00000000-0000-0000-0000-000000000000");
+        throw new RuntimeException("Unable to get user ID from authentication");
     }
 }
