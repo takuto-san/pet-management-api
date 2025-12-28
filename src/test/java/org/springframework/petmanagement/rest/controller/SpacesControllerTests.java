@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,10 +17,8 @@ import org.springframework.petmanagement.model.Space;
 import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.service.DocumentService;
 import org.springframework.petmanagement.service.SpaceService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -34,6 +31,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles({"spring-data-jpa", "postgres"})
+@WithMockUser(username = "10000000-0000-0000-0000-000000000001")
 class SpacesControllerTests {
 
     private static final UUID SPACE_ID = UUID.fromString("10000000-0000-0000-0000-000000000001");
@@ -49,23 +48,10 @@ class SpacesControllerTests {
     private User user;
 
     @BeforeEach
-    void initData() {
-        user = new User();
-        user.setId(UUID.randomUUID());
-        user.setUsername("testuser");
-        user.setEmail("test@example.com");
-
-        // Set up mock authentication
-        Authentication authentication = mock(Authentication.class);
-        given(authentication.getPrincipal()).willReturn(user);
-
-        SecurityContext securityContext = mock(SecurityContext.class);
-        given(securityContext.getAuthentication()).willReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-
+    void setup() {
         space = new Space();
         space.setId(SPACE_ID);
-        space.setUserId(user.getId());
+        space.setUserId(UUID.fromString("10000000-0000-0000-0000-000000000001"));
         space.setName("Test Space");
 
         document = new Document();
@@ -78,7 +64,6 @@ class SpacesControllerTests {
 
 
     @Test
-    @WithMockUser
     void testListSpacesSuccess() throws Exception {
         given(this.spaceService.findAllByUserId(any())).willReturn(List.of(space));
         this.mockMvc.perform(get("/api/spaces").accept(MediaType.APPLICATION_JSON))
@@ -86,7 +71,6 @@ class SpacesControllerTests {
     }
 
     @Test
-    @WithMockUser
     void testAddSpaceSuccess() throws Exception {
         Space newSpace = new Space();
         newSpace.setId(UUID.randomUUID());
@@ -107,7 +91,6 @@ class SpacesControllerTests {
     }
 
     @Test
-    @WithMockUser
     void testListDocumentsSuccess() throws Exception {
         given(this.documentService.findAllBySpaceId(SPACE_ID)).willReturn(List.of(document));
         this.mockMvc.perform(get("/api/spaces/{spaceId}/documents", SPACE_ID).accept(MediaType.APPLICATION_JSON))
@@ -115,7 +98,6 @@ class SpacesControllerTests {
     }
 
     @Test
-    @WithMockUser
     void testAddDocumentSuccess() throws Exception {
         Document newDocument = new Document();
         newDocument.setId(UUID.randomUUID());
@@ -137,7 +119,6 @@ class SpacesControllerTests {
     }
 
     @Test
-    @WithMockUser
     void testGetDocumentSuccess() throws Exception {
         given(this.documentService.findById(DOCUMENT_ID)).willReturn(document);
         this.mockMvc.perform(get("/api/spaces/{spaceId}/documents/{documentId}", SPACE_ID, DOCUMENT_ID).accept(MediaType.APPLICATION_JSON))
@@ -145,7 +126,6 @@ class SpacesControllerTests {
     }
 
     @Test
-    @WithMockUser
     void testUpdateDocumentSuccess() throws Exception {
         Document updatedDocument = new Document();
         updatedDocument.setId(DOCUMENT_ID);
@@ -168,7 +148,6 @@ class SpacesControllerTests {
     }
 
     @Test
-    @WithMockUser
     void testDeleteDocumentSuccess() throws Exception {
         given(this.documentService.findById(DOCUMENT_ID)).willReturn(document);
         this.mockMvc.perform(delete("/api/spaces/{spaceId}/documents/{documentId}", SPACE_ID, DOCUMENT_ID).accept(MediaType.APPLICATION_JSON))
