@@ -112,12 +112,10 @@ public class SpacesController implements SpacesApi {
 
     private UUID getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // Assuming the principal is a UserDetails or similar with getId method
-        // Adjust based on your security setup
-        if (authentication.getPrincipal() instanceof org.springframework.petmanagement.model.User user) {
-            return user.getId();
+        if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt jwt) {
+            String userIdStr = jwt.getClaim("userId");
+            return UUID.fromString(userIdStr);
         }
-        // For testing purposes, return a default UUID
-        return UUID.fromString("00000000-0000-0000-0000-000000000000");
+        throw new RuntimeException("Unable to get user ID from authentication");
     }
 }
