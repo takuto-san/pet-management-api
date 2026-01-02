@@ -1,5 +1,6 @@
 package org.springframework.petmanagement.rest.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -8,14 +9,22 @@ import static org.mockito.BDDMockito.given;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.petmanagement.mapper.PetMapper;
+import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.User;
+import org.springframework.petmanagement.rest.dto.PetPageDto;
 import org.springframework.petmanagement.rest.dto.UserRegistrationDto;
+import org.springframework.petmanagement.service.PetService;
 import org.springframework.petmanagement.service.UserService;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,6 +34,8 @@ class UserControllerTests {
 
     @Autowired private MockMvc mockMvc;
     @MockitoBean private UserService userService;
+    @MockitoBean private PetService petService;
+    @MockitoBean private PetMapper petMapper;
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -48,7 +59,7 @@ class UserControllerTests {
             }
             """;
 
-        this.mockMvc.perform(post("/api/users")
+        this.mockMvc.perform(post("/users")
             .with(csrf())
             .content(jsonBody)
             .contentType(MediaType.APPLICATION_JSON)
@@ -73,11 +84,60 @@ class UserControllerTests {
             }
             """;
 
-        this.mockMvc.perform(post("/api/users")
+        this.mockMvc.perform(post("/users")
             .with(csrf())
             .content(jsonBody)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "12345678-1234-1234-1234-123456789abc", roles = "ADMIN")
+    void testListPetsByUserSuccess() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+        UUID petId = UUID.randomUUID();
+        Pet pet = new Pet();
+        pet.setId(petId);
+        List<Pet> pets = List.of(pet);
+        Page<Pet> petPage = new PageImpl<>(pets, PageRequest.of(0, 10), 1);
+
+        given(userService.getUser(userId)).willReturn(new User());
+        given(petService.listPetsByUser(userId, PageRequest.of(0, 10))).willReturn(petPage);
+        given(petMapper.toPetPageDto(petPage)).willReturn(new PetPageDto());
+
+        this.mockMvc.perform(get("/users/{userId}/pets", userId)
+            .param("page", "0")
+            .param("size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "87654321-4321-4321-4321-cba987654321", roles = "USER")
+    void testListPetsByUserForbidden() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+
+        given(userService.getUser(userId)).willReturn(new User());
+
+        this.mockMvc.perform(get("/users/{userId}/pets", userId)
+            .param("page", "0")
+            .param("size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "12345678-1234-1234-1234-123456789abc", roles = "ADMIN")
+    void testListPetsByUserNotFound() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+
+        given(userService.getUser(userId)).willThrow(new IllegalArgumentException("User not found"));
+
+        this.mockMvc.perform(get("/users/{userId}/pets", userId)
+            .param("page", "0")
+            .param("size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
     }
 }
