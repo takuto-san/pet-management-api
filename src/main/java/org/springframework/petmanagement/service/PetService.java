@@ -14,4 +14,5 @@ public interface PetService {
     Pet createPet(PetFieldsDto fields);
     Pet updatePet(UUID petId, PetFieldsDto fields);
     void deletePet(UUID petId);
+    Page<Pet> listPetsByUser(UUID userId, Pageable pageable);
 }

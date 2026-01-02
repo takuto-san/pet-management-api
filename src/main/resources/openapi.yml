@@ -292,6 +292,40 @@ paths:
         403:
           description: Forbidden
 
+  /users/{userId}/pets:
+    get:
+      tags: [pet]
+      operationId: listPetsByUser
+      summary: Lists pets for a specific user with pagination
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetPage'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
   /pettypes:
     get:
       tags: [pettypes]

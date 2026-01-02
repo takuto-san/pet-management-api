@@ -4,18 +4,25 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.petmanagement.mapper.PetMapper;
 import org.springframework.petmanagement.mapper.UserMapper;
 import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.rest.api.UsersApi;
+import org.springframework.petmanagement.rest.dto.PetPageDto;
 import org.springframework.petmanagement.rest.dto.UserBaseDto;
 import org.springframework.petmanagement.rest.dto.UserPageDto;
 import org.springframework.petmanagement.rest.dto.UserRegistrationDto;
 import org.springframework.petmanagement.rest.dto.UserResponseDto;
+import org.springframework.petmanagement.service.PetService;
 import org.springframework.petmanagement.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -28,11 +35,17 @@ public class UserController implements UsersApi {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final PetService petService;
+    private final PetMapper petMapper;
 
     public UserController(UserService userService,
-                              UserMapper userMapper) {
+                              UserMapper userMapper,
+                              PetService petService,
+                              PetMapper petMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.petService = petService;
+        this.petMapper = petMapper;
     }
 
     @PreAuthorize("hasRole(@roles.ADMIN)")
@@ -99,5 +112,40 @@ public class UserController implements UsersApi {
         pageDto.setTotalElements(dtoList.size());
         pageDto.setTotalPages(1); // TODO: ページネーション実装
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<PetPageDto> listPetsByUser(UUID userId, Integer page, Integer size) {
+        UUID currentUserId = getCurrentUserId();
+        if (!userId.equals(currentUserId) && !hasRole("ADMIN")) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        try {
+            // Check if user exists
+            userService.getUser(userId);
+            Pageable pageable = PageRequest.of(page, size);
+            var pets = petService.listPetsByUser(userId, pageable);
+            return ResponseEntity.ok(petMapper.toPetPageDto(pets));
+        } catch (IllegalArgumentException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    private UUID getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt jwt) {
+            String userIdStr = jwt.getClaim("userId");
+            return UUID.fromString(userIdStr);
+        } else if (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User user) {
+            String userIdStr = user.getUsername();
+            return UUID.fromString(userIdStr);
+        }
+        throw new RuntimeException("Unable to get user ID from authentication");
+    }
+
+    private boolean hasRole(String role) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities().stream()
+            .anyMatch(authority -> authority.getAuthority().equals("ROLE_" + role));
     }
 }
