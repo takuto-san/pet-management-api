@@ -47,6 +47,7 @@ API documentation (OAS 3.1) is accessible at: [http://localhost:9966/petmanageme
 | | **GET** | `/users/{userId}` | Get a user by ID (UUID) |
 | | **PUT** | `/users/{userId}` | Update user profile |
 | | **DELETE** | `/users/{userId}` | Delete a user |
+| | **GET** | `/users/{userId}/pets` | List all pets with user |
 | **Pets** |
 | | **GET** | `/pets` | List all pets with pagination |
 | | **POST** | `/pets` | Add a new pet |
