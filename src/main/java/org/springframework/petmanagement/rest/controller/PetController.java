@@ -22,12 +22,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @CrossOrigin(exposedHeaders = "errors, content-type")
-public class PetRestController implements PetsApi {
+public class PetController implements PetsApi {
 
     private final PetService petService;
     private final PetMapper petMapper;
 
-    public PetRestController(PetService petService, PetMapper petMapper) {
+    public PetController(PetService petService, PetMapper petMapper) {
         this.petService = petService;
         this.petMapper = petMapper;
     }

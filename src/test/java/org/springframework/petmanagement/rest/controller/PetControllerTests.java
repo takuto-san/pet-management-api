@@ -36,7 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class PetRestControllerTests {
+class PetControllerTests {
 
     private static final UUID PET_ID = UUID.fromString("10000000-0000-0000-0000-000000000001");
     private static final UUID PET_ID_NOT_FOUND = UUID.fromString("99999999-9999-9999-9999-999999999999");
