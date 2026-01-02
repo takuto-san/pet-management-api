@@ -23,4 +23,6 @@ public interface PetRepository {
     Collection<Pet> findAll() throws DataAccessException;
 
     Page<Pet> findAll(Pageable pageable) throws DataAccessException;
+
+    Page<Pet> findByUserId(UUID userId, Pageable pageable) throws DataAccessException;
 }

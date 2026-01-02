@@ -21,4 +21,6 @@ public interface SpringDataPetRepository extends PetRepository, PagingAndSorting
 
     Page<Pet> findAll(Pageable pageable);
 
+    Page<Pet> findByUserId(UUID userId, Pageable pageable);
+
 }

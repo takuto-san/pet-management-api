@@ -98,4 +98,10 @@ public class PetServiceImpl implements PetService {
 
         petRepository.delete(pet);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Pet> listPetsByUser(UUID userId, Pageable pageable) {
+        return petRepository.findByUserId(userId, pageable);
+    }
 }
