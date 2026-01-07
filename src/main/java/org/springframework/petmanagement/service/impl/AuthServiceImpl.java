@@ -54,8 +54,21 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new IllegalArgumentException("Email already in use");
         }
+
+        // Generate username from email local part
+        String email = signUpRequest.getEmail();
+        String localPart = email.substring(0, email.indexOf('@'));
+        if (localPart.length() > 20) {
+            localPart = localPart.substring(0, 20);
+        }
+
+        // Check if username already exists
+        if (userRepository.findByUsername(localPart).isPresent()) {
+            throw new IllegalArgumentException("Username already in use");
+        }
+
         User user = new User();
-        user.setUsername(signUpRequest.getEmail()); // Use full email as username
+        user.setUsername(localPart);
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setEnabled(true);
