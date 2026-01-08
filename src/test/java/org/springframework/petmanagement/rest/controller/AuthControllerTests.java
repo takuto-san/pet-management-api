@@ -124,5 +124,4 @@ class AuthControllerTests {
             .andExpect(status().isUnauthorized());
     }
 
-
 }

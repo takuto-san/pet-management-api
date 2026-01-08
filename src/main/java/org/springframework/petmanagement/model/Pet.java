@@ -78,4 +78,7 @@ public class Pet extends Time {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(name = "icon")
+    private String icon;
 }

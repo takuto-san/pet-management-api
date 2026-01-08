@@ -26,7 +26,7 @@ There is an actuator health check route as well:
 managing a veterinary clinic's users, pets, clinics, visits, prescriptions, and inventory items.
 
 ### **Access Swagger UI**
-Swagger UI is available at: [http://localhost:9966/petmanagement/api/v2/swagger-ui/index.html](http://localhost:9966/petmanagement/api/v2/swagger-ui/index.html).
+Swagger UI is available at: [http://localhost:9966/petmanagement/api/v2/swagger-ui.html](http://localhost:9966/petmanagement/api/v2/swagger-ui.html).
 
 API documentation (OAS 3.1) is accessible at: [http://localhost:9966/petmanagement/api/v2/docs](http://localhost:9966/petmanagement/api/v2/docs).
 
@@ -42,8 +42,8 @@ API documentation (OAS 3.1) is accessible at: [http://localhost:9966/petmanageme
 | | **POST** | `/auth/refreshtoken` | Generate a new access token using a refresh token |
 | | **POST** | `/auth/signout` | Log out user |
 | **Users** |
-| | **GET** | `/users` | List users with pagination (supports kana search) |
 | | **POST** | `/users` | Create a user (**Admin Only**) |
+| | **GET** | `/users` | List users with pagination (supports kana search) |
 | | **GET** | `/users/{userId}` | Get a user by ID (UUID) |
 | | **PUT** | `/users/{userId}` | Update user profile |
 | | **DELETE** | `/users/{userId}` | Delete a user |

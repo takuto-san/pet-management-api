@@ -33,6 +33,7 @@ public interface PetMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "type", source = "type")
     @Mapping(target = "sex", source = "sex")
+    @Mapping(target = "icon", source = "icon")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Pet toPet(PetFieldsDto petFieldsDto);
@@ -49,6 +50,7 @@ public interface PetMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "type", source = "type")
     @Mapping(target = "sex", source = "sex")
+    @Mapping(target = "icon", source = "icon")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     void updatePetFromFields(PetFieldsDto petFieldsDto, @MappingTarget Pet currentPet);

@@ -24,8 +24,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -139,5 +141,90 @@ class UserControllerTests {
             .param("size", "10")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "12345678-1234-1234-1234-123456789abc", roles = "USER")
+    void testUpdateUserSuccess() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+        User updated = new User();
+        updated.setId(userId);
+        updated.setUsername("testuser");
+        given(this.userService.updateUserBase(userId, any())).willReturn(updated);
+
+        String jsonBody = """
+            {
+              "username": "testuser",
+              "firstName": "太郎",
+              "lastName": "山田",
+              "email": "test@example.com",
+              "profileIcon": "https://example.com/icon.png"
+            }
+            """;
+
+        this.mockMvc.perform(put("/users/{userId}", userId)
+            .with(csrf())
+            .content(jsonBody)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "87654321-4321-4321-4321-cba987654321", roles = "USER")
+    void testUpdateUserForbidden() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+
+        this.mockMvc.perform(put("/users/{userId}", userId)
+            .with(csrf())
+            .content("{}")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "12345678-1234-1234-1234-123456789abc", roles = "USER")
+    void testDeleteUserSuccess() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+
+        this.mockMvc.perform(delete("/users/{userId}", userId)
+            .with(csrf())
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser(username = "87654321-4321-4321-4321-cba987654321", roles = "USER")
+    void testDeleteUserForbidden() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+
+        this.mockMvc.perform(delete("/users/{userId}", userId)
+            .with(csrf())
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "12345678-1234-1234-1234-123456789abc", roles = "USER")
+    void testGetUserSuccess() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+        User user = new User();
+        user.setId(userId);
+        given(this.userService.getUser(userId)).willReturn(user);
+
+        this.mockMvc.perform(get("/users/{userId}", userId)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "87654321-4321-4321-4321-cba987654321", roles = "USER")
+    void testGetUserForbidden() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+
+        this.mockMvc.perform(get("/users/{userId}", userId)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
     }
 }
