@@ -11,8 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.petmanagement.mapper.PetMapper;
 import org.springframework.petmanagement.mapper.UserMapper;
+import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.User;
 import org.springframework.petmanagement.rest.api.UsersApi;
+import org.springframework.petmanagement.rest.dto.PetDto;
+import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 import org.springframework.petmanagement.rest.dto.PetPageDto;
 import org.springframework.petmanagement.rest.dto.UserBaseDto;
 import org.springframework.petmanagement.rest.dto.UserPageDto;
@@ -150,6 +153,27 @@ public class UserController implements UsersApi {
             return UUID.fromString(userIdStr);
         }
         throw new RuntimeException("Unable to get user ID from authentication");
+    }
+
+    @Override
+    public ResponseEntity<PetDto> createPet(UUID userId, PetFieldsDto petFieldsDto) {
+        UUID currentUserId = getCurrentUserId();
+        if (!userId.equals(currentUserId) && !hasRole("ADMIN") && !hasRole("CLINIC_ADMIN")) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        try {
+            petFieldsDto.setUserId(userId);
+            Pet created = petService.createPet(petFieldsDto);
+            return new ResponseEntity<>(petMapper.toPetDto(created), HttpStatus.CREATED);
+        } catch (IllegalArgumentException ex) {
+            String msg = ex.getMessage() == null ? "" : ex.getMessage();
+            if (msg.contains("User not found")) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else if (msg.contains("Pet type not found")) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     private boolean hasRole(String role) {

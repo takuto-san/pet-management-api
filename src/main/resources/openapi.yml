@@ -293,6 +293,48 @@ paths:
           description: Forbidden
 
   /users/{userId}/pets:
+    post:
+      tags: [pet]
+      operationId: createPet
+      summary: Add a new pet for a specific user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetFields'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
     get:
       tags: [pet]
       operationId: listPetsByUser
@@ -1581,12 +1623,16 @@ components:
       required:
         - name
         - type
-        - userId
     Pet:
       allOf:
         - $ref: '#/components/schemas/PetFields'
         - type: object
           properties:
+            userId:
+              type: string
+              format: uuid
+              description: The owner ID
+              readOnly: true
             id:
               type: string
               format: uuid
