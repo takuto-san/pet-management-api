@@ -236,7 +236,7 @@ class UserControllerTests {
     }
 
     @Test
-    @WithMockUser(roles = "CLINIC_ADMIN")
+    @WithMockUser(username = "12345678-1234-1234-1234-123456789abc", roles = "CLINIC_ADMIN")
     void testCreatePetSuccess() throws Exception {
         UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
         Pet created = new Pet();
@@ -261,7 +261,7 @@ class UserControllerTests {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(username = "87654321-4321-4321-4321-cba987654321", roles = "USER")
     void testCreatePetForbidden() throws Exception {
         UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
 
@@ -280,7 +280,7 @@ class UserControllerTests {
     }
 
     @Test
-    @WithMockUser(roles = "CLINIC_ADMIN")
+    @WithMockUser(username = "12345678-1234-1234-1234-123456789abc", roles = "CLINIC_ADMIN")
     void testCreatePetUserNotFound() throws Exception {
         UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
 
@@ -302,7 +302,7 @@ class UserControllerTests {
     }
 
     @Test
-    @WithMockUser(roles = "CLINIC_ADMIN")
+    @WithMockUser(username = "12345678-1234-1234-1234-123456789abc", roles = "CLINIC_ADMIN")
     void testCreatePetTypeNotFound() throws Exception {
         UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
 

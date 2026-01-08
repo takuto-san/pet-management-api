@@ -155,9 +155,12 @@ public class UserController implements UsersApi {
         throw new RuntimeException("Unable to get user ID from authentication");
     }
 
-    @PreAuthorize("hasRole(@roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<PetDto> createPet(UUID userId, PetFieldsDto petFieldsDto) {
+        UUID currentUserId = getCurrentUserId();
+        if (!userId.equals(currentUserId) && !hasRole("ADMIN") && !hasRole("CLINIC_ADMIN")) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         try {
             petFieldsDto.setUserId(userId);
             Pet created = petService.createPet(petFieldsDto);
