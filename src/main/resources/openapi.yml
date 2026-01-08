@@ -1623,12 +1623,16 @@ components:
       required:
         - name
         - type
-        - userId
     Pet:
       allOf:
         - $ref: '#/components/schemas/PetFields'
         - type: object
           properties:
+            userId:
+              type: string
+              format: uuid
+              description: The owner ID
+              readOnly: true
             id:
               type: string
               format: uuid

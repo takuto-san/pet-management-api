@@ -16,7 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.petmanagement.mapper.PetMapper;
 import org.springframework.petmanagement.model.Pet;
 import org.springframework.petmanagement.model.User;
+import org.springframework.petmanagement.rest.dto.PetDto;
+import org.springframework.petmanagement.rest.dto.PetFieldsDto;
 import org.springframework.petmanagement.rest.dto.PetPageDto;
+import org.springframework.petmanagement.rest.dto.PetSexDto;
+import org.springframework.petmanagement.rest.dto.PetTypeDto;
 import org.springframework.petmanagement.rest.dto.UserRegistrationDto;
 import org.springframework.petmanagement.service.PetService;
 import org.springframework.petmanagement.service.UserService;
@@ -30,6 +34,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerTests {
@@ -38,6 +44,7 @@ class UserControllerTests {
     @MockitoBean private UserService userService;
     @MockitoBean private PetService petService;
     @MockitoBean private PetMapper petMapper;
+    @Autowired private ObjectMapper objectMapper;
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -226,5 +233,93 @@ class UserControllerTests {
         this.mockMvc.perform(get("/users/{userId}", userId)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "CLINIC_ADMIN")
+    void testCreatePetSuccess() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+        Pet created = new Pet();
+        created.setId(UUID.randomUUID());
+        created.setName("Test Pet");
+
+        PetFieldsDto fieldsDto = new PetFieldsDto()
+            .name("Test Pet")
+            .type(PetTypeDto.DOG);
+
+        given(petService.createPet(any(PetFieldsDto.class))).willReturn(created);
+        given(petMapper.toPetDto(created)).willReturn(new PetDto());
+
+        String jsonBody = objectMapper.writeValueAsString(fieldsDto);
+
+        this.mockMvc.perform(post("/users/{userId}/pets", userId)
+            .with(csrf())
+            .content(jsonBody)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void testCreatePetForbidden() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+
+        PetFieldsDto fieldsDto = new PetFieldsDto()
+            .name("Test Pet")
+            .type(PetTypeDto.DOG);
+
+        String jsonBody = objectMapper.writeValueAsString(fieldsDto);
+
+        this.mockMvc.perform(post("/users/{userId}/pets", userId)
+            .with(csrf())
+            .content(jsonBody)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "CLINIC_ADMIN")
+    void testCreatePetUserNotFound() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+
+        PetFieldsDto fieldsDto = new PetFieldsDto()
+            .name("Test Pet")
+            .type(PetTypeDto.DOG);
+
+        given(petService.createPet(any(PetFieldsDto.class)))
+            .willThrow(new IllegalArgumentException("User not found"));
+
+        String jsonBody = objectMapper.writeValueAsString(fieldsDto);
+
+        this.mockMvc.perform(post("/users/{userId}/pets", userId)
+            .with(csrf())
+            .content(jsonBody)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = "CLINIC_ADMIN")
+    void testCreatePetTypeNotFound() throws Exception {
+        UUID userId = UUID.fromString("12345678-1234-1234-1234-123456789abc");
+
+        PetFieldsDto fieldsDto = new PetFieldsDto()
+            .name("Test Pet")
+            .type(PetTypeDto.DOG);
+
+        given(petService.createPet(any(PetFieldsDto.class)))
+            .willThrow(new IllegalArgumentException("Pet type not found"));
+
+        String jsonBody = objectMapper.writeValueAsString(fieldsDto);
+
+        this.mockMvc.perform(post("/users/{userId}/pets", userId)
+            .with(csrf())
+            .content(jsonBody)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
     }
 }
