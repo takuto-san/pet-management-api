@@ -6,17 +6,17 @@ ON CONFLICT (name) DO NOTHING;
 INSERT INTO users (
     username, password, enabled,
     first_name, last_name, first_name_kana, last_name_kana,
-    email, postal_code, prefecture, city, address, telephone
+    email, postal_code, prefecture, city, address, telephone, icon
 ) VALUES
 ('taro', '$2a$10$ymaklWBnpBKlgdMgkjWVF.GMGyvH8aDuTK.glFOaKw712LHtRRymS', TRUE,
  '太郎', '山田', 'タロウ', 'ヤマダ',
- 'taro.yamada@example.com', '100-0001', '東京都', '千代田区', '千代田1-1', '090-1111-2222'),
+ 'taro.yamada@example.com', '100-0001', '東京都', '千代田区', '千代田1-1', '090-1111-2222', NULL),
 ('hanako', '$2a$10$ymaklWBnpBKlgdMgkjWVF.GMGyvH8aDuTK.glFOaKw712LHtRRymS', TRUE,
  '花子', '鈴木', 'ハナコ', 'スズキ',
- 'hanako.suzuki@example.com', '530-0001', '大阪府', '大阪市北区', '梅田1-1', '080-3333-4444'),
+ 'hanako.suzuki@example.com', '530-0001', '大阪府', '大阪市北区', '梅田1-1', '080-3333-4444', NULL),
 ('admin', '$2a$10$ymaklWBnpBKlgdMgkjWVF.GMGyvH8aDuTK.glFOaKw712LHtRRymS', TRUE,
  '管理者', 'システム', 'カンリシャ', 'システム',
- 'admin@example.com', NULL, NULL, NULL, NULL, NULL)
+ 'admin@example.com', NULL, NULL, NULL, NULL, NULL, NULL)
 ON CONFLICT (username) DO NOTHING;
 
 
@@ -30,10 +30,10 @@ SELECT u.id, r.id FROM users u, roles r
 WHERE r.name = 'admin' AND u.username = 'admin'
 ON CONFLICT DO NOTHING;
 
-INSERT INTO pets (name, birth_date, sex, type, user_id)
-SELECT 'ポチ', '2020-01-15'::date, 'male'::pet_sex, 'dog'::pet_type, u.id FROM users u WHERE u.email = 'taro.yamada@example.com' AND NOT EXISTS (SELECT 1 FROM pets p WHERE p.name = 'ポチ' AND p.user_id = u.id)
+INSERT INTO pets (name, birth_date, sex, type, user_id, icon)
+SELECT 'ポチ', '2020-01-15'::date, 'male'::pet_sex, 'dog'::pet_type, u.id, NULL FROM users u WHERE u.email = 'taro.yamada@example.com' AND NOT EXISTS (SELECT 1 FROM pets p WHERE p.name = 'ポチ' AND p.user_id = u.id)
 UNION ALL
-SELECT 'ミケ', '2021-05-05'::date, 'female'::pet_sex, 'cat'::pet_type, u.id FROM users u WHERE u.email = 'hanako.suzuki@example.com' AND NOT EXISTS (SELECT 1 FROM pets p WHERE p.name = 'ミケ' AND p.user_id = u.id);
+SELECT 'ミケ', '2021-05-05'::date, 'female'::pet_sex, 'cat'::pet_type, u.id, NULL FROM users u WHERE u.email = 'hanako.suzuki@example.com' AND NOT EXISTS (SELECT 1 FROM pets p WHERE p.name = 'ミケ' AND p.user_id = u.id);
 
 
 INSERT INTO clinics (name, telephone, address, opening_hours)

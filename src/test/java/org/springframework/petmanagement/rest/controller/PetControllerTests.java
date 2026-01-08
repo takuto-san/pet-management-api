@@ -57,6 +57,7 @@ class PetControllerTests {
             .name("Rosy")
             .birthDate(LocalDate.now())
             .type(PetType.DOG)
+            .icon("https://example.com/icons/test.jpg")
             .user(User.builder().id(USER_ID).username("test").email("test@example.com").firstName("Test").lastName("User").build())
             .build();
     }
@@ -70,55 +71,9 @@ class PetControllerTests {
             .userId(USER_ID);
     }
 
-    // Create
-    @Test
-    @WithMockUser(roles = "OWNER_ADMIN")
-    void testCreatePetSuccess() throws Exception {
-        given(this.petService.createPet(any(PetFieldsDto.class))).willReturn(pet);
 
-        String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 
-        this.mockMvc.perform(post("/api/pets")
-                .with(csrf())
-                .content(jsonBody)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated());
-    }
 
-    @Test
-    @WithMockUser(roles = "OWNER_ADMIN")
-    void testCreatePetInvalidType() throws Exception {
-        given(this.petService.createPet(any(PetFieldsDto.class)))
-            .willThrow(new IllegalArgumentException("pet type not found"));
-
-        String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto().type(PetTypeDto.DOG));
-
-        this.mockMvc.perform(post("/api/pets")
-                .with(csrf())
-                .content(jsonBody)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @WithMockUser(roles = "OWNER_ADMIN")
-    void testCreatePetErrorValidation() throws Exception {
-        PetFieldsDto fieldsDto = new PetFieldsDto();
-
-        given(this.petService.createPet(any(PetFieldsDto.class)))
-            .willThrow(new IllegalArgumentException("Validation failed"));
-
-        String jsonBody = objectMapper.writeValueAsString(fieldsDto);
-
-        this.mockMvc.perform(post("/api/pets")
-                .with(csrf())
-                .content(jsonBody)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
-    }
 
     // Update
     @Test
@@ -128,7 +83,7 @@ class PetControllerTests {
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 
-        this.mockMvc.perform(put("/api/pets/{id}", PET_ID)
+        this.mockMvc.perform(put("/pets/{id}", PET_ID)
                 .with(csrf())
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -144,7 +99,7 @@ class PetControllerTests {
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto());
 
-        this.mockMvc.perform(put("/api/pets/{id}", PET_ID_NOT_FOUND)
+        this.mockMvc.perform(put("/pets/{id}", PET_ID_NOT_FOUND)
                 .with(csrf())
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -160,7 +115,7 @@ class PetControllerTests {
 
         String jsonBody = objectMapper.writeValueAsString(createValidFieldsDto().type(PetTypeDto.DOG));
 
-        this.mockMvc.perform(put("/api/pets/{id}", PET_ID)
+        this.mockMvc.perform(put("/pets/{id}", PET_ID)
                 .with(csrf())
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -173,7 +128,7 @@ class PetControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetPetSuccess() throws Exception {
         given(this.petService.getPet(PET_ID)).willReturn(Optional.of(pet));
-        this.mockMvc.perform(get("/api/pets/{id}", PET_ID).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/pets/{id}", PET_ID).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 
@@ -181,7 +136,7 @@ class PetControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetAllPetsSuccess() throws Exception {
         given(this.petService.listPets(null)).willReturn(new PageImpl<>(java.util.List.of(pet)));
-        this.mockMvc.perform(get("/api/pets").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/pets").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 
@@ -189,7 +144,7 @@ class PetControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetAllPetsEmptyStillOk() throws Exception {
         given(this.petService.listPets(null)).willReturn(new PageImpl<>(java.util.List.of()));
-        this.mockMvc.perform(get("/api/pets").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/pets").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 
@@ -197,7 +152,7 @@ class PetControllerTests {
     @WithMockUser(roles = "OWNER_ADMIN")
     void testGetPetNotFound() throws Exception {
         given(this.petService.getPet(PET_ID_NOT_FOUND)).willReturn(Optional.empty());
-        this.mockMvc.perform(get("/api/pets/{id}", PET_ID_NOT_FOUND).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/pets/{id}", PET_ID_NOT_FOUND).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
 
@@ -207,7 +162,7 @@ class PetControllerTests {
         PetFieldsDto fieldsDto = new PetFieldsDto();
 
         String jsonBody = objectMapper.writeValueAsString(fieldsDto);
-        this.mockMvc.perform(put("/api/pets/{id}", PET_ID)
+        this.mockMvc.perform(put("/pets/{id}", PET_ID)
                 .with(csrf())
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -219,7 +174,7 @@ class PetControllerTests {
     @Test
     @WithMockUser(roles = "OWNER_ADMIN")
     void testDeletePetSuccess() throws Exception {
-        this.mockMvc.perform(delete("/api/pets/{id}", PET_ID).with(csrf()).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(delete("/pets/{id}", PET_ID).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
     }
 
@@ -228,7 +183,8 @@ class PetControllerTests {
     void testDeletePetNotFound() throws Exception {
         doThrow(new IllegalArgumentException("pet not found")).when(petService).deletePet(PET_ID_NOT_FOUND);
 
-        this.mockMvc.perform(delete("/api/pets/{id}", PET_ID_NOT_FOUND).with(csrf()).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(delete("/pets/{id}", PET_ID_NOT_FOUND).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
+
 }

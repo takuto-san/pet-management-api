@@ -72,6 +72,9 @@ public class User extends Person {
     public String getTelephone() { return super.getTelephone(); }
     @Override
     public void setTelephone(String telephone) { super.setTelephone(telephone); }
+
+    @Column(name = "profile_icon", length = 500)
+    private String icon;
     
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

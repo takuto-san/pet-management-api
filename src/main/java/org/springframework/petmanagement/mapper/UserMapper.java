@@ -50,6 +50,7 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "enabled", ignore = true)
+    @Mapping(target = "icon", source = "icon")
     void updateUserFromBase(UserBaseDto userBaseDto, @MappingTarget User currentUser);
 
     @Mapping(target = "id", source = "id")

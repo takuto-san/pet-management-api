@@ -56,6 +56,7 @@ CREATE TABLE users (
     city            TEXT,
     address         TEXT,
     telephone       TEXT,
+    icon            VARCHAR(500),
     created_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
@@ -97,6 +98,7 @@ CREATE TABLE pets (
     sex        pet_sex,
     type       pet_type NOT NULL,
     user_id    UUID NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    icon       VARCHAR(500),
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );

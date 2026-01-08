@@ -62,9 +62,12 @@ public class UserController implements UsersApi {
         return new ResponseEntity<>(userMapper.toUserDto(created), headers, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
     public ResponseEntity<UserResponseDto> updateUser(UUID userId, UserBaseDto body) {
+        UUID currentUserId = getCurrentUserId();
+        if (!userId.equals(currentUserId) && !hasRole("ADMIN")) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         try {
             User updated = userService.updateUserBase(userId, body);
             return new ResponseEntity<>(userMapper.toUserDto(updated), HttpStatus.OK);
@@ -76,9 +79,12 @@ public class UserController implements UsersApi {
         }
     }
 
-    @PreAuthorize("hasRole(@roles.ADMIN)")
     @Override
     public ResponseEntity<Void> deleteUser(UUID userId) {
+        UUID currentUserId = getCurrentUserId();
+        if (!userId.equals(currentUserId) && !hasRole("ADMIN")) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         try {
             userService.deleteUser(userId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -87,9 +93,12 @@ public class UserController implements UsersApi {
         }
     }
 
-    @PreAuthorize("hasAnyRole(@roles.ADMIN, @roles.CLINIC_ADMIN)")
     @Override
     public ResponseEntity<UserResponseDto> getUser(UUID userId) {
+        UUID currentUserId = getCurrentUserId();
+        if (!userId.equals(currentUserId) && !hasRole("ADMIN") && !hasRole("CLINIC_ADMIN")) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         try {
             User user = userService.getUser(userId);
             return new ResponseEntity<>(userMapper.toUserDto(user), HttpStatus.OK);

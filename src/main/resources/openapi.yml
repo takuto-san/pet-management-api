@@ -356,23 +356,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PetPage'
-    post:
-      tags: [pet]
-      operationId: addPet
-      summary: Add a new pet
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PetFields'
-      responses:
-        201:
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Pet'
 
   /pets/{petId}:
     get:
@@ -1592,6 +1575,9 @@ components:
           type: string
           format: uuid
           description: The owner ID
+        icon:
+          type: string
+          description: URL of pet icon image
       required:
         - name
         - type
@@ -1605,6 +1591,9 @@ components:
               type: string
               format: uuid
               readOnly: true
+            icon:
+              type: string
+              description: URL of pet icon image
             createdAt:
               type: string
               format: date-time
@@ -1661,6 +1650,9 @@ components:
               type: string
               maxLength: 20
               pattern: '^$|^[0-9-]*$'
+            icon:
+              type: string
+              description: URL of profile icon image
           required:
             - email
             - username
